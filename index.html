@@ -31,7 +31,7 @@
 
         /* 3. キャラクターの表示設定 */
         #player {
-            width: 300px; height: 300px; /* サイズはお好みで */
+            width: 150px; height: 150px; /* サイズはお好みで */
             position: absolute; top: 0; left: 0;
             --poster-color: transparent;
             pointer-events: none; /* キャラを直接触って回転するのを防止 */
@@ -144,7 +144,8 @@
             
             if (distance > 5) { // 少しでも動かしたら
                 // 1. 向きを計算（指を動かした方向）
-                rotation = Math.atan2(moveX, moveY) * (180 / Math.PI) + 180;
+                // rotation = Math.atan2(moveX, moveY) * (180 / Math.PI) + 180;
+                rotation = Math.atan2(moveX, moveY) * (180 / Math.PI);
                 
                 // 2. 移動（引っ張る量に応じて速度変化）
                 posX += (moveX / maxDistance) * walkSpeed;
