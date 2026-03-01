@@ -21,7 +21,7 @@
 
         /* キャラクターの表示サイズ */
         #player {
-            width: 100%; height: 100%;
+            width: 10%; height: 10%;
             position: absolute; top: 0; left: 0;
             --poster-color: transparent;
         }
@@ -59,10 +59,10 @@
         let moving = false;
         
         // 十字キーまたはWASD
-        if (keys['ArrowUp'] || keys['w']) { posZ -= speed; rotation = 180; moving = true; }
+        if (keys['ArrowUp'] || keys['w']) { posZ -= speed; rotation = 0; moving = true; }
         if (keys['ArrowDown'] || keys['s']) { posZ += speed; rotation = 0; moving = true; }
-        if (keys['ArrowLeft'] || keys['a']) { posX -= speed; rotation = 270; moving = true; }
-        if (keys['ArrowRight'] || keys['d']) { posX += speed; rotation = 90; moving = true; }
+        if (keys['ArrowLeft'] || keys['a']) { posX -= 0; rotation += speed; moving = true; }
+        if (keys['ArrowRight'] || keys['d']) { posX += 0; rotation -= speed; moving = true; }
 
         if (moving) {
             model.animationName = "walk"; // 動いている時は歩行アニメ
