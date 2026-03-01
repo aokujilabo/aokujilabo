@@ -44,38 +44,62 @@
 
 <script>
     const model = document.querySelector('#player');
-    let posX = 0, posZ = 0, rotation = 180;
-    const speed = 3; // 移動速度
+    let posX = window.innerWidth / 2, posZ = window.innerHeight / 2; // 初期位置を画面中央付近に
+    let rotation = 180; // 向き（角度）
+    const walkSpeed = 3; // 前進速度
+    const turnSpeed = 3; // 回転速度
     const keys = {};
 
-    // キー入力の状態を記録
+    // エリアの制限（壁）
+    const minX = 0, maxX = window.innerWidth - 100;
+    const minZ = 0, maxZ = window.innerHeight - 100;
+
     window.addEventListener('keydown', e => keys[e.key] = true);
     window.addEventListener('keyup', e => {
         keys[e.key] = false;
-        model.animationName = "Idle"; // キーを離したら待機
+        // 何も押してなければアイドルへ（Walkキーが離された時のみ）
+        if(!keys['ArrowUp'] && !keys['w'] && !keys['ArrowDown'] && !keys['s']){
+            model.animationName = "idle"; 
+        }
     });
 
     function update() {
         let moving = false;
         
-        // 十字キーまたはWASD
-        if (keys['ArrowUp'] || keys['w']) { posZ -= speed; moving = true; }
-        if (keys['ArrowDown'] || keys['s']) { posZ += speed; moving = true; }
-        if (keys['ArrowLeft'] || keys['a']) { posX -= 0; rotation += (speed*2); moving = true; }
-        if (keys['ArrowRight'] || keys['d']) { posX += 0; rotation -= (speed*2); moving = true; }
+        // 左右で回転（向きを変える）
+        if (keys['ArrowLeft'] || keys['a']) { rotation += turnSpeed; }
+        if (keys['ArrowRight'] || keys['d']) { rotation -= turnSpeed; }
+
+        // 上下で「向いている方向」に対して前進・後退
+        // 角度をラジアンに変換して計算
+        const rad = (rotation * Math.PI) / 180;
+
+        if (keys['ArrowUp'] || keys['w']) {
+            posX += Math.sin(rad) * walkSpeed;
+            posZ += Math.cos(rad) * walkSpeed;
+            moving = true;
+        }
+        if (keys['ArrowDown'] || keys['s']) {
+            posX -= Math.sin(rad) * walkSpeed;
+            posZ -= Math.cos(rad) * walkSpeed;
+            moving = true;
+        }
+
+        // 壁の判定（エリア外に出ないようにする）
+        posX = Math.max(minX, Math.min(maxX, posX));
+        posZ = Math.max(minZ, Math.min(maxZ, posZ));
 
         if (moving) {
-            model.animationName = "walk"; // 動いている時は歩行アニメ
-            // モデルの位置を移動（CSSのtransformを使用）
-            model.style.transform = `translate(${posX}px, ${posZ}px)`;
-            // モデルの向きを回転（model-viewerの属性を使用）
-            model.orientation = `0deg 0deg ${rotation}deg`;
+            model.animationName = "walk";
         }
+
+        // 表示の更新
+        model.style.left = `${posX}px`;
+        model.style.top = `${posZ}px`;
+        model.orientation = `0deg 0deg ${rotation}deg`;
 
         requestAnimationFrame(update);
     }
     update();
 </script>
-
-</body>
 </html>
