@@ -6,134 +6,166 @@
     <title>もちもちの子の大冒険</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
+        /* 1. 画面を固定してスクロールさせない設定 */
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; overscroll-behavior: none; touch-action: none;
+            background: #e0f7fa; /* 空の色 */
         }
+        
         h1 { 
             position: absolute; top: 10px; width: 100%; text-align: center;
-            color: #6495ed; animation: bounce 1s infinite alternate; z-index: 10;
+            color: #6495ed; font-family: sans-serif; z-index: 10;
+            animation: bounce 1s infinite alternate; 
         }
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
         
+        /* 2. 地面（エリア）の設定 */
         #stage {
             width: 100vw; height: 100vh;
-            background-color: #8bc34a;
+            background-color: #8bc34a; /* 草原の色 */
             background-image: radial-gradient(#9ccc65 20%, transparent 20%), 
                               radial-gradient(#9ccc65 20%, transparent 20%);
             background-size: 50px 50px; background-position: 0 0, 25px 25px;
         }
 
+        /* 3. キャラクターの表示設定 */
         #player {
-            width: 30%; height: 30%;
+            width: 300px; height: 300px; /* サイズはお好みで */
             position: absolute; top: 0; left: 0;
             --poster-color: transparent;
+            pointer-events: none; /* キャラを直接触って回転するのを防止 */
         }
 
-        /* ★スマホ操作ボタンの見た目 */
-        #controls {
-            position: fixed; bottom: 30px; left: 30px; z-index: 100;
-            display: grid; grid-template-columns: 60px 60px 60px; grid-template-rows: 60px 60px;
-            gap: 10px;
+        /* 4. ジョイスティックの見た目（触った時に出るガイド） */
+        #joystick-guide {
+            position: fixed; width: 100px; height: 100px;
+            border: 2px solid rgba(255,255,255,0.5); border-radius: 50%;
+            display: none; pointer-events: none; z-index: 1000;
+            background: rgba(255,255,255,0.1);
         }
-        .btn {
-            width: 60px; height: 60px; background: rgba(255, 255, 255, 0.7);
-            border: 2px solid #333; border-radius: 50%; font-size: 24px;
-            display: flex; align-items: center; justify-content: center;
-            touch-action: none; user-select: none; -webkit-user-select: none;
+        #joystick-stick {
+            position: absolute; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.8); border-radius: 50%;
+            top: 30px; left: 30px;
         }
-        .btn:active { background: rgba(100, 200, 255, 0.8); }
-        #btn-up { grid-column: 2; grid-row: 1; }
-        #btn-left { grid-column: 1; grid-row: 2; }
-        #btn-down { grid-column: 2; grid-row: 2; }
-        #btn-right { grid-column: 3; grid-row: 2; }
     </style>
 </head>
 <body>
 
-<h1>Hello!<br> Welcome to AOKUJILab.</h1>
+    <h1>Hello!<br>Welcome to AOKUJILab.</h1>
 
-<div id="stage">
-    <model-viewer id="player"
-        src="first_kemono_animation.glb" 
-        autoplay animation-name="idle"
-        shadow-intensity="1" environment-image="neutral">
-    </model-viewer>
-</div>
+    <div id="stage">
+        <model-viewer id="player"
+            src="first_kemono_animation.glb" 
+            autoplay 
+            animation-name="idle"
+            shadow-intensity="1" 
+            environment-image="neutral">
+        </model-viewer>
+    </div>
 
-<div id="controls">
-    <div class="btn" id="btn-up">▲</div>
-    <div class="btn" id="btn-left">◀</div>
-    <div class="btn" id="btn-down">▼</div>
-    <div class="btn" id="btn-right">▶</div>
-</div>
+    <div id="joystick-guide"><div id="joystick-stick"></div></div>
 
 <script>
     const model = document.querySelector('#player');
-    let posX = window.innerWidth / 2 - 50; 
-    let posZ = window.innerHeight / 2 - 50;
+    const guide = document.querySelector('#joystick-guide');
+    const stick = document.querySelector('#joystick-stick');
+
+    // 位置と動きの変数
+    let posX = window.innerWidth / 2 - 150; 
+    let posZ = window.innerHeight / 2 - 150;
     let rotation = 180;
-    const walkSpeed = 3; // 少し速くしました
-    const turnSpeed = 4;
-    const keys = {};
+    const walkSpeed = 5; 
+    
+    // 操作の状態
+    let joystickActive = false;
+    let startX = 0, startY = 0;
+    let moveX = 0, moveY = 0;
+    const maxDistance = 50; // 引っ張れる最大距離
 
-    // スクロール禁止のおまじない
-    window.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+    // --- スマホ・マウス操作のイベント ---
 
-    function setupButton(id, keyName) {
-        const el = document.querySelector(id);
-        if (!el) return;
-        const start = (e) => { e.preventDefault(); keys[keyName] = true; };
-        const end = () => { keys[keyName] = false; model.animationName = "idle"; };
-        el.addEventListener('touchstart', start, {passive: false});
-        el.addEventListener('touchend', end);
-        el.addEventListener('mousedown', start);
-        el.addEventListener('mouseup', end);
-        el.addEventListener('mouseleave', end);
-    }
+    const startAction = (e) => {
+        joystickActive = true;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX;
+        startY = clientY;
 
-    setupButton('#btn-up', 'ArrowUp');
-    setupButton('#btn-down', 'ArrowDown');
-    setupButton('#btn-left', 'ArrowLeft');
-    setupButton('#btn-right', 'ArrowRight');
+        // ガイドを表示
+        guide.style.display = 'block';
+        guide.style.left = `${startX - 50}px`;
+        guide.style.top = `${startY - 50}px`;
+    };
 
-    window.addEventListener('keydown', e => keys[e.key] = true);
-    window.addEventListener('keyup', e => {
-        keys[e.key] = false;
-        if(!keys['ArrowUp'] && !keys['ArrowDown'] && !keys['ArrowLeft'] && !keys['ArrowRight']){
-            model.animationName = "idle";
+    const moveAction = (e) => {
+        if (!joystickActive) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        let diffX = clientX - startX;
+        let diffY = clientY - startY;
+
+        // 距離制限
+        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+        if (distance > maxDistance) {
+            diffX = (diffX / distance) * maxDistance;
+            diffY = (diffY / distance) * maxDistance;
         }
-    });
 
+        moveX = diffX;
+        moveY = diffY;
+
+        // スティックの見た目を動かす
+        stick.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    };
+
+    const endAction = () => {
+        joystickActive = false;
+        moveX = 0; moveY = 0;
+        guide.style.display = 'none';
+        model.animationName = "idle";
+    };
+
+    // イベント登録
+    window.addEventListener('touchstart', (e) => { e.preventDefault(); startAction(e); }, { passive: false });
+    window.addEventListener('touchmove', (e) => { e.preventDefault(); moveAction(e); }, { passive: false });
+    window.addEventListener('touchend', endAction);
+
+    window.addEventListener('mousedown', startAction);
+    window.addEventListener('mousemove', moveAction);
+    window.addEventListener('mouseup', endAction);
+
+    // --- メインループ（キャラの移動更新） ---
     function update() {
-        let moving = false;
-        if (keys['ArrowLeft'] || keys['a']) { rotation += turnSpeed; }
-        if (keys['ArrowRight'] || keys['d']) { rotation -= turnSpeed; }
-
-        const rad = (rotation * Math.PI) / 180;
-        if (keys['ArrowUp'] || keys['w']) {
-            posX += Math.sin(rad) * walkSpeed;
-            posZ += Math.cos(rad) * walkSpeed;
-            moving = true;
+        if (joystickActive) {
+            const distance = Math.sqrt(moveX * moveX + moveY * moveY);
+            
+            if (distance > 5) { // 少しでも動かしたら
+                // 1. 向きを計算（指を動かした方向）
+                rotation = Math.atan2(moveX, moveY) * (180 / Math.PI) + 180;
+                
+                // 2. 移動（引っ張る量に応じて速度変化）
+                posX += (moveX / maxDistance) * walkSpeed;
+                posZ += (moveY / maxDistance) * walkSpeed;
+                
+                model.animationName = "walk";
+            }
         }
-        if (keys['ArrowDown'] || keys['s']) {
-            posX -= Math.sin(rad) * walkSpeed;
-            posZ -= Math.cos(rad) * walkSpeed;
-            moving = true;
-        }
 
-        // 壁の判定
-        posX = Math.max(0, Math.min(window.innerWidth - 100, posX));
-        posZ = Math.max(0, Math.min(window.innerHeight - 100, posZ));
+        // 3. エリア制限（画面外に出ないように）
+        posX = Math.max(0, Math.min(window.innerWidth - 300, posX));
+        posZ = Math.max(0, Math.min(window.innerHeight - 300, posZ));
 
-        if (moving) { model.animationName = "walk"; }
-
+        // 4. モデルに反映
         model.style.left = `${posX}px`;
         model.style.top = `${posZ}px`;
         model.orientation = `0deg 0deg ${rotation}deg`;
 
         requestAnimationFrame(update);
     }
+
     update();
 </script>
 </body>
