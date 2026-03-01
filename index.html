@@ -45,7 +45,7 @@
 <script>
     const model = document.querySelector('#player');
     let posX = 0, posZ = 0, rotation = 180;
-    const speed = 5; // 移動速度
+    const speed = 3; // 移動速度
     const keys = {};
 
     // キー入力の状態を記録
@@ -59,10 +59,10 @@
         let moving = false;
         
         // 十字キーまたはWASD
-        if (keys['ArrowUp'] || keys['w']) { posZ -= speed; rotation = 0; moving = true; }
-        if (keys['ArrowDown'] || keys['s']) { posZ += speed; rotation = 0; moving = true; }
-        if (keys['ArrowLeft'] || keys['a']) { posX -= 0; rotation += speed; moving = true; }
-        if (keys['ArrowRight'] || keys['d']) { posX += 0; rotation -= speed; moving = true; }
+        if (keys['ArrowUp'] || keys['w']) { posZ -= speed; moving = true; }
+        if (keys['ArrowDown'] || keys['s']) { posZ += speed; moving = true; }
+        if (keys['ArrowLeft'] || keys['a']) { posX -= 0; rotation += (speed*2); moving = true; }
+        if (keys['ArrowRight'] || keys['d']) { posX += 0; rotation -= (speed*2); moving = true; }
 
         if (moving) {
             model.animationName = "walk"; // 動いている時は歩行アニメ
