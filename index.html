@@ -21,7 +21,7 @@
 
         /* キャラクターの表示サイズ */
         #player {
-            width: 10%; height: 10%;
+            width: 30%; height: 30%;
             position: absolute; top: 0; left: 0;
             --poster-color: transparent;
         }
@@ -37,7 +37,6 @@
         animation-name="idle"
         shadow-intensity="1"
         environment-image="neutral"
-        camera-controls
         touch-action="none">
     </model-viewer>
 </div>
@@ -46,7 +45,7 @@
     const model = document.querySelector('#player');
     let posX = window.innerWidth / 2, posZ = window.innerHeight / 2; // 初期位置を画面中央付近に
     let rotation = 180; // 向き（角度）
-    const walkSpeed = 3; // 前進速度
+    const walkSpeed = 1; // 前進速度
     const turnSpeed = 3; // 回転速度
     const keys = {};
 
