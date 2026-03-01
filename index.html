@@ -2,10 +2,31 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>もちもちの子の大冒険</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: #e0f7fa; } /* 空の色 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            /* 画面からはみ出た部分を隠し、スクロールを禁止する */
+            overflow: hidden; 
+            /* 指で引っ張った時の「バウンド（跳ね返り）」を防止 */
+            overscroll-behavior: none; 
+            /* タッチ操作のデフォルト挙動（ズームやスクロール）を無効化 */
+            touch-action: none; 
+        }
+        
+        /* 操作ボタンだけはタッチに反応するように、個別に設定 */
+        .btn {
+            touch-action: manipulation; 
+            /* 長押しによるメニュー（コピーなど）を禁止 */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
         h1 { color: #6495ed; animation: bounce 1s infinite alternate; }
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-20px); } }
         
@@ -49,6 +70,37 @@
     const turnSpeed = 3; // 回転速度
     const keys = {};
 
+    // ★ここに「2のやつ（ボタン設定）」を入れる
+    function setupButton(id, keyName) {
+        const el = document.querySelector(id);
+        if (!el) return;
+
+        // スマホ用（タッチ）
+        el.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); // ズームやスクロールを防ぐ
+            keys[keyName] = true; 
+        }, {passive: false});
+        el.addEventListener('touchend', () => { 
+            keys[keyName] = false; 
+            model.animationName = "idle"; 
+        });
+
+        // PCでマウスでポチポチしたい用
+        el.addEventListener('mousedown', () => { keys[keyName] = true; });
+        el.addEventListener('mouseup', () => { 
+            keys[keyName] = false; 
+            model.animationName = "idle"; 
+        });
+        // ボタンの外にマウスが外れた時も止まるように
+        el.addEventListener('mouseleave', () => { keys[keyName] = false; });
+    }
+
+    // 各ボタンを紐付け
+    setupButton('#btn-up', 'ArrowUp');
+    setupButton('#btn-down', 'ArrowDown');
+    setupButton('#btn-left', 'ArrowLeft');
+    setupButton('#btn-right', 'ArrowRight');
+    
     // エリアの制限（壁）
     const minX = 0, maxX = window.innerWidth - 100;
     const minZ = 0, maxZ = window.innerHeight - 100;
@@ -63,6 +115,11 @@
     });
 
     function update() {
+        // 画面全体のタッチ移動（スクロール）をイベントレベルで禁止する
+        window.addEventListener('touchmove', (e) => {
+            // ボタン操作以外の場所でのスクロールを防止
+            e.preventDefault();
+        }, { passive: false });
         let moving = false;
         
         // 左右で回転（向きを変える）
