@@ -64,7 +64,7 @@
         <model-viewer id="sign01" 
             src="signboard.glb" 
             style="position:absolute; left:200px; top:200px; width:150px; height:150px;"
-            orientation="0deg 90deg 0deg">
+            orientation="90deg 0deg 0deg">
         </model-viewer>
     </div>
 
@@ -139,7 +139,7 @@
 
     // ボタンの処理（バッククォートを使うことでリンクを安全に記述）
     actionBtn.addEventListener('click', () => {
-        msgText.innerHTML = `看板にはこう書かれている：<br>「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは <a href="https://x.com/aokujira_iriam" target="_blank">こちら</a>」`;
+        msgText.innerHTML = `<br>「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは <a href="https://x.com/aokujira_iriam" target="_blank">こちら</a>」`;
         msgWindow.style.display = 'block';
         joystickActive = false; // 読むときは止める
     });
