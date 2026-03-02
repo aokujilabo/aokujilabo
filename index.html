@@ -20,11 +20,12 @@
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
         
         #stage {
-            width: 100vw; height: 100vh;
+            width: 2000px; /* 画面より大きく作る */
+            height: 2000px;
             background-color: #8bc34a;
-            background-image: radial-gradient(#9ccc65 20%, transparent 20%), 
-                              radial-gradient(#9ccc65 20%, transparent 20%);
-            background-size: 50px 50px; background-position: 0 0, 25px 25px;
+            position: absolute;
+            /* ここがポイント：地面そのものを少し傾けて奥行き感を出す */
+            transform: rotateX(0deg) rotateZ(0deg); 
         }
 
         #player {
@@ -55,10 +56,11 @@
     <div id="stage">
         <model-viewer id="player"
             src="first_kemono_animation.glb" 
-            autoplay 
-            animation-name="idle"
-            shadow-intensity="1" 
-            environment-image="neutral">
+            camera-orbit="45deg 55deg 2.5m"
+            field-of-view="20deg"
+            interaction-prompt="none"
+            disable-zoom
+            disable-pan>
         </model-viewer>
 
         <model-viewer id="sign01" 
