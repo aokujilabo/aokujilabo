@@ -3,93 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>もちもち箱庭ワールド</title>
+    <title>もちもちの子の大冒険 - 基本Ver.</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; overscroll-behavior: none; touch-action: none;
-            background: #aad4ff; /* 空の色 */
+            background: #e0f7fa;
         }
         
-        h1 { 
-            position: absolute; top: 10px; width: 100%; text-align: center;
-            color: #ffffff; font-family: sans-serif; z-index: 100;
-            text-shadow: 2px 2px 0px #6495ed; pointer-events: none;
-        }
-
-        /* 箱庭の土台 */
         #stage {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 1000px; height: 1000px; /* 十分に広く */
+            width: 100vw; height: 100vh;
             background-color: #8bc34a;
-            border-radius: 50%; /* 円形の島にする */
-            border: 10px solid #7cb342;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
-            background-image: radial-gradient(#9ccc65 20%, transparent 20%);
-            background-size: 40px 40px;
+            background-image: radial-gradient(#9ccc65 20%, transparent 20%), 
+                              radial-gradient(#9ccc65 20%, transparent 20%);
+            background-size: 50px 50px; background-position: 0 0, 25px 25px;
         }
 
         /* キャラクター */
         #player {
-            width: 160px; height: 160px;
-            position: absolute;
-            top: 0; left: 0;
-            --poster-color: transparent;
-            pointer-events: none;
+            width: 150px; height: 150px;
+            position: absolute; top: 0; left: 0;
+            pointer-events: none; /* キャラを直接触って回転するのを防止 */
             z-index: 50;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
         }
 
         /* 看板 */
-        #sign01 {
-            width: 140px; height: 140px;
+        #signboard {
+            width: 150px; height: 150px;
             position: absolute;
-            pointer-events: none;
             z-index: 40;
         }
 
-        /* 操作UI */
+        /* ジョイスティック */
         #joystick-guide {
             position: fixed; width: 100px; height: 100px;
-            border: 3px solid rgba(255,255,255,0.8); border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5); border-radius: 50%;
             display: none; pointer-events: none; z-index: 1000;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
         }
         #joystick-stick {
             position: absolute; width: 40px; height: 40px;
-            background: #ffffff; border-radius: 50%;
+            background: rgba(255,255,255,0.8); border-radius: 50%;
             top: 30px; left: 30px;
         }
 
+        /* UI */
         #action-btn {
-            display: none; position: fixed; bottom: 100px; left: 50%; 
-            transform: translateX(-50%); padding: 15px 40px; border-radius: 50px; 
-            background: #ff9800; color: white; font-weight: bold; font-size: 18px;
-            border: 4px solid white; z-index: 1000; cursor: pointer;
-        }
-        
-        #msg-window {
-            display: none; position: fixed; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); width: 80%; max-width: 350px; 
-            background: white; border: 5px solid #6495ed; border-radius: 20px; 
-            padding: 20px; z-index: 2000; text-align: center;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>AOKUJILab. Island</h1>
-
-    <div id="stage">
-        <model-viewer id="player"
-            src="first_kemono_animation.glb" 
-            autoplay 
-            animation-name="idle"
-            camera-orbit="45deg 55deg 2.5m"
-            field-of-view="25deg"
-            interaction-prompt="none"
-            disable-zoom>
-        </model-viewer>
+            display: none; position: fixed; bottom: 120px; left: 50%; 
+            transform: translateX(-50%); padding: 15px 30px; border-radius: 3
