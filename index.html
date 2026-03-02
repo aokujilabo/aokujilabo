@@ -3,48 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>もちもちクォータービュー大冒険</title>
+    <title>もちもち箱庭ワールド</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; overscroll-behavior: none; touch-action: none;
-            background: #aad4ff; /* 空の色を少し明るく */
+            background: #aad4ff; /* 空の色 */
         }
         
         h1 { 
             position: absolute; top: 10px; width: 100%; text-align: center;
-            color: #ffffff; font-family: 'Arial', sans-serif; z-index: 10;
-            text-shadow: 2px 2px 0px #6495ed;
-            pointer-events: none;
+            color: #ffffff; font-family: sans-serif; z-index: 100;
+            text-shadow: 2px 2px 0px #6495ed; pointer-events: none;
         }
 
+        /* 箱庭の土台 */
         #stage {
-            width: 100vw; height: 100vh;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1000px; height: 1000px; /* 十分に広く */
             background-color: #8bc34a;
-            background-image: 
-                linear-gradient(45deg, #9ccc65 25%, transparent 25%, transparent 75%, #9ccc65 75%, #9ccc65),
-                linear-gradient(45deg, #9ccc65 25%, transparent 25%, transparent 75%, #9ccc65 75%, #9ccc65);
-            background-size: 60px 60px;
-            background-position: 0 0, 30px 30px;
+            border-radius: 50%; /* 円形の島にする */
+            border: 10px solid #7cb342;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
+            background-image: radial-gradient(#9ccc65 20%, transparent 20%);
+            background-size: 40px 40px;
         }
 
-        /* キャラクター：pointer-events: noneで操作をジョイスティックに集中 */
+        /* キャラクター */
         #player {
-            width: 200px; height: 200px;
-            position: absolute; top: 0; left: 0;
+            width: 160px; height: 160px;
+            position: absolute;
+            top: 0; left: 0;
             --poster-color: transparent;
             pointer-events: none;
             z-index: 50;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
         }
 
-        /* 看板もmodel-viewerとして配置 */
-        .decoration {
-            width: 150px; height: 150px;
+        /* 看板 */
+        #sign01 {
+            width: 140px; height: 140px;
             position: absolute;
             pointer-events: none;
+            z-index: 40;
         }
 
+        /* 操作UI */
         #joystick-guide {
             position: fixed; width: 100px; height: 100px;
             border: 3px solid rgba(255,255,255,0.8); border-radius: 50%;
@@ -55,30 +62,26 @@
             position: absolute; width: 40px; height: 40px;
             background: #ffffff; border-radius: 50%;
             top: 30px; left: 30px;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
         }
 
-        /* UI周り */
         #action-btn {
-            display: none; position: fixed; bottom: 120px; left: 50%; 
+            display: none; position: fixed; bottom: 100px; left: 50%; 
             transform: translateX(-50%); padding: 15px 40px; border-radius: 50px; 
-            background: #ff9800; color: white; font-weight: bold; font-size: 20px;
-            border: 4px solid white; z-index: 1000; box-shadow: 0 8px 0 #e68a00;
-            cursor: pointer;
+            background: #ff9800; color: white; font-weight: bold; font-size: 18px;
+            border: 4px solid white; z-index: 1000; cursor: pointer;
         }
         
         #msg-window {
             display: none; position: fixed; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); width: 85%; max-width: 400px; 
-            background: white; border: 6px solid #6495ed; border-radius: 20px; 
-            padding: 25px; z-index: 2000; text-align: center;
-            box-shadow: 0 10px 0 rgba(0,0,0,0.1);
+            transform: translate(-50%, -50%); width: 80%; max-width: 350px; 
+            background: white; border: 5px solid #6495ed; border-radius: 20px; 
+            padding: 20px; z-index: 2000; text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <h1>AOKUJILab. World</h1>
+    <h1>AOKUJILab. Island</h1>
 
     <div id="stage">
         <model-viewer id="player"
@@ -88,11 +91,5 @@
             camera-orbit="45deg 55deg 2.5m"
             field-of-view="25deg"
             interaction-prompt="none"
-            disable-zoom
-            shadow-intensity="1">
+            disable-zoom>
         </model-viewer>
-
-        <model-viewer id="sign01" class="decoration"
-            src="signboard.glb" 
-            style="left:250px; top:250px;"
-            camera-orbit="45deg 55deg 2.5m
