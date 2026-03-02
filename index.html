@@ -3,193 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>もちもちの子の大冒険</title>
+    <title>もちもちクォータービュー大冒険</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; overscroll-behavior: none; touch-action: none;
-            background: #e0f7fa;
+            background: #aad4ff; /* 空の色を少し明るく */
         }
         
         h1 { 
             position: absolute; top: 10px; width: 100%; text-align: center;
-            color: #6495ed; font-family: sans-serif; z-index: 10;
-            animation: bounce 1s infinite alternate; 
-        }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
-        
-        #stage {
-            width: 2000px; /* 画面より大きく作る */
-            height: 2000px;
-            background-color: #8bc34a;
-            position: absolute;
-            /* ここがポイント：地面そのものを少し傾けて奥行き感を出す */
-            transform: rotateX(0deg) rotateZ(0deg); 
+            color: #ffffff; font-family: 'Arial', sans-serif; z-index: 10;
+            text-shadow: 2px 2px 0px #6495ed;
+            pointer-events: none;
         }
 
+        #stage {
+            width: 100vw; height: 100vh;
+            background-color: #8bc34a;
+            background-image: 
+                linear-gradient(45deg, #9ccc65 25%, transparent 25%, transparent 75%, #9ccc65 75%, #9ccc65),
+                linear-gradient(45deg, #9ccc65 25%, transparent 25%, transparent 75%, #9ccc65 75%, #9ccc65);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        /* キャラクター：pointer-events: noneで操作をジョイスティックに集中 */
         #player {
-            width: 150px; height: 150px;
+            width: 200px; height: 200px;
             position: absolute; top: 0; left: 0;
             --poster-color: transparent;
             pointer-events: none;
             z-index: 50;
         }
 
+        /* 看板もmodel-viewerとして配置 */
+        .decoration {
+            width: 150px; height: 150px;
+            position: absolute;
+            pointer-events: none;
+        }
+
         #joystick-guide {
             position: fixed; width: 100px; height: 100px;
-            border: 2px solid rgba(255,255,255,0.5); border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.8); border-radius: 50%;
             display: none; pointer-events: none; z-index: 1000;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.2);
         }
         #joystick-stick {
             position: absolute; width: 40px; height: 40px;
-            background: rgba(255,255,255,0.8); border-radius: 50%;
+            background: #ffffff; border-radius: 50%;
             top: 30px; left: 30px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+        }
+
+        /* UI周り */
+        #action-btn {
+            display: none; position: fixed; bottom: 120px; left: 50%; 
+            transform: translateX(-50%); padding: 15px 40px; border-radius: 50px; 
+            background: #ff9800; color: white; font-weight: bold; font-size: 20px;
+            border: 4px solid white; z-index: 1000; box-shadow: 0 8px 0 #e68a00;
+            cursor: pointer;
+        }
+        
+        #msg-window {
+            display: none; position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); width: 85%; max-width: 400px; 
+            background: white; border: 6px solid #6495ed; border-radius: 20px; 
+            padding: 25px; z-index: 2000; text-align: center;
+            box-shadow: 0 10px 0 rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
-    <h1>Hello!<br>Welcome to AOKUJILab.</h1>
+    <h1>AOKUJILab. World</h1>
 
     <div id="stage">
         <model-viewer id="player"
             src="first_kemono_animation.glb" 
+            autoplay 
+            animation-name="idle"
             camera-orbit="45deg 55deg 2.5m"
-            field-of-view="20deg"
+            field-of-view="25deg"
             interaction-prompt="none"
             disable-zoom
-            disable-pan>
+            shadow-intensity="1">
         </model-viewer>
 
-        <model-viewer id="sign01" 
+        <model-viewer id="sign01" class="decoration"
             src="signboard.glb" 
-            style="position:absolute; left:200px; top:200px; width:150px; height:150px;"
-            orientation="0deg 0deg 90deg">
-        </model-viewer>
-    </div>
-
-    <button id="action-btn" style="display:none; position:fixed; bottom:120px; left:50%; transform:translateX(-50%); padding:15px 30px; border-radius:30px; background:#ff9800; color:white; font-weight:bold; border:none; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3);">しらべる</button>
-    
-    <div id="msg-window" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:80%; max-width:400px; background:rgba(255,255,255,0.95); border:4px solid #6495ed; border-radius:15px; padding:20px; z-index:2000; text-align:center;">
-        <p id="msg-text" style="font-size:18px; color:#333; line-height:1.6;"></p>
-        <button id="close-btn" style="padding:10px 20px; background:#6495ed; color:white; border:none; border-radius:5px; cursor:pointer;">とじる</button>
-    </div>
-
-    <div id="joystick-guide"><div id="joystick-stick"></div></div>
-
-<script>
-    const model = document.querySelector('#player');
-    const guide = document.querySelector('#joystick-guide');
-    const stick = document.querySelector('#joystick-stick');
-    const actionBtn = document.querySelector('#action-btn');
-    const msgWindow = document.querySelector('#msg-window');
-    const msgText = document.querySelector('#msg-text');
-    const closeBtn = document.querySelector('#close-btn');
-
-    // 位置と動き
-    let posX = window.innerWidth / 2 - 75; 
-    let posZ = window.innerHeight / 2 - 75;
-    let rotation = 180;
-    const walkSpeed = 5; 
-    
-    // 操作状態
-    let joystickActive = false;
-    let startX = 0, startY = 0;
-    let moveX = 0, moveY = 0;
-    const maxDistance = 50;
-
-    // 看板の設定（HTMLの位置 left:200px, top:200px に合わせておく）
-    const signPos = { x: 200, z: 200 }; 
-    const triggerDist = 80;
-
-    const startAction = (e) => {
-        if(msgWindow.style.display === 'block') return; // ウィンドウが開いてる時は動かさない
-        joystickActive = true;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        startX = clientX;
-        startY = clientY;
-        guide.style.display = 'block';
-        guide.style.left = `${startX - 50}px`;
-        guide.style.top = `${startY - 50}px`;
-    };
-
-    const moveAction = (e) => {
-        if (!joystickActive) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        let diffX = clientX - startX;
-        let diffY = clientY - startY;
-        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-        if (distance > maxDistance) {
-            diffX = (diffX / distance) * maxDistance;
-            diffY = (diffY / distance) * maxDistance;
-        }
-        moveX = diffX;
-        moveY = diffY;
-        stick.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    };
-
-    const endAction = () => {
-        joystickActive = false;
-        moveX = 0; moveY = 0;
-        guide.style.display = 'none';
-        model.animationName = "idle";
-    };
-
-    // ボタンの処理（バッククォートを使うことでリンクを安全に記述）
-    actionBtn.addEventListener('click', () => {
-        msgText.innerHTML = `<br>「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは <a href="https://x.com/aokujira_iriam" target="_blank">こちら</a>」`;
-        msgWindow.style.display = 'block';
-        joystickActive = false; // 読むときは止める
-    });
-    
-    closeBtn.addEventListener('click', () => {
-        msgWindow.style.display = 'none';
-    });
-
-    window.addEventListener('touchstart', (e) => { if(e.target.tagName !== 'BUTTON') e.preventDefault(); startAction(e); }, { passive: false });
-    window.addEventListener('touchmove', (e) => { e.preventDefault(); moveAction(e); }, { passive: false });
-    window.addEventListener('touchend', endAction);
-    window.addEventListener('mousedown', startAction);
-    window.addEventListener('mousemove', moveAction);
-    window.addEventListener('mouseup', endAction);
-
-    function update() {
-        if (joystickActive) {
-            const distance = Math.sqrt(moveX * moveX + moveY * moveY);
-            if (distance > 5) {
-                rotation = Math.atan2(moveX, moveY) * (180 / Math.PI);
-                posX += (moveX / maxDistance) * walkSpeed;
-                posZ += (moveY / maxDistance) * walkSpeed;
-                model.animationName = "walk";
-            }
-        }
-
-        posX = Math.max(0, Math.min(window.innerWidth - 150, posX));
-        posZ = Math.max(0, Math.min(window.innerHeight - 150, posZ));
-
-        model.style.left = `${posX}px`;
-        model.style.top = `${posZ}px`;
-        model.orientation = `0deg 0deg ${rotation}deg`;
-
-        // 距離判定
-        const dx = posX - signPos.x;
-        const dz = posZ - signPos.z;
-        const dist = Math.sqrt(dx * dx + dz * dz);
-    
-        if (dist < triggerDist) {
-            actionBtn.style.display = 'block';
-        } else {
-            actionBtn.style.display = 'none';
-            if(msgWindow.style.display === 'block') msgWindow.style.display = 'none';
-        }
-
-        requestAnimationFrame(update);
-    }
-    update();
-</script>
-</body>
-</html>
+            style="left:250px; top:250px;"
+            camera-orbit="45deg 55deg 2.5m
