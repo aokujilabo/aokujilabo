@@ -6,11 +6,10 @@
     <title>もちもちの子の大冒険</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
-        /* 1. 画面を固定してスクロールさせない設定 */
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; overscroll-behavior: none; touch-action: none;
-            background: #e0f7fa; /* 空の色 */
+            background: #e0f7fa;
         }
         
         h1 { 
@@ -20,24 +19,22 @@
         }
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
         
-        /* 2. 地面（エリア）の設定 */
         #stage {
             width: 100vw; height: 100vh;
-            background-color: #8bc34a; /* 草原の色 */
+            background-color: #8bc34a;
             background-image: radial-gradient(#9ccc65 20%, transparent 20%), 
                               radial-gradient(#9ccc65 20%, transparent 20%);
             background-size: 50px 50px; background-position: 0 0, 25px 25px;
         }
 
-        /* 3. キャラクターの表示設定 */
         #player {
-            width: 150px; height: 150px; /* サイズはお好みで */
+            width: 150px; height: 150px;
             position: absolute; top: 0; left: 0;
             --poster-color: transparent;
-            pointer-events: none; /* キャラを直接触って回転するのを防止 */
+            pointer-events: none;
+            z-index: 50;
         }
 
-        /* 4. ジョイスティックの見た目（触った時に出るガイド） */
         #joystick-guide {
             position: fixed; width: 100px; height: 100px;
             border: 2px solid rgba(255,255,255,0.5); border-radius: 50%;
@@ -63,44 +60,55 @@
             shadow-intensity="1" 
             environment-image="neutral">
         </model-viewer>
-        <model-viewer id="sign01" src="signboard.glb" style="position:absolute; left:200px; top:200px; width:150px; height:150px; rotation:90%;"></model-viewer>
+
+        <model-viewer id="sign01" 
+            src="signboard.glb" 
+            style="position:absolute; left:200px; top:200px; width:150px; height:150px;"
+            orientation="0deg 90deg 0deg">
+        </model-viewer>
     </div>
+
     <button id="action-btn" style="display:none; position:fixed; bottom:120px; left:50%; transform:translateX(-50%); padding:15px 30px; border-radius:30px; background:#ff9800; color:white; font-weight:bold; border:none; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3);">しらべる</button>
     
     <div id="msg-window" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:80%; max-width:400px; background:rgba(255,255,255,0.95); border:4px solid #6495ed; border-radius:15px; padding:20px; z-index:2000; text-align:center;">
         <p id="msg-text" style="font-size:18px; color:#333; line-height:1.6;"></p>
-        <button onclick="closeWindow()" style="padding:10px 20px; background:#6495ed; color:white; border:none; border-radius:5px;">とじる</button>
+        <button id="close-btn" style="padding:10px 20px; background:#6495ed; color:white; border:none; border-radius:5px; cursor:pointer;">とじる</button>
     </div>
+
     <div id="joystick-guide"><div id="joystick-stick"></div></div>
 
 <script>
     const model = document.querySelector('#player');
-    const sign01 = document.querySelector('#sign01');
     const guide = document.querySelector('#joystick-guide');
     const stick = document.querySelector('#joystick-stick');
+    const actionBtn = document.querySelector('#action-btn');
+    const msgWindow = document.querySelector('#msg-window');
+    const msgText = document.querySelector('#msg-text');
+    const closeBtn = document.querySelector('#close-btn');
 
-    // 位置と動きの変数
-    let posX = window.innerWidth / 2 - 150; 
-    let posZ = window.innerHeight / 2 - 150;
+    // 位置と動き
+    let posX = window.innerWidth / 2 - 75; 
+    let posZ = window.innerHeight / 2 - 75;
     let rotation = 180;
     const walkSpeed = 5; 
     
-    // 操作の状態
+    // 操作状態
     let joystickActive = false;
     let startX = 0, startY = 0;
     let moveX = 0, moveY = 0;
-    const maxDistance = 50; // 引っ張れる最大距離
+    const maxDistance = 50;
 
-    // --- スマホ・マウス操作のイベント ---
+    // 看板の設定（HTMLの位置 left:200px, top:200px に合わせておく）
+    const signPos = { x: 200, z: 200 }; 
+    const triggerDist = 80;
 
     const startAction = (e) => {
+        if(msgWindow.style.display === 'block') return; // ウィンドウが開いてる時は動かさない
         joystickActive = true;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         startX = clientX;
         startY = clientY;
-
-        // ガイドを表示
         guide.style.display = 'block';
         guide.style.left = `${startX - 50}px`;
         guide.style.top = `${startY - 50}px`;
@@ -110,21 +118,15 @@
         if (!joystickActive) return;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
         let diffX = clientX - startX;
         let diffY = clientY - startY;
-
-        // 距離制限
         const distance = Math.sqrt(diffX * diffX + diffY * diffY);
         if (distance > maxDistance) {
             diffX = (diffX / distance) * maxDistance;
             diffY = (diffY / distance) * maxDistance;
         }
-
         moveX = diffX;
         moveY = diffY;
-
-        // スティックの見た目を動かす
         stick.style.transform = `translate(${moveX}px, ${moveY}px)`;
     };
 
@@ -135,55 +137,38 @@
         model.animationName = "idle";
     };
 
-    const signPos = { x: 200, z: 200 }; // 看板を置いた位置に合わせて調整！
-    const triggerDist = 70; // 反応する距離
-    
-    const actionBtn = document.querySelector('#action-btn');
-    const msgWindow = document.querySelector('#msg-window');
-    const msgText = document.querySelector('#msg-text');
-    
-    // ボタンを押した時の処理
+    // ボタンの処理（バッククォートを使うことでリンクを安全に記述）
     actionBtn.addEventListener('click', () => {
-        msgText.innerText = "看板にはこう書かれている：\n「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは<a href="https://x.com/aokujira_iriam ">こちら</a>」";
+        msgText.innerHTML = `看板にはこう書かれている：<br>「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは <a href="https://x.com/aokujira_iriam" target="_blank">こちら</a>」`;
         msgWindow.style.display = 'block';
+        joystickActive = false; // 読むときは止める
     });
     
-    function closeWindow() {
+    closeBtn.addEventListener('click', () => {
         msgWindow.style.display = 'none';
-    }
+    });
 
-    // イベント登録
-    window.addEventListener('touchstart', (e) => { e.preventDefault(); startAction(e); }, { passive: false });
+    window.addEventListener('touchstart', (e) => { if(e.target.tagName !== 'BUTTON') e.preventDefault(); startAction(e); }, { passive: false });
     window.addEventListener('touchmove', (e) => { e.preventDefault(); moveAction(e); }, { passive: false });
     window.addEventListener('touchend', endAction);
-
     window.addEventListener('mousedown', startAction);
     window.addEventListener('mousemove', moveAction);
     window.addEventListener('mouseup', endAction);
 
-    // --- メインループ（キャラの移動更新） ---
     function update() {
         if (joystickActive) {
             const distance = Math.sqrt(moveX * moveX + moveY * moveY);
-            
-            if (distance > 5) { // 少しでも動かしたら
-                // 1. 向きを計算（指を動かした方向）
-                // rotation = Math.atan2(moveX, moveY) * (180 / Math.PI) + 180;
+            if (distance > 5) {
                 rotation = Math.atan2(moveX, moveY) * (180 / Math.PI);
-                
-                // 2. 移動（引っ張る量に応じて速度変化）
                 posX += (moveX / maxDistance) * walkSpeed;
                 posZ += (moveY / maxDistance) * walkSpeed;
-                
                 model.animationName = "walk";
             }
         }
 
-        // 3. エリア制限（画面外に出ないように）
-        posX = Math.max(0, Math.min(window.innerWidth - 300, posX));
-        posZ = Math.max(0, Math.min(window.innerHeight - 300, posZ));
+        posX = Math.max(0, Math.min(window.innerWidth - 150, posX));
+        posZ = Math.max(0, Math.min(window.innerHeight - 150, posZ));
 
-        // 4. モデルに反映
         model.style.left = `${posX}px`;
         model.style.top = `${posZ}px`;
         model.orientation = `0deg 0deg ${rotation}deg`;
@@ -194,15 +179,14 @@
         const dist = Math.sqrt(dx * dx + dz * dz);
     
         if (dist < triggerDist) {
-            actionBtn.style.display = 'block'; // 近づいたらボタン出現
+            actionBtn.style.display = 'block';
         } else {
-            actionBtn.style.display = 'none'; // 離れたら消える
-            msgWindow.style.display = 'none'; // 離れたらウィンドウも閉じる
+            actionBtn.style.display = 'none';
+            if(msgWindow.style.display === 'block') msgWindow.style.display = 'none';
         }
 
         requestAnimationFrame(update);
     }
-
     update();
 </script>
 </body>
