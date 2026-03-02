@@ -63,7 +63,7 @@
             shadow-intensity="1" 
             environment-image="neutral">
         </model-viewer>
-        <model-viewer id="sign01" src="signboard.glb" style="position:absolute; left:200px; top:200px; width:150px; height:150px;"></model-viewer>
+        <model-viewer id="sign01" src="signboard.glb" style="position:absolute; left:200px; top:200px; width:150px; height:150px; rotation:90%"></model-viewer>
     </div>
     <button id="action-btn" style="display:none; position:fixed; bottom:120px; left:50%; transform:translateX(-50%); padding:15px 30px; border-radius:30px; background:#ff9800; color:white; font-weight:bold; border:none; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3);">しらべる</button>
     
@@ -144,7 +144,7 @@
     
     // ボタンを押した時の処理
     actionBtn.addEventListener('click', () => {
-        msgText.innerText = "看板にはこう書かれている：\n「ようこそ！ここは AOKUJILab. です。Xへのリンクはこちら： https://x.com/your_id 」";
+        msgText.innerText = "看板にはこう書かれている：\n「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは<a href="https://x.com/aokujira_iriam ">こちら</a>」";
         msgWindow.style.display = 'block';
     });
     
