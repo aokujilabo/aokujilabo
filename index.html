@@ -2,192 +2,110 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>もちもちの子の大冒険</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <title>Three.js & Cannon.js Base</title>
     <style>
-        html, body {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; overscroll-behavior: none; touch-action: none;
-            background: #e0f7fa;
-        }
-        
-        h1 { 
-            position: absolute; top: 10px; width: 100%; text-align: center;
-            color: #6495ed; font-family: sans-serif; z-index: 10;
-            animation: bounce 1s infinite alternate; 
-        }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
-        
-        #stage {
-            width: 100vw; height: 100vh;
-            background-color: #8bc34a;
-            background-image: radial-gradient(#9ccc65 20%, transparent 20%), 
-                              radial-gradient(#9ccc65 20%, transparent 20%);
-            background-size: 50px 50px; background-position: 0 0, 25px 25px;
-        }
-
-        #player {
-            width: 150px; height: 150px;
-            position: absolute; top: 0; left: 0;
-            --poster-color: transparent;
-            pointer-events: none;
-            z-index: 50;
-        }
-
-        #joystick-guide {
-            position: fixed; width: 100px; height: 100px;
-            border: 2px solid rgba(255,255,255,0.5); border-radius: 50%;
-            display: none; pointer-events: none; z-index: 1000;
-            background: rgba(255,255,255,0.1);
-        }
-        #joystick-stick {
-            position: absolute; width: 40px; height: 40px;
-            background: rgba(255,255,255,0.8); border-radius: 50%;
-            top: 30px; left: 30px;
-        }
+        body { margin: 0; overflow: hidden; background: #aad4ff; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
 
-    <h1>Hello!<br>Welcome to AOKUJILab.</h1>
-
-    <div id="stage">
-        <model-viewer id="player"
-            src="first_kemono_animation.glb" 
-            autoplay 
-            animation-name="idle"
-            shadow-intensity="1" 
-            environment-image="neutral">
-        </model-viewer>
-
-        <model-viewer id="sign01" 
-            src="signboard.glb" 
-            style="position:absolute; left:200px; top:200px; width:150px; height:150px;"
-            orientation="0deg 0deg 90deg">
-        </model-viewer>
-    </div>
-
-    <button id="action-btn" style="display:none; position:fixed; bottom:120px; left:50%; transform:translateX(-50%); padding:15px 30px; border-radius:30px; background:#ff9800; color:white; font-weight:bold; border:none; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3);">しらべる</button>
-    
-    <div id="msg-window" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:80%; max-width:400px; background:rgba(255,255,255,0.95); border:4px solid #6495ed; border-radius:15px; padding:20px; z-index:2000; text-align:center;">
-        <p id="msg-text" style="font-size:18px; color:#333; line-height:1.6;"></p>
-        <button id="close-btn" style="padding:10px 20px; background:#6495ed; color:white; border:none; border-radius:5px; cursor:pointer;">とじる</button>
-    </div>
-
-    <div id="joystick-guide"><div id="joystick-stick"></div></div>
-
-<script>
-    const model = document.querySelector('#player');
-    const guide = document.querySelector('#joystick-guide');
-    const stick = document.querySelector('#joystick-stick');
-    const actionBtn = document.querySelector('#action-btn');
-    const msgWindow = document.querySelector('#msg-window');
-    const msgText = document.querySelector('#msg-text');
-    const closeBtn = document.querySelector('#close-btn');
-
-    // 位置と動き
-    let posX = window.innerWidth / 2 - 75; 
-    let posZ = window.innerHeight / 2 - 75;
-    let rotation = 180;
-    const walkSpeed = 5; 
-    
-    // 操作状態
-    let joystickActive = false;
-    let startX = 0, startY = 0;
-    let moveX = 0, moveY = 0;
-    const maxDistance = 50;
-
-    // 看板の設定（HTMLの位置 left:200px, top:200px に合わせておく）
-    const signPos = { x: 200, z: 200 }; 
-    const triggerDist = 80;
-
-    const startAction = (e) => {
-        if(msgWindow.style.display === 'block') return; // ウィンドウが開いてる時は動かさない
-        joystickActive = true;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        startX = clientX;
-        startY = clientY;
-        guide.style.display = 'block';
-        guide.style.left = `${startX - 50}px`;
-        guide.style.top = `${startY - 50}px`;
-    };
-
-    const moveAction = (e) => {
-        if (!joystickActive) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        let diffX = clientX - startX;
-        let diffY = clientY - startY;
-        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-        if (distance > maxDistance) {
-            diffX = (diffX / distance) * maxDistance;
-            diffY = (diffY / distance) * maxDistance;
-        }
-        moveX = diffX;
-        moveY = diffY;
-        stick.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    };
-
-    const endAction = () => {
-        joystickActive = false;
-        moveX = 0; moveY = 0;
-        guide.style.display = 'none';
-        model.animationName = "idle";
-    };
-
-    // ボタンの処理（バッククォートを使うことでリンクを安全に記述）
-    actionBtn.addEventListener('click', () => {
-        msgText.innerHTML = `看板にはこう書かれている：<br>「ようこそ！ここは AOKUJILab. です。<br>Xへのリンクは <a href="https://x.com/aokujira_iriam" target="_blank">こちら</a>」`;
-        msgWindow.style.display = 'block';
-        joystickActive = false; // 読むときは止める
-    });
-    
-    closeBtn.addEventListener('click', () => {
-        msgWindow.style.display = 'none';
-    });
-
-    window.addEventListener('touchstart', (e) => { if(e.target.tagName !== 'BUTTON') e.preventDefault(); startAction(e); }, { passive: false });
-    window.addEventListener('touchmove', (e) => { e.preventDefault(); moveAction(e); }, { passive: false });
-    window.addEventListener('touchend', endAction);
-    window.addEventListener('mousedown', startAction);
-    window.addEventListener('mousemove', moveAction);
-    window.addEventListener('mouseup', endAction);
-
-    function update() {
-        if (joystickActive) {
-            const distance = Math.sqrt(moveX * moveX + moveY * moveY);
-            if (distance > 5) {
-                rotation = Math.atan2(moveX, moveY) * (180 / Math.PI);
-                posX += (moveX / maxDistance) * walkSpeed;
-                posZ += (moveY / maxDistance) * walkSpeed;
-                model.animationName = "walk";
-            }
-        }
-
-        posX = Math.max(0, Math.min(window.innerWidth - 150, posX));
-        posZ = Math.max(0, Math.min(window.innerHeight - 150, posZ));
-
-        model.style.left = `${posX}px`;
-        model.style.top = `${posZ}px`;
-        model.orientation = `0deg 0deg ${rotation}deg`;
-
-        // 距離判定
-        const dx = posX - signPos.x;
-        const dz = posZ - signPos.z;
-        const dist = Math.sqrt(dx * dx + dz * dz);
-    
-        if (dist < triggerDist) {
-            actionBtn.style.display = 'block';
-        } else {
-            actionBtn.style.display = 'none';
-            if(msgWindow.style.display === 'block') msgWindow.style.display = 'none';
-        }
-
-        requestAnimationFrame(update);
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+        "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"
     }
-    update();
+}
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import * as CANNON from 'cannon-es';
+
+    // --- 1. Three.js の基本設定 ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xaad4ff);
+
+    // カメラ（クォータービュー風）
+    const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(12, 12, 12); // 斜め上遠くに配置
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true; // 影を有効化
+    document.body.appendChild(renderer.domElement);
+
+    // ライト
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    dirLight.position.set(5, 10, 5);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+
+    // --- 2. Cannon.js の物理世界設定 ---
+    const world = new CANNON.World();
+    world.gravity.set(0, -9.82, 0); // 重力
+
+    // 物理の床
+    const floorShape = new CANNON.Plane();
+    const floorBody = new CANNON.Body({ mass: 0 }); // 固定
+    floorBody.addShape(floorShape);
+    floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+    world.addBody(floorBody);
+
+    // 見ための床 (Three.js)
+    const floorMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(50, 50),
+        new THREE.MeshStandardMaterial({ color: 0x8bc34a })
+    );
+    floorMesh.rotation.x = -Math.PI / 2;
+    floorMesh.receiveShadow = true;
+    scene.add(floorMesh);
+
+    // --- 3. モデルの読み込み ---
+    const loader = new GLTFLoader();
+
+    // キャラクターの配置
+    loader.load('first_kemono_animation.glb', (gltf) => {
+        const player = gltf.scene;
+        player.position.set(0, 0, 0); // 中央
+        player.traverse(n => { if(n.isMesh) n.castShadow = true; });
+        scene.add(player);
+        console.log("キャラ読み込み完了");
+    });
+
+    // 看板の配置
+    loader.load('signboard.glb', (gltf) => {
+        const sign = gltf.scene;
+        sign.position.set(3, 0, -2); // 少し離れた場所に配置
+        sign.traverse(n => { if(n.isMesh) n.castShadow = true; });
+        scene.add(sign);
+        console.log("看板読み込み完了");
+    });
+
+    // --- 4. アニメーションループ ---
+    function animate() {
+        requestAnimationFrame(animate);
+
+        // 物理エンジンの時間を進める
+        world.fixedStep();
+
+        // 描画
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // リサイズ対応
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 </script>
 </body>
 </html>
