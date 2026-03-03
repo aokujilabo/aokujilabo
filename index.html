@@ -163,7 +163,7 @@
             const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
             const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
 
-            playerBody.velocity.x = -finalX * 5;
+            playerBody.velocity.x = finalX * 5;
             playerBody.velocity.z = -finalZ * 5;
 
             // プレイヤーの移動処理
@@ -176,7 +176,7 @@
 
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
                 if (isMoving) {
-                    playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI; 
+                    playerMesh.rotation.y = Math.atan2(inputX, inputZ); 
                     fadeToAction('walk');
                 } else {
                     fadeToAction('idle');
