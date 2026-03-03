@@ -92,17 +92,6 @@
         const loader = new GLTFLoader();
 
         // キャラクター読み込み
-        /*
-        loader.load('first_kemono_animation.glb', (gltf) => {
-            playerMesh = gltf.scene;
-            playerMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
-            scene.add(playerMesh);
-            if (gltf.animations && gltf.animations.length > 0) {
-                mixer = new THREE.AnimationMixer(playerMesh);
-                mixer.clipAction(gltf.animations[0]).play();
-            }
-        });
-        */
         let actions = {}; // アニメーションを保存する辞書
         let currentAction; // 現在再生中のアクション
         
@@ -111,6 +100,9 @@
             scene.add(playerMesh);
             
             mixer = new THREE.AnimationMixer(playerMesh);
+
+            //[DEBUG]全アニメーションをログに出して名前をチェック！
+            console.log("利用可能なアニメ名:", gltf.animations.map(a => a.name));
             
             // 全てのアニメーションを登録（名前はBlenderでの設定に合わせてください）
             gltf.animations.forEach((clip) => {
@@ -131,30 +123,6 @@
             signMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
             scene.add(signMesh);
         });
-
-        // --- 看板の物理設定 ---
-        /*
-        // Boxの数値は「中心からの距離」なので、(0.5, 1, 0.2) は「幅1m, 高さ2m, 厚み0.4m」になります
-        const signShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.2)); 
-        const signBody = new CANNON.Body({
-            mass: 0, // 0にすると何がぶつかっても動かない「不動の壁」になります
-            shape: signShape
-        });
-        signBody.position.set(5, 1, 5); // 看板を置きたい座標
-        world.addBody(signBody);
-        
-        // --- 看板の見た目（モデル）を重ねる ---
-        loader.load('signboard.glb', (gltf) => {
-            signMesh = gltf.scene;
-            scene.add(signMesh);
-            
-            // 物理の箱の位置をモデルにコピー
-            signMesh.position.copy(signBody.position);
-            // もしモデルの原点が足元なら、高さの半分(1)だけ下げるとピッタリ重なります
-            signMesh.position.y -= 1; 
-        });
-        */
-        // --- ここまで　コリジョン ---
 
         // --- 6. 操作 ＆ 更新 ---
         window.addEventListener('keydown', (e) => keys[e.code] = true);
@@ -187,8 +155,10 @@
             if (keys['ArrowLeft'] || keys['KeyA']) kX = -1;
             if (keys['ArrowRight'] || keys['KeyD']) kX = 1;
 
-            const finalX = move.x || kX;
+            const finalX = -(move.x || kX); 
             const finalZ = move.z || kZ;
+            
+            const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
 
             playerBody.velocity.x = finalX * 5;
             playerBody.velocity.z = -finalZ * 5;
@@ -204,27 +174,12 @@
                 const inputX = move.x || (keys['ArrowRight'] || keys['KeyD'] ? -1 : keys['ArrowLeft'] || keys['KeyA'] ? 1 : 0);
                 const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
 
-                /*
-                if (Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1) {
-                    // あなたのモデルの「ズレ」を考慮した計算式です
-                    playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI; 
-                    
-                    // --- アニメーション再生(walk) ---
-                    // 動いている間だけアニメーションを更新
-                    if (mixer) {
-                        // もし複数のアニメーションがあるなら、名前で探す方法もあります
-                        // mixer.clipAction(THREE.AnimationClip.findByName(gltf.animations, 'walk')).play();
-                    }
-                }
-                */
-
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
-                const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
                 if (isMoving) {
                     playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI; 
-                    fadeToAction('Walk'); // 名前は実際のglb内の名前に合わせてね
+                    fadeToAction('walk');
                 } else {
-                    fadeToAction('Idle');
+                    fadeToAction('idle');
                 }
             
                 // 3. カメラの追従（ガクガク防止版）
