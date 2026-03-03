@@ -158,6 +158,9 @@
             const finalX = -(move.x || kX); 
             const finalZ = move.z || kZ;
             
+            // inputX, inputZ を使って計算します
+            const inputX = move.x || (keys['ArrowRight'] || keys['KeyD'] ? -1 : keys['ArrowLeft'] || keys['KeyA'] ? 1 : 0);
+            const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
             const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
 
             playerBody.velocity.x = finalX * 5;
@@ -170,9 +173,6 @@
                 playerMesh.position.y -= 0.5; // めり込み微調整
             
                 // 2. 向きの修正（左で下、下で左…を直す決定版）
-                // inputX, inputZ を使って計算します
-                const inputX = move.x || (keys['ArrowRight'] || keys['KeyD'] ? -1 : keys['ArrowLeft'] || keys['KeyA'] ? 1 : 0);
-                const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
 
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
                 if (isMoving) {
