@@ -6,6 +6,34 @@
     <style>
         body { margin: 0; overflow: hidden; background: #aad4ff; }
         #joystick-zone { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        
+        #check-btn {
+            display: none;
+            position: absolute;
+            padding: 10px 20px;
+            background: #ff9800;
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 100;
+            user-select: none; /* テキスト選択防止 */
+        }
+    
+        #balloon {
+            display: none;
+            position: absolute;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid #333;
+            width: 200px;
+            z-index: 101;
+            font-family: sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -34,6 +62,23 @@
         const clock = new THREE.Clock();
         const move = { x: 0, z: 0 };
         const keys = {};
+
+        // 看板のデータリスト
+        const signData = [
+            { x: 10, z: 0, rot: -Math.PI / 2, msg: "東の看板：海が見えるよ" }, // 左を向く
+            { x: -10, z: 0, rot: Math.PI / 2, msg: "西の看板：森が広がっている" }, // 右を向く
+            { x: 0, z: 10, rot: 0, msg: "南の看板：太陽がまぶしい" }, // そのまま（南向き）
+            { x: 0, z: -10, rot: Math.PI, msg: "北の看板：こっちは寒いぞ" } // 180度回転
+        ];
+        
+        // メッセージを表示するHTML要素（まだ作っていなければ）
+        const msgBox = document.createElement('div');
+        msgBox.style.cssText = "position:absolute; bottom:50px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:white; padding:15px; border-radius:10px; display:none; font-family:sans-serif; z-index:100; pointer-events:none;";
+        document.body.appendChild(msgBox);
+
+        let activeSign = null; 
+        const checkBtn = document.getElementById('check-btn');
+        const balloon = document.getElementById('balloon');
 
         // --- 2. Three.js 設定 ---
         const scene = new THREE.Scene();
@@ -100,9 +145,6 @@
             scene.add(playerMesh);
             
             mixer = new THREE.AnimationMixer(playerMesh);
-
-            //[DEBUG]全アニメーションをログに出して名前をチェック！
-            console.log("利用可能なアニメ名:", gltf.animations.map(a => a.name));
             
             // 全てのアニメーションを登録（名前はBlenderでの設定に合わせてください）
             gltf.animations.forEach((clip) => {
@@ -116,12 +158,32 @@
 
         // 看板読み込み
         loader.load('signboard.glb', (gltf) => {
+            /*
             signMesh = gltf.scene;
             signMesh.position.copy(signBody.position);
             // モデルの原点が足元なら -1 (高さの半分) して物理の箱と合わせる
             signMesh.position.y -= 1; 
             signMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
             scene.add(signMesh);
+            */
+            loader.load('signboard.glb', (gltf) => {
+                signData.forEach((data) => {
+                    // モデルを複製
+                    const mesh = gltf.scene.clone(); 
+                    
+                    // 位置をセット
+                    mesh.position.set(data.x, 0, data.z); 
+                    
+                    // ★ ここで向き（回転）をセット！
+                    mesh.rotation.y = data.rot; 
+                    
+                    scene.add(mesh);
+                    data.mesh = mesh; // 距離判定用に保存
+                    
+                    // 影の設定
+                    mesh.traverse(n => { if(n.isMesh) n.castShadow = true; });
+                });
+            });
         });
 
         // --- 6. 操作 ＆ 更新 ---
@@ -131,7 +193,20 @@
         const manager = nipplejs.create({ zone: document.getElementById('joystick-zone'), mode: 'dynamic', color: 'white' });
         manager.on('move', (evt, data) => { move.x = data.vector.x; move.z = data.vector.y; });
         manager.on('end', () => { move.x = 0; move.z = 0; });
+        checkBtn.onclick = () => {
+            if (activeSign) {
+                document.getElementById('balloon-text').innerText = activeSign.msg;
+                balloon.style.display = 'block';
+                checkBtn.style.display = 'none';
+            }
+        };
         
+        // 吹き出しをクリックしたら閉じる
+        balloon.onclick = () => {
+            balloon.style.display = 'none';
+        };
+
+        // --- 7. 関数 ---
         // アニメーションを切り替える関数
         function fadeToAction(name, duration = 0.2) {
             const nextAction = actions[name];
@@ -141,6 +216,28 @@
                 currentAction.crossFadeTo(nextAction, duration, true);
                 currentAction = nextAction;
             }
+        }
+        
+        // UIポジションのアップデート
+        function updateUIPosition(mesh, element, offsetY = 2) {
+            if (!mesh) return;
+        
+            // メッシュの世界座標を取得
+            const vector = new THREE.Vector3();
+            mesh.getWorldPosition(vector);
+            vector.y += offsetY; // 看板の少し上に表示
+        
+            // 3D座標を画面上の-1〜1の範囲に投影
+            vector.project(camera);
+        
+            // 画面サイズに合わせてピクセル座標に変換
+            const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+        
+            // 要素の位置を更新
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`;
+            element.style.transform = 'translate(-50%, -100%)';
         }
         
         function animate() {
@@ -195,14 +292,35 @@
             controls.update();
             renderer.render(scene, camera);
 
-            // [DEBUG]物理体の位置に、Three.jsの赤い箱を表示させる
-            if (playerMesh && signMesh) {
-                const distance = playerMesh.position.distanceTo(signMesh.position);
-                if (distance < 2) {
-                    // ここに「しらべる」ボタンを出す処理を書く
-                    console.log("看板の近くにいます！");
+            
+            let nearAnySign = false;
+            // 看板との距離チェック
+            signData.forEach((data) => {
+                if (data.mesh && playerMesh) {
+                    const dist = playerMesh.position.distanceTo(data.mesh.position);
+                    
+                    if (dist < 3) { // 近づいた！
+                        nearAnySign = true;
+                        activeSign = data;
+                        
+                        // ボタンや吹き出しの位置を「今」の座標に更新
+                        if (balloon.style.display !== 'block') {
+                            checkBtn.style.display = 'block';
+                            updateUIPosition(data.mesh, checkBtn, 2.5);
+                        } else {
+                            updateUIPosition(data.mesh, balloon, 3.0);
+                        }
+                    }
                 }
+            });
+        
+            // 離れたら消す
+            if (!nearAnySign) {
+                checkBtn.style.display = 'none';
+                balloon.style.display = 'none';
+                activeSign = null;
             }
+            
         }
         animate();
     </script>
