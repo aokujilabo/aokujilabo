@@ -155,8 +155,8 @@
             if (keys['ArrowLeft'] || keys['KeyA']) kX = -1;
             if (keys['ArrowRight'] || keys['KeyD']) kX = 1;
 
-            const finalX = -(move.x || kX); 
-            const finalZ = move.z || kZ;
+            const finalX = (move.x || kX); 
+            const finalZ = (move.z || kZ);
             
             // inputX, inputZ を使って計算します
             const inputX = move.x || (keys['ArrowRight'] || keys['KeyD'] ? 1 : keys['ArrowLeft'] || keys['KeyA'] ? -1 : 0);
