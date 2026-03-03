@@ -134,6 +134,23 @@
             const finalX = move.x || kX;
             const finalZ = move.z || kZ;
 
+            let playerMesh, mixer; // mixer（再生装置）を保存する変数を用意
+            const clock = new THREE.Clock(); // 時間を測るための時計
+            loader.load('first_kemono_animation.glb', (gltf) => {
+                playerMesh = gltf.scene;
+                scene.add(playerMesh);
+            
+                // アニメーションの設定
+                if (gltf.animations && gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(playerMesh); // このモデル用の再生機を作成
+                    const action = mixer.clipAction(gltf.animations[0]); // 1番目のアニメを取得
+                    action.play(); // 再生！
+                }
+            });
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta(); // 前のフレームからの経過時間を取得
+            if (mixer) mixer.update(delta); // アニメーションの時間を進める
+
             // 物理移動
             const speed = 5;
             playerBody.velocity.x = finalX * speed;
@@ -145,14 +162,14 @@
                 
                 // 重心修正済みなら y のオフセットは不要（0）
                 // もし少し浮く・沈むならここを調整
-                playerMesh.position.y -= 0.5; 
+                playerMesh.position.y -= 0; 
 
                 // モデルの向きを90度（Math.PI / 2）修正する
                 if (Math.abs(finalX) > 0.1 || Math.abs(finalZ) > 0.1) {
                     // もし右を向いて進むなら + Math.PI / 2
                     // もし左を向いて進むなら - Math.PI / 2
                     // あなたのモデルに合わせて調整してください
-                    playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 2; 
+                    playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 3; 
                 }
             }
             
@@ -162,8 +179,7 @@
                 const targetPos = playerMesh.position;
             
                 // カメラをキャラからどれくらい離すか（x, y, z）
-                // (8, 8, 8) なら斜め後ろから見下ろす感じになります
-                const offset = new THREE.Vector3(10,10,10); 
+                const offset = new THREE.Vector3(10,20,30); 
             
                 // カメラの位置を更新
                 camera.position.lerp(targetPos.clone().add(offset), 0.1); // 0.1は滑らかさ（1なら即座に追従）
