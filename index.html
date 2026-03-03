@@ -163,7 +163,7 @@
             const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
             const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
 
-            playerBody.velocity.x = finalX * 5;
+            playerBody.velocity.x = -finalX * 5;
             playerBody.velocity.z = -finalZ * 5;
 
             // プレイヤーの移動処理
