@@ -37,6 +37,9 @@
     </style>
 </head>
 <body>
+    <button id="check-btn">◆</button>
+    <div id="balloon"><p id="balloon-text"></p></div>
+    
     <div id="joystick-zone"></div>
 
     <script type="importmap">
@@ -158,14 +161,6 @@
 
         // 看板読み込み
         loader.load('signboard.glb', (gltf) => {
-            /*
-            signMesh = gltf.scene;
-            signMesh.position.copy(signBody.position);
-            // モデルの原点が足元なら -1 (高さの半分) して物理の箱と合わせる
-            signMesh.position.y -= 1; 
-            signMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
-            scene.add(signMesh);
-            */
             loader.load('signboard.glb', (gltf) => {
                 signData.forEach((data) => {
                     // モデルを複製
