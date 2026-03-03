@@ -92,6 +92,7 @@
         const loader = new GLTFLoader();
 
         // キャラクター読み込み
+        /*
         loader.load('first_kemono_animation.glb', (gltf) => {
             playerMesh = gltf.scene;
             playerMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
@@ -100,6 +101,25 @@
                 mixer = new THREE.AnimationMixer(playerMesh);
                 mixer.clipAction(gltf.animations[0]).play();
             }
+        });
+        */
+        let actions = {}; // アニメーションを保存する辞書
+        let currentAction; // 現在再生中のアクション
+        
+        loader.load('first_kemono_animation.glb', (gltf) => {
+            playerMesh = gltf.scene;
+            scene.add(playerMesh);
+            
+            mixer = new THREE.AnimationMixer(playerMesh);
+            
+            // 全てのアニメーションを登録（名前はBlenderでの設定に合わせてください）
+            gltf.animations.forEach((clip) => {
+                actions[clip.name] = mixer.clipAction(clip);
+            });
+        
+            // 最初は Idle を再生
+            currentAction = actions['Idle'] || actions[Object.keys(actions)[0]]; 
+            if (currentAction) currentAction.play();
         });
 
         // 看板読み込み
@@ -143,7 +163,18 @@
         const manager = nipplejs.create({ zone: document.getElementById('joystick-zone'), mode: 'dynamic', color: 'white' });
         manager.on('move', (evt, data) => { move.x = data.vector.x; move.z = data.vector.y; });
         manager.on('end', () => { move.x = 0; move.z = 0; });
-
+        
+        // アニメーションを切り替える関数
+        function fadeToAction(name, duration = 0.2) {
+            const nextAction = actions[name];
+            if (nextAction && currentAction !== nextAction) {
+                nextAction.reset();
+                nextAction.play();
+                currentAction.crossFadeTo(nextAction, duration, true);
+                currentAction = nextAction;
+            }
+        }
+        
         function animate() {
             requestAnimationFrame(animate);
             const delta = clock.getDelta();
@@ -162,18 +193,52 @@
             playerBody.velocity.x = finalX * 5;
             playerBody.velocity.z = -finalZ * 5;
 
+            // プレイヤーの移動処理
             if (playerMesh) {
+                // 1. 物理体との同期
                 playerMesh.position.copy(playerBody.position);
                 playerMesh.position.y -= 0.5; // めり込み微調整
-                if (Math.abs(finalX) > 0.1 || Math.abs(finalZ) > 0.1) {
-                    // 下記の「+ Math.PI」の部分を、
-                    // なし / + Math.PI / 2 / - Math.PI / 2 / + Math.PI 
-                    // のどれかにすれば必ず正解に当たります。今の症状なら「+ Math.PI」が怪しいです。
-                    playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI;
+            
+                // 2. 向きの修正（左で下、下で左…を直す決定版）
+                // inputX, inputZ を使って計算します
+                const inputX = move.x || (keys['ArrowRight'] || keys['KeyD'] ? -1 : keys['ArrowLeft'] || keys['KeyA'] ? 1 : 0);
+                const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
+
+                /*
+                if (Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1) {
+                    // あなたのモデルの「ズレ」を考慮した計算式です
+                    playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI; 
+                    
+                    // --- アニメーション再生(walk) ---
+                    // 動いている間だけアニメーションを更新
+                    if (mixer) {
+                        // もし複数のアニメーションがあるなら、名前で探す方法もあります
+                        // mixer.clipAction(THREE.AnimationClip.findByName(gltf.animations, 'walk')).play();
+                    }
                 }
-                camera.position.lerp(playerMesh.position.clone().add(new THREE.Vector3(10, 20, 30)), 0.1);
-                controls.target.copy(playerMesh.position);
+                */
+
+                // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
+                const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
+                const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
+
+                if (isMoving) {
+                    playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI; 
+                    fadeToAction('Walk'); // 名前は実際のglb内の名前に合わせてね
+                } else {
+                    fadeToAction('Idle');
+                }
+            
+                // 3. カメラの追従（ガクガク防止版）
+                const idealOffset = new THREE.Vector3(10, 20, 30);
+                const targetPos = playerMesh.position.clone().add(idealOffset);
+                
+                // カメラ位置を滑らかに
+                camera.position.lerp(targetPos, 0.1);
+                // カメラの注視点（ターゲット）も滑らかに追従させることでガクガクを消す
+                controls.target.lerp(playerMesh.position, 0.1); 
             }
+            
             controls.update();
             renderer.render(scene, camera);
 
