@@ -155,7 +155,23 @@
                     playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 2; 
                 }
             }
-
+            
+            // --- カメラの追従設定 ---
+            if (playerMesh) {
+                // キャラの現在位置を取得
+                const targetPos = playerMesh.position;
+            
+                // カメラをキャラからどれくらい離すか（x, y, z）
+                // (8, 8, 8) なら斜め後ろから見下ろす感じになります
+                const offset = new THREE.Vector3(10,10,10); 
+            
+                // カメラの位置を更新
+                camera.position.lerp(targetPos.clone().add(offset), 0.1); // 0.1は滑らかさ（1なら即座に追従）
+                
+                // カメラの視点を常にキャラに向ける
+                controls.target.copy(targetPos);
+            }
+            
             controls.update();
             renderer.render(scene, camera);
         }
