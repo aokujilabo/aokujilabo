@@ -220,8 +220,6 @@
 
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
                 const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
-                const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
-
                 if (isMoving) {
                     playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI; 
                     fadeToAction('Walk'); // 名前は実際のglb内の名前に合わせてね
