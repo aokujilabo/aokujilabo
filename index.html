@@ -112,6 +112,28 @@
             scene.add(signMesh);
         });
 
+        // --- 看板の物理設定 ---
+        // Boxの数値は「中心からの距離」なので、(0.5, 1, 0.2) は「幅1m, 高さ2m, 厚み0.4m」になります
+        const signShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.2)); 
+        const signBody = new CANNON.Body({
+            mass: 0, // 0にすると何がぶつかっても動かない「不動の壁」になります
+            shape: signShape
+        });
+        signBody.position.set(5, 1, 5); // 看板を置きたい座標
+        world.addBody(signBody);
+        
+        // --- 看板の見た目（モデル）を重ねる ---
+        loader.load('signboard.glb', (gltf) => {
+            signMesh = gltf.scene;
+            scene.add(signMesh);
+            
+            // 物理の箱の位置をモデルにコピー
+            signMesh.position.copy(signBody.position);
+            // もしモデルの原点が足元なら、高さの半分(1)だけ下げるとピッタリ重なります
+            signMesh.position.y -= 1; 
+        });
+        // --- ここまで　コリジョン ---
+
         // --- 6. 操作 ＆ 更新 ---
         window.addEventListener('keydown', (e) => keys[e.code] = true);
         window.addEventListener('keyup', (e) => keys[e.code] = false);
@@ -142,13 +164,25 @@
                 playerMesh.position.copy(playerBody.position);
                 playerMesh.position.y -= 0.5; // めり込み微調整
                 if (Math.abs(finalX) > 0.1 || Math.abs(finalZ) > 0.1) {
-                    playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 2; 
+                    // 下記の「+ Math.PI」の部分を、
+                    // なし / + Math.PI / 2 / - Math.PI / 2 / + Math.PI 
+                    // のどれかにすれば必ず正解に当たります。今の症状なら「+ Math.PI」が怪しいです。
+                    playerMesh.rotation.y = Math.atan2(inputX, inputZ) + Math.PI;
                 }
                 camera.position.lerp(playerMesh.position.clone().add(new THREE.Vector3(10, 20, 30)), 0.1);
                 controls.target.copy(playerMesh.position);
             }
             controls.update();
             renderer.render(scene, camera);
+
+            // [DEBUG]物理体の位置に、Three.jsの赤い箱を表示させる
+            if (playerMesh && signMesh) {
+                const distance = playerMesh.position.distanceTo(signMesh.position);
+                if (distance < 2) {
+                    // ここに「しらべる」ボタンを出す処理を書く
+                    console.log("看板の近くにいます！");
+                }
+            }
         }
         animate();
     </script>
