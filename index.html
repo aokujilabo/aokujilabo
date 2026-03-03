@@ -176,7 +176,7 @@
 
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
                 if (isMoving) {
-                    playerMesh.rotation.y = Math.atan2(inputX, inputZ); 
+                    playerMesh.rotation.y = Math.atan2(-inputX, inputZ) + Math.PI;
                     fadeToAction('walk');
                 } else {
                     fadeToAction('idle');
