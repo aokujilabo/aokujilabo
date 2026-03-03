@@ -2,18 +2,10 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>3D Adventure - Pro Control</title>
+    <title>3D Adventure - Optimized</title>
     <style>
         body { margin: 0; overflow: hidden; background: #aad4ff; }
-        /* ジョイスティックを表示するエリア（画面全体で反応するように） */
-        #joystick-zone {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-        }
+        #joystick-zone { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
     </style>
 </head>
 <body>
@@ -37,7 +29,13 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import * as CANNON from 'cannon-es';
 
-        // --- 基本設定 ---
+        // --- 1. 変数の宣言（外に出しておく） ---
+        let playerMesh, mixer;
+        const clock = new THREE.Clock();
+        const move = { x: 0, z: 0 };
+        const keys = {};
+
+        // --- 2. 基本設定 ---
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xaad4ff);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -46,11 +44,10 @@
         document.body.appendChild(renderer.domElement);
 
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(8, 8, 8); // 少し近づけました
+        camera.position.set(10, 20, 30);
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
-        // ライト
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
         const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
@@ -58,11 +55,10 @@
         sunLight.castShadow = true;
         scene.add(sunLight);
 
-        // --- 物理世界 ---
+        // --- 3. 物理世界 ---
         const world = new CANNON.World();
         world.gravity.set(0, -9.82, 0);
 
-        // 床
         const floorBody = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
         floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
         world.addBody(floorBody);
@@ -75,119 +71,87 @@
         floorMesh.receiveShadow = true;
         scene.add(floorMesh);
 
-        // プレイヤー物理体
+        // プレイヤー物理体（半径0.5の球体）
         const playerBody = new CANNON.Body({
             mass: 1,
             shape: new CANNON.Sphere(0.5) 
         });
-        playerBody.position.set(0, 1, 0);
+        playerBody.position.set(0, 5, 0);
         world.addBody(playerBody);
 
-        // --- モデル読み込み ---
+        // --- 4. モデル読み込み（animateの外で1回だけ！） ---
         const loader = new GLTFLoader();
-        let playerMesh;
-
         loader.load('first_kemono_animation.glb', (gltf) => {
             playerMesh = gltf.scene;
             playerMesh.traverse(n => { if(n.isMesh) n.castShadow = true; });
             scene.add(playerMesh);
+        
+            if (gltf.animations && gltf.animations.length > 0) {
+                mixer = new THREE.AnimationMixer(playerMesh);
+                const action = mixer.clipAction(gltf.animations[0]);
+                action.play();
+            }
         });
 
-        // --- 操作系（最新版） ---
-        const move = { x: 0, z: 0 };
-        const keys = {};
-
-        // キーボード（十字キー ＆ WASD 対応）
+        // --- 5. 操作系 ---
         window.addEventListener('keydown', (e) => keys[e.code] = true);
         window.addEventListener('keyup', (e) => keys[e.code] = false);
 
-        // ジョイスティック（触った場所に表示される設定）
         const manager = nipplejs.create({
             zone: document.getElementById('joystick-zone'),
-            mode: 'dynamic', // これで「触った時に表示」になる
+            mode: 'dynamic',
             color: 'white'
         });
-
         manager.on('move', (evt, data) => {
             move.x = data.vector.x;
             move.z = data.vector.y;
         });
-        manager.on('end', () => {
-            move.x = 0;
-            move.z = 0;
-        });
+        manager.on('end', () => { move.x = 0; move.z = 0; });
 
-        // --- 更新ループ ---
+        // --- 6. 更新ループ ---
         function animate() {
             requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            if (mixer) mixer.update(delta);
+
             world.fixedStep();
 
-            // キーボードの入力を計算
-            let kX = 0;
-            let kZ = 0;
+            // キーボード入力
+            let kX = 0, kZ = 0;
             if (keys['ArrowUp'] || keys['KeyW']) kZ = 1;
             if (keys['ArrowDown'] || keys['KeyS']) kZ = -1;
             if (keys['ArrowLeft'] || keys['KeyA']) kX = -1;
             if (keys['ArrowRight'] || keys['KeyD']) kX = 1;
 
-            // ジョイスティックとキーボードの入力を合成
             const finalX = move.x || kX;
             const finalZ = move.z || kZ;
 
-            let playerMesh, mixer; // mixer（再生装置）を保存する変数を用意
-            const clock = new THREE.Clock(); // 時間を測るための時計
-            loader.load('first_kemono_animation.glb', (gltf) => {
-                playerMesh = gltf.scene;
-                scene.add(playerMesh);
-            
-                // アニメーションの設定
-                if (gltf.animations && gltf.animations.length > 0) {
-                    mixer = new THREE.AnimationMixer(playerMesh); // このモデル用の再生機を作成
-                    const action = mixer.clipAction(gltf.animations[0]); // 1番目のアニメを取得
-                    action.play(); // 再生！
-                }
-            });
-            requestAnimationFrame(animate);
-            const delta = clock.getDelta(); // 前のフレームからの経過時間を取得
-            if (mixer) mixer.update(delta); // アニメーションの時間を進める
-
-            // 物理移動
             const speed = 5;
             playerBody.velocity.x = finalX * speed;
-            playerBody.velocity.z = -finalZ * speed; // 3D空間の前後合わせ
+            playerBody.velocity.z = -finalZ * speed;
 
-            // モデルの同期
             if (playerMesh) {
+                // 物理体に追従
                 playerMesh.position.copy(playerBody.position);
                 
-                // 重心修正済みなら y のオフセットは不要（0）
-                // もし少し浮く・沈むならここを調整
-                playerMesh.position.y -= 0; 
+                // ★めり込み調整
+                // 物理球体の中心は y=0.5 (半径分) なので、-0.5すると足元が y=0 になります。
+                // Blenderで原点を足元にしたなら、ここを -0.5 前後で調整してください。
+                playerMesh.position.y -= 0.5; 
 
-                // モデルの向きを90度（Math.PI / 2）修正する
+                // 向きの調整
                 if (Math.abs(finalX) > 0.1 || Math.abs(finalZ) > 0.1) {
-                    // もし右を向いて進むなら + Math.PI / 2
-                    // もし左を向いて進むなら - Math.PI / 2
-                    // あなたのモデルに合わせて調整してください
-                    playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 3; 
+                    playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 2; 
                 }
-            }
-            
-            // --- カメラの追従設定 ---
-            if (playerMesh) {
-                // キャラの現在位置を取得
+
+                // カメラ追従
                 const targetPos = playerMesh.position;
-            
-                // カメラをキャラからどれくらい離すか（x, y, z）
-                const offset = new THREE.Vector3(10,20,30); 
-            
-                // カメラの位置を更新
-                camera.position.lerp(targetPos.clone().add(offset), 0.1); // 0.1は滑らかさ（1なら即座に追従）
-                
-                // カメラの視点を常にキャラに向ける
+                const offset = new THREE.Vector3(10, 20, 30);
+                camera.position.lerp(targetPos.clone().add(offset), 0.1);
                 controls.target.copy(targetPos);
             }
-            
+
             controls.update();
             renderer.render(scene, camera);
         }
