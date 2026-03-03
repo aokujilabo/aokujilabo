@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>3D Adventure - Optimized</title>
+    <title>3D Adventure - Signboard Fixed</title>
     <style>
         body { margin: 0; overflow: hidden; background: #aad4ff; }
         #joystick-zone { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
@@ -20,7 +20,6 @@
         }
     }
     </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.min.js"></script>
 
     <script type="module">
@@ -29,13 +28,14 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import * as CANNON from 'cannon-es';
 
-        // --- 1. 変数の宣言（外に出しておく） ---
-        let playerMesh, mixer;
+        // --- 1. 変数宣言 ---
+        let playerMesh = null, mixer = null;
+        let signMesh = null;
         const clock = new THREE.Clock();
         const move = { x: 0, z: 0 };
         const keys = {};
 
-        // --- 2. 基本設定 ---
+        // --- 2. Three.js 設定 ---
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xaad4ff);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -59,6 +59,7 @@
         const world = new CANNON.World();
         world.gravity.set(0, -9.82, 0);
 
+        // 床
         const floorBody = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
         floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
         world.addBody(floorBody);
@@ -71,7 +72,7 @@
         floorMesh.receiveShadow = true;
         scene.add(floorMesh);
 
-        // プレイヤー物理体（半径0.5の球体）
+        // プレイヤー物理体
         const playerBody = new CANNON.Body({
             mass: 1,
             shape: new CANNON.Sphere(0.5) 
@@ -79,45 +80,52 @@
         playerBody.position.set(0, 5, 0);
         world.addBody(playerBody);
 
-        // --- 4. モデル読み込み（animateの外で1回だけ！） ---
+        // --- 4. 看板の物理体 (ぶつかって止まる壁) ---
+        // サイズ: 幅1m, 高さ2m, 厚み0.4m の箱
+        const signShape = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.2)); 
+        const signBody = new CANNON.Body({ mass: 0 }); // mass:0 で固定される
+        signBody.addShape(signShape);
+        signBody.position.set(5, 1, 5); // 後で読み込むモデルと同じ位置に
+        world.addBody(signBody);
+
+        // --- 5. モデル読み込み ---
         const loader = new GLTFLoader();
+
+        // キャラクター読み込み
         loader.load('first_kemono_animation.glb', (gltf) => {
             playerMesh = gltf.scene;
-            playerMesh.traverse(n => { if(n.isMesh) n.castShadow = true; });
+            playerMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
             scene.add(playerMesh);
-        
             if (gltf.animations && gltf.animations.length > 0) {
                 mixer = new THREE.AnimationMixer(playerMesh);
-                const action = mixer.clipAction(gltf.animations[0]);
-                action.play();
+                mixer.clipAction(gltf.animations[0]).play();
             }
         });
 
-        // --- 5. 操作系 ---
+        // 看板読み込み
+        loader.load('signboard.glb', (gltf) => {
+            signMesh = gltf.scene;
+            signMesh.position.copy(signBody.position);
+            // モデルの原点が足元なら -1 (高さの半分) して物理の箱と合わせる
+            signMesh.position.y -= 1; 
+            signMesh.traverse(n => { if(n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
+            scene.add(signMesh);
+        });
+
+        // --- 6. 操作 ＆ 更新 ---
         window.addEventListener('keydown', (e) => keys[e.code] = true);
         window.addEventListener('keyup', (e) => keys[e.code] = false);
 
-        const manager = nipplejs.create({
-            zone: document.getElementById('joystick-zone'),
-            mode: 'dynamic',
-            color: 'white'
-        });
-        manager.on('move', (evt, data) => {
-            move.x = data.vector.x;
-            move.z = data.vector.y;
-        });
+        const manager = nipplejs.create({ zone: document.getElementById('joystick-zone'), mode: 'dynamic', color: 'white' });
+        manager.on('move', (evt, data) => { move.x = data.vector.x; move.z = data.vector.y; });
         manager.on('end', () => { move.x = 0; move.z = 0; });
 
-        // --- 6. 更新ループ ---
         function animate() {
             requestAnimationFrame(animate);
-            
             const delta = clock.getDelta();
             if (mixer) mixer.update(delta);
-
             world.fixedStep();
 
-            // キーボード入力
             let kX = 0, kZ = 0;
             if (keys['ArrowUp'] || keys['KeyW']) kZ = 1;
             if (keys['ArrowDown'] || keys['KeyS']) kZ = -1;
@@ -127,31 +135,18 @@
             const finalX = move.x || kX;
             const finalZ = move.z || kZ;
 
-            const speed = 5;
-            playerBody.velocity.x = finalX * speed;
-            playerBody.velocity.z = -finalZ * speed;
+            playerBody.velocity.x = finalX * 5;
+            playerBody.velocity.z = -finalZ * 5;
 
             if (playerMesh) {
-                // 物理体に追従
                 playerMesh.position.copy(playerBody.position);
-                
-                // ★めり込み調整
-                // 物理球体の中心は y=0.5 (半径分) なので、-0.5すると足元が y=0 になります。
-                // Blenderで原点を足元にしたなら、ここを -0.5 前後で調整してください。
-                playerMesh.position.y -= 0.5; 
-
-                // 向きの調整
+                playerMesh.position.y -= 0.5; // めり込み微調整
                 if (Math.abs(finalX) > 0.1 || Math.abs(finalZ) > 0.1) {
                     playerMesh.rotation.y = Math.atan2(finalX, finalZ) + Math.PI / 2; 
                 }
-
-                // カメラ追従
-                const targetPos = playerMesh.position;
-                const offset = new THREE.Vector3(10, 20, 30);
-                camera.position.lerp(targetPos.clone().add(offset), 0.1);
-                controls.target.copy(targetPos);
+                camera.position.lerp(playerMesh.position.clone().add(new THREE.Vector3(10, 20, 30)), 0.1);
+                controls.target.copy(playerMesh.position);
             }
-
             controls.update();
             renderer.render(scene, camera);
         }
