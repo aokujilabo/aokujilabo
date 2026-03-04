@@ -66,9 +66,6 @@
                 5px 5px 0px #3e2723, /* 濃い茶色のズレた影で厚みを表現 */
                 0 10px 20px rgba(0,0,0,0.3), /* 全体の浮遊感 */
                 inset 0 0 30px rgba(0,0,0,0.1); /* 板のくすみ感 */
-        
-            /* 4. ちょっとだけ揺らす（看板が吊るされている風） */
-            animation: sway 3s ease-in-out infinite alternate;
             
             /* 看板っぽさを出す装飾 */
             padding: 30px;            /* 余白を広げてゆったりさせる */
@@ -96,10 +93,6 @@
         /* 吹き出しの「しっぽ（三角）」を消して、より看板らしく */
         #balloon::after {
             content: none;
-        }
-        @keyframes sway {
-            0% { transform: rotate(-1.5deg); }
-            100% { transform: rotate(1deg); }
         }
     </style>
 </head>
@@ -349,7 +342,7 @@
             // 要素の位置を更新
             element.style.left = `${x}px`;
             element.style.top = `${y}px`;
-            element.style.transform = 'translate(-50%, -100%)';
+            element.style.transform = 'translate(-30%, -40%)';
         }
 
         // animation管理
