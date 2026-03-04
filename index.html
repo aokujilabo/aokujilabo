@@ -288,7 +288,7 @@
             playerBody.velocity.z = -finalZ * speed;
 
             // --- 3. ここで物理計算を進める！ (速度を与えた直後) ---
-            world.step(1/60, delta, 3);
+            world.step(1/60, delta, 10);
             
             // --- 4. メッシュとカメラの更新 ---
             // プレイヤーの移動処理
