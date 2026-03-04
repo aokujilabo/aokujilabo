@@ -27,14 +27,28 @@
         #balloon {
             display: none;
             position: absolute;
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            border: 3px solid #333;
-            width: 200px;
+            /* 看板の板をイメージしたデザイン */
+            background: #f4e4bc; /* 古びた紙・木のような色 */
+            color: #4e342e;    /* 濃い茶色の文字 */
+            padding: 20px;
+            border-radius: 4px; /* 角を少しだけ丸める */
+            border: 6px solid #5d4037; /* 太めの木の枠線 */
+            
+            /* 看板っぽさを出す装飾 */
+            width: 250px;
+            min-height: 100px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.1);
+
+            transform: rotate(-1deg);            
             z-index: 101;
-            font-family: sans-serif;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            pointer-events: auto; /* リンクをクリックできるように */
+        }
+
+        /* 吹き出しの「しっぽ（三角）」を消して、より看板らしく */
+        #balloon::after {
+            content: none;
         }
     </style>
 </head>
@@ -66,7 +80,7 @@
 
         // --- 1. 変数宣言 ---
         let playerMesh = null, mixer = null;
-        let isZooming = false; // これを忘れずに追加！[CHECK]
+        let isZooming = false;
         let signMesh = null;
         const clock = new THREE.Clock();
         const move = { x: 0, z: 0 };
@@ -199,23 +213,8 @@
         // 看板チェックの挙動.
         checkBtn.onclick = () => {
             if (activeSign) {
-                /*
-                // テキストをセット
-                document.getElementById('balloon-text').innerText = activeSign.msg;
-                document.getElementById('balloon-text').innerHTML = activeSign.msg;document.getElementById('balloon-text').innerHTML = activeSign.msg;
-                
-                const linkTag = document.getElementById('balloon-link');
-                if (activeSign.url) {
-                    linkTag.href = activeSign.url;
-                    linkTag.style.display = 'inline-block'; // リンクがあれば表示
-                } else {
-                    linkTag.style.display = 'none'; // なければ隠す
-                }
-        
-                balloon.style.display = 'block';
-                checkBtn.style.display = 'none';
-                */
                 isZooming = true;
+                if (playerMesh) playerMesh.visible = false; // キャラを消す
                 // 看板の正面にカメラを移動させる座標を計算
                 const zoomPos = activeSign.mesh.position.clone();
                 zoomPos.y += 1.5; // 看板の高さに合わせる
@@ -233,6 +232,7 @@
         // 吹き出しをクリックしたら閉じる
         balloon.onclick = () => {
             balloon.style.display = 'none';
+            if (playerMesh) playerMesh.visible = true; // キャラを戻す
             isZooming = false; // ここでズーム終了！
         };
 
@@ -348,11 +348,21 @@
                         activeSign = data;
                         
                         // ボタンや吹き出しの位置を「今」の座標に更新
+                        /*
                         if (balloon.style.display !== 'block') {
                             checkBtn.style.display = 'block';
                             updateUIPosition(data.mesh, checkBtn, 2.5);
                         } else {
                             updateUIPosition(data.mesh, balloon, 3.0);
+                        }
+                        */
+
+                        if (isZooming) {
+                            // ズーム中は看板のちょうど真ん中（高さ1.5m付近）に表示
+                            updateUIPosition(activeSign.mesh, balloon, 1.5);
+                        } else {
+                            // 通常時は看板の少し上
+                            updateUIPosition(activeSign.mesh, balloon, 2.5);
                         }
                     }
                 }
