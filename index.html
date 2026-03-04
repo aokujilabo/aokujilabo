@@ -78,7 +78,7 @@
             { x: 0, z: 40, rot: Math.PI, msg: "南の看板：太陽がまぶしい<br>わけもなく" }, // そのまま（南向き）
             { x: 0, z: -40, rot: 0, msg: "北の看板：こっちは寒いぞ<br>気を付けろ" }, // 180度回転
             { x: -10, z: -10, rot: 0, msg: "IRIAMのりんく<br>ウクレレ弾いてるよ", url: "https://web.iriam.app/s/user/7iqMoj5s8y?uuid=40876107" }, // 180度回転
-            { x: 0, z: -10, rot: 0, msg: "ツイッターのりんく<br>落書きのせたりしてるよ"、url: "https://x.com/aokujira_iriam" }, // 180度回転
+            { x: 0, z: -10, rot: 0, msg: "ツイッターのりんく<br>落書きのせたりしてるよ", url: "https://x.com/aokujira_iriam" }, // 180度回転
             { x: 10, z: -10, rot: 0, msg: "なかみはない<br>からっぽの看板のようだ" } // 180度回転
         ];
         
@@ -169,23 +169,21 @@
 
         // 看板読み込み
         loader.load('signboard.glb', (gltf) => {
-            loader.load('signboard.glb', (gltf) => {
-                signData.forEach((data) => {
-                    // モデルを複製
-                    const mesh = gltf.scene.clone(); 
-                    
-                    // 位置をセット
-                    mesh.position.set(data.x, 0, data.z); 
-                    
-                    // ★ ここで向き（回転）をセット！
-                    mesh.rotation.y = data.rot; 
-                    
-                    scene.add(mesh);
-                    data.mesh = mesh; // 距離判定用に保存
-                    
-                    // 影の設定
-                    mesh.traverse(n => { if(n.isMesh) n.castShadow = true; });
-                });
+            signData.forEach((data) => {
+                // モデルを複製
+                const mesh = gltf.scene.clone(); 
+                
+                // 位置をセット
+                mesh.position.set(data.x, 0, data.z); 
+                
+                // ★ ここで向き（回転）をセット！
+                mesh.rotation.y = data.rot; 
+                
+                scene.add(mesh);
+                data.mesh = mesh; // 距離判定用に保存
+                
+                // 影の設定
+                mesh.traverse(n => { if(n.isMesh) n.castShadow = true; });
             });
         });
 
@@ -209,6 +207,7 @@
             if (activeSign) {
                 // テキストをセット
                 document.getElementById('balloon-text').innerText = activeSign.msg;
+                document.getElementById('balloon-text').innerHTML = activeSign.msg;document.getElementById('balloon-text').innerHTML = activeSign.msg;
                 
                 const linkTag = document.getElementById('balloon-link');
                 if (activeSign.url) {
