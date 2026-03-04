@@ -240,8 +240,7 @@
                 // --- 2. ズーム位置の計算（高さをしっかり確保！） ---
                 const zoomPos = activeSign.mesh.position.clone();
                 const dist = 4;      // 看板からの距離
-                // zoomPos.y += 4.5; 
-                const height = 1.2; // ★カメラの高さ（看板の中央に合わせる）
+                const height = 5; // ★カメラの高さ（看板の中央に合わせる）
 
                 // 看板の向き(rot)に合わせて、手前の位置を計算
                 zoomPos.x += Math.sin(activeSign.rot) * dist;
