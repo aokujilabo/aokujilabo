@@ -149,6 +149,7 @@
             shape: new CANNON.Sphere(0.5) 
         });
         playerBody.position.set(0, 5, 0);
+        playerBody.fixedRotation = true; // ★これを追加！
         world.addBody(playerBody);
 
         // --- 4. 看板の物理体 (ぶつかって止まる壁) ---
@@ -185,20 +186,20 @@
         // 看板読み込み
         loader.load('signboard.glb', (gltf) => {
             signData.forEach((data) => {
-                // モデルを複製
+                // 1. 3Dモデルを表示
                 const mesh = gltf.scene.clone(); 
-                
-                // 位置をセット
                 mesh.position.set(data.x, 0, data.z); 
-                
-                // ★ ここで向き（回転）をセット！
                 mesh.rotation.y = data.rot; 
-                
                 scene.add(mesh);
-                data.mesh = mesh; // 距離判定用に保存
-                
-                // 影の設定
+                data.mesh = mesh;
                 mesh.traverse(n => { if(n.isMesh) n.castShadow = true; });
+
+                // 2. ★物理的な「壁」をこの看板の位置にも作る
+                const sBody = new CANNON.Body({ mass: 0 });
+                sBody.addShape(new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.2))); 
+                sBody.position.set(data.x, 1, data.z);
+                sBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), data.rot); // 向きも合わせる
+                world.addBody(sBody);
             });
         });
 
@@ -212,6 +213,7 @@
 
         // 看板チェックの挙動.
         checkBtn.onclick = () => {
+            /*
             if (activeSign) {
                 isZooming = true;
                 if (playerMesh) playerMesh.visible = false; // キャラを消す
@@ -226,6 +228,40 @@
                 
                 // HTMLを表示
                 balloon.style.display = 'block';
+            }
+            */
+            if (activeSign) {
+                isZooming = true;
+                if (playerMesh) playerMesh.visible = false; // キャラを消す
+
+                // --- ここから追加・修正 ---
+                // 1. 看板のメッセージをHTMLに流し込む
+                document.getElementById('balloon-text').innerHTML = activeSign.msg;
+                
+                // 2. リンク（url）がある場合だけリンクを表示する
+                const linkTag = document.getElementById('balloon-link');
+                if (activeSign.url) {
+                    linkTag.href = activeSign.url;
+                    linkTag.style.display = 'inline-block';
+                } else {
+                    linkTag.style.display = 'none';
+                }
+                // --- ここまで ---
+
+                // 看板の正面にカメラを移動させる座標を計算
+                const zoomPos = activeSign.mesh.position.clone();
+                zoomPos.y += 1.5; 
+
+                // ★ activeSign.rot を使って、看板の「前」の位置を割り出す
+                const dist = 3; 
+                zoomPos.x += Math.sin(activeSign.rot) * dist;
+                zoomPos.z += Math.cos(activeSign.rot) * dist;
+                
+                camera.position.copy(zoomPos);
+                controls.target.copy(activeSign.mesh.position);
+                
+                balloon.style.display = 'block';
+                checkBtn.style.display = 'none'; // ボタンを隠してスッキリさせる
             }
         };
         
@@ -293,8 +329,12 @@
             const speed = 10;
             
             // --- 2. 物理体に速度を与える ---
-            playerBody.velocity.x = finalX * speed;
-            playerBody.velocity.z = -finalZ * speed;
+            if (!isZooming) { // ★ズーム中でない時だけ動かせるように
+                playerBody.velocity.x = finalX * speed;
+                playerBody.velocity.z = -finalZ * speed;
+            } else {
+                playerBody.velocity.set(0, 0, 0); // ズーム中はピタッと止める
+            }
 
             // --- 3. ここで物理計算を進める！ (速度を与えた直後) ---
             world.step(1/60, delta, 10);
@@ -308,7 +348,7 @@
             
                 // 2. 向きの修正（左で下、下で左…を直す決定版）
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
-                if (isMoving) {
+                if (isMoving && !isZooming) {
                     playerMesh.rotation.y = Math.atan2(-inputX, inputZ) + Math.PI;
                     fadeToAction('walk');
                 } else {
@@ -356,7 +396,12 @@
                             updateUIPosition(data.mesh, balloon, 3.0);
                         }
                         */
-
+                        // ボタン表示
+                        if (balloon.style.display !== 'block') {
+                            checkBtn.style.display = 'block';
+                            updateUIPosition(data.mesh, checkBtn, 2.5);
+                        }
+                        // 看板内容表示
                         if (isZooming) {
                             // ズーム中は看板のちょうど真ん中（高さ1.5m付近）に表示
                             updateUIPosition(activeSign.mesh, balloon, 1.5);
@@ -373,6 +418,8 @@
                 checkBtn.style.display = 'none';
                 balloon.style.display = 'none';
                 activeSign = null;
+                isZooming = false; // ズーム解除
+                if (playerMesh) playerMesh.visible = true; // [追加] 離れたら必ず表示
             }
         }
         animate();
