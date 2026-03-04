@@ -44,10 +44,11 @@
         }
     
         #balloon {
+            /*
             display: none;
             position: absolute;
             /* 看板の板をイメージしたデザイン */
-            /* 1. 木目っぽい質感を出す（細い線のグラデーションを重ねる） */
+            /* 1. 木目っぽい質感を出す（細い線のグラデーションを重ねる） 
             background-image: repeating-linear-gradient(
                 90deg,
                 rgba(255, 255, 255, 0.05) 0px,
@@ -56,26 +57,26 @@
                 transparent 10px
             );
         
-            /* 2. 角を「完全な直線」にせず、少しガタガタさせる */
-            /* 左上、右上、右下、左下の丸みをバラバラにするだけで手作り感が出ます */
+            /* 2. 角を「完全な直線」にせず、少しガタガタさせる 
+            /* 左上、右上、右下、左下の丸みをバラバラにするだけで手作り感が出ます 
             border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
         
-            /* 3. 「看板の厚み」を影で表現する */
-            /* 外側の影(box-shadow)に、内側の影(inset)を組み合わせて彫り込み感を出す */
+            /* 3. 「看板の厚み」を影で表現する 
+            /* 外側の影(box-shadow)に、内側の影(inset)を組み合わせて彫り込み感を出す 
             box-shadow: 
-                5px 5px 0px #3e2723, /* 濃い茶色のズレた影で厚みを表現 */
-                0 10px 20px rgba(0,0,0,0.3), /* 全体の浮遊感 */
-                inset 0 0 30px rgba(0,0,0,0.1); /* 板のくすみ感 */
+                5px 5px 0px #3e2723, /* 濃い茶色のズレた影で厚みを表現 
+                0 10px 20px rgba(0,0,0,0.3), /* 全体の浮遊感 
+                inset 0 0 30px rgba(0,0,0,0.1); /* 板のくすみ感 
             
-            /* 看板っぽさを出す装飾 */
-            padding: 30px;            /* 余白を広げてゆったりさせる */
-            width: 600px;             /* 250px から 400px に大幅アップ */
-            min-height: 150px;        /* 最小の高さも少し確保 */
+            /* 看板っぽさを出す装飾 
+            padding: 30px;            /* 余白を広げてゆったりさせる 
+            width: 600px;             /* 250px から 400px に大幅アップ 
+            min-height: 150px;        /* 最小の高さも少し確保 
             
-            /* フォントサイズと指定 */
+            /* フォントサイズと指定 
             font-family: 'IkahoCombined', sans-serif;
-            font-size: 3rem;        /* 文字も一回り大きく（1.2〜1.5くらいがおすすめ） */
-            line-height: 1.6;         /* 行間を広げると読みやすくなります */
+            font-size: 3rem;        /* 文字も一回り大きく（1.2〜1.5くらいがおすすめ） 
+            line-height: 1.6;         /* 行間を広げると読みやすくなります 
             font-weight: bold;
             color: white;
             text-align: center;
@@ -85,6 +86,49 @@
             transform: rotate(-1deg);            
             z-index: 101;
             pointer-events: auto; /* リンクをクリックできるように */
+            display: none;
+            position: absolute;
+            z-index: 101;
+            pointer-events: auto;
+        
+            /* --- 1. 背景色と質感（古びた地図風） --- */
+            background-color: #f4e4bc; /* クリーム色 */
+            background-image: repeating-linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.03) 0px,
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 15px
+            );
+        
+            /* --- 2. 形状（ガタガタの板） --- */
+            border: 10px solid #5d4037; /* 太めの木の枠 */
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            
+            /* --- 3. サイズ（大幅アップ！） --- */
+            width: 800px; 
+            min-height: 250px;
+            padding: 50px;
+            box-sizing: border-box; /* パディングを含めたサイズ計算 */
+        
+            /* --- 4. フォントと文字色（こげ茶＋彫り込み風） --- */
+            font-family: 'IkahoCombined', sans-serif;
+            font-size: 4rem; /* さらに大きく */
+            line-height: 1.4;
+            font-weight: bold;
+            color: #4e342e; /* 濃い茶色 */
+            text-align: center;
+            /* 文字の彫り込み感を出すため、白っぽいハイライトを1px下に置く */
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+        
+            /* --- 5. 看板の厚みと浮遊感 --- */
+            box-shadow: 
+                8px 8px 0px #3e2723, /* 板の厚み */
+                0 15px 30px rgba(0,0,0,0.4), /* 全体の影 */
+                inset 0 0 50px rgba(0,0,0,0.1); /* 内側のくすみ */
+        
+            transform: rotate(-1deg);
+                    
         }
         /* リンク（◇ボタン）も大きくする */
         #balloon-link {
