@@ -316,26 +316,20 @@
                 }
             
                 // 3. カメラの追従（ガクガク防止版）
-                const idealOffset = new THREE.Vector3(10, 20, 30);
-                const targetPos = playerMesh.position.clone().add(idealOffset);
-
+                // 【重要】lerpをやめて、直接位置を計算する
                 // 【重要】ズーム中でない時だけ、カメラをプレイヤーに追従させる
                 if (!isZooming) {
-                    const idealOffset = new THREE.Vector3(10, 20, 30);
-                    const targetPos = playerMesh.position.clone().add(idealOffset);
-                }
-                
-                // 【重要】lerpをやめて、直接位置を計算する
-                const idealOffset = new THREE.Vector3(10, 20, 30);
-                const targetPos = playerMesh.position.clone().add(idealOffset);
-                
-                // 滑らかさを捨てて「完全同期」させる
-                camera.position.copy(targetPos); 
-                controls.target.copy(playerMesh.position);
+                    idealOffset = new THREE.Vector3(10, 20, 30);
+                    targetPos = playerMesh.position.clone().add(idealOffset);
                     
-                // ぬるっと戻したいなら lerp、パッと戻したいなら copy
-                // camera.position.lerp(targetPos, 0.1); 
-                // controls.target.lerp(playerMesh.position, 0.1);
+                    // 滑らかさを捨てて「完全同期」させる
+                    camera.position.copy(targetPos); 
+                    controls.target.copy(playerMesh.position);
+                        
+                    // ぬるっと戻したいなら lerp、パッと戻したいなら copy
+                    // camera.position.lerp(targetPos, 0.1); 
+                    // controls.target.lerp(playerMesh.position, 0.1);
+                }
             }
             
             // --- 5. 描画直前にコントロール更新 ---
