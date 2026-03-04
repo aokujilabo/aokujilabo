@@ -35,8 +35,12 @@
             border: 6px solid #5d4037; /* 太めの木の枠線 */
             
             /* 看板っぽさを出す装飾 */
-            width: 250px;
-            min-height: 100px;
+            padding: 30px;            /* 余白を広げてゆったりさせる */
+            width: 400px;             /* 250px から 400px に大幅アップ */
+            min-height: 150px;        /* 最小の高さも少し確保 */
+            font-size: 1.5rem;        /* 文字も一回り大きく（1.2〜1.5くらいがおすすめ） */
+            line-height: 1.6;         /* 行間を広げると読みやすくなります */
+            
             font-weight: bold;
             text-align: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.1);
@@ -231,9 +235,9 @@
                 
                 // --- 2. ズーム位置の計算（高さをしっかり確保！） ---
                 const zoomPos = activeSign.mesh.position.clone();
-                const dist = 4;      // 看板からの距離
-                zoomPos.y += 1.5; 
-                const offsetY = 1.2; // ★カメラの高さ（看板の中央に合わせる）
+                const dist = 5;      // 看板からの距離
+                zoomPos.y += 4.5; 
+                const offsetY = 1.5; // ★カメラの高さ（看板の中央に合わせる）
 
                 // 看板の向き(rot)に合わせて、手前の位置を計算
                 zoomPos.x += Math.sin(activeSign.rot) * dist;
@@ -384,14 +388,6 @@
                         activeSign = data;
                         
                         // ボタンや吹き出しの位置を「今」の座標に更新
-                        /*
-                        if (balloon.style.display !== 'block') {
-                            checkBtn.style.display = 'block';
-                            updateUIPosition(data.mesh, checkBtn, 2.5);
-                        } else {
-                            updateUIPosition(data.mesh, balloon, 3.0);
-                        }
-                        */
                         // ボタン表示
                         if (balloon.style.display !== 'block') {
                             checkBtn.style.display = 'block';
@@ -400,7 +396,7 @@
                         // 看板内容表示
                         if (isZooming) {
                             // ズーム中は看板のちょうど真ん中（高さ1.5m付近）に表示
-                            updateUIPosition(activeSign.mesh, balloon, 1.5);
+                            updateUIPosition(activeSign.mesh, balloon, 1.8);
                         } else {
                             // 通常時は看板の少し上
                             updateUIPosition(activeSign.mesh, balloon, 2.5);
