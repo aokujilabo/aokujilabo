@@ -260,13 +260,14 @@
             element.style.top = `${y}px`;
             element.style.transform = 'translate(-50%, -100%)';
         }
-        
+
+        // animation管理
         function animate() {
             requestAnimationFrame(animate);
             const delta = clock.getDelta();
             if (mixer) mixer.update(delta);
-            world.fixedStep();
 
+            // --- 1. 入力を受け取る ---
             let kX = 0, kZ = 0;
             if (keys['ArrowUp'] || keys['KeyW']) kZ = 1;
             if (keys['ArrowDown'] || keys['KeyS']) kZ = -1;
@@ -281,10 +282,15 @@
             const inputZ = move.z || (keys['ArrowUp'] || keys['KeyW'] ? 1 : keys['ArrowDown'] || keys['KeyS'] ? -1 : 0);
             const isMoving = Math.abs(inputX) > 0.1 || Math.abs(inputZ) > 0.1;
             const speed = 10;
-
+            
+            // --- 2. 物理体に速度を与える ---
             playerBody.velocity.x = finalX * speed;
             playerBody.velocity.z = -finalZ * speed;
 
+            // --- 3. ここで物理計算を進める！ (速度を与えた直後) ---
+            world.step(1/60, delta, 3);
+            
+            // --- 4. メッシュとカメラの更新 ---
             // プレイヤーの移動処理
             if (playerMesh) {
                 // 1. 物理体との同期
@@ -292,7 +298,6 @@
                 playerMesh.position.y -= 0.5; // めり込み微調整
             
                 // 2. 向きの修正（左で下、下で左…を直す決定版）
-
                 // 入力の有無を確認（0.1以上の入力があれば「移動中」とみなす）
                 if (isMoving) {
                     playerMesh.rotation.y = Math.atan2(-inputX, inputZ) + Math.PI;
@@ -311,10 +316,11 @@
                 controls.target.lerp(playerMesh.position, 0.1); 
             }
             
+            // --- 5. 描画直前にコントロール更新 ---
             controls.update();
             renderer.render(scene, camera);
 
-            
+            // --- 6. 距離判定 (描画の後でもOK) ---
             let nearAnySign = false;
             // 看板との距離チェック
             signData.forEach((data) => {
@@ -342,7 +348,6 @@
                 balloon.style.display = 'none';
                 activeSign = null;
             }
-            
         }
         animate();
     </script>
