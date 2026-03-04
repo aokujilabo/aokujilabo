@@ -44,48 +44,6 @@
         }
     
         #balloon {
-            /*
-            display: none;
-            position: absolute;
-            /* 看板の板をイメージしたデザイン */
-            /* 1. 木目っぽい質感を出す（細い線のグラデーションを重ねる） 
-            background-image: repeating-linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.05) 0px,
-                rgba(255, 255, 255, 0.05) 1px,
-                transparent 1px,
-                transparent 10px
-            );
-        
-            /* 2. 角を「完全な直線」にせず、少しガタガタさせる 
-            /* 左上、右上、右下、左下の丸みをバラバラにするだけで手作り感が出ます 
-            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-        
-            /* 3. 「看板の厚み」を影で表現する 
-            /* 外側の影(box-shadow)に、内側の影(inset)を組み合わせて彫り込み感を出す 
-            box-shadow: 
-                5px 5px 0px #3e2723, /* 濃い茶色のズレた影で厚みを表現 
-                0 10px 20px rgba(0,0,0,0.3), /* 全体の浮遊感 
-                inset 0 0 30px rgba(0,0,0,0.1); /* 板のくすみ感 
-            
-            /* 看板っぽさを出す装飾 
-            padding: 30px;            /* 余白を広げてゆったりさせる 
-            width: 600px;             /* 250px から 400px に大幅アップ 
-            min-height: 150px;        /* 最小の高さも少し確保 
-            
-            /* フォントサイズと指定 
-            font-family: 'IkahoCombined', sans-serif;
-            font-size: 3rem;        /* 文字も一回り大きく（1.2〜1.5くらいがおすすめ） 
-            line-height: 1.6;         /* 行間を広げると読みやすくなります 
-            font-weight: bold;
-            color: white;
-            text-align: center;
-
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.1);
-
-            transform: rotate(-1deg);            
-            z-index: 101;
-            pointer-events: auto; /* リンクをクリックできるように */
             display: none;
             position: absolute;
             z-index: 101;
@@ -181,7 +139,7 @@
             { x: -40, z: 0, rot: Math.PI / 2, msg: "西の看板：森が広がっている<br>とうれしいな" }, // 右を向く
             { x: 0, z: 40, rot: Math.PI, msg: "南の看板：太陽がまぶしい<br>わけもなく" }, // そのまま（南向き）
             { x: 0, z: -40, rot: 0, msg: "北の看板：こっちは寒いぞ<br>気を付けろ" }, // 180度回転
-            { x: -10, z: -10, rot: 0, msg: "IRIAMのりんく<br>ウクレレ弾いてるよ", url: "https://web.iriam.app/s/user/7iqMoj5s8y?uuid=40876107" }, // 180度回転
+            { x: -10, z: -10, rot: 0, msg: "ここまで見てくれて<br>ありがと🍆"}, // 180度回転
             { x: 0, z: -10, rot: 0, msg: "ツイッターのりんく<br>落書きのせたりしてるよ", url: "https://x.com/aokujira_iriam" }, // 180度回転
             { x: 10, z: -10, rot: 0, msg: "なかみはない<br>からっぽの看板のようだ" } // 180度回転
         ];
