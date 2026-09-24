@@ -33,7 +33,9 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { 
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
@@ -172,7 +174,7 @@
     .pixel-label {
       font-family: "DotGothic16", monospace;
       font-size: 12px;
-      color: var(--blue-dark);
+      color: #f0f0f0;
       letter-spacing: .08em;
     }
 
@@ -672,16 +674,59 @@
 
     /* ---------- Responsive ---------- */
     @media (max-width: 900px) {
-      .links-grid { grid-template-columns: repeat(2, 1fr); }
-      .about-box { grid-template-columns: 220px 1fr; }
-      .player-data { grid-column: 1 / -1; }
-      .archive-grid { grid-template-columns: repeat(2, 1fr); }
+      .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .about-box {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .player-data {
+        grid-column: 1 / -1;
+      }
+
+      .archive-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 680px) {
-      .header-inner { min-height: 62px; }
-      .tagline { display: none; }
-      .menu-button { display: block; }
+
+      /* ---------- Header ---------- */
+      .header-inner {
+        width: calc(100% - 20px);
+        min-height: 62px;
+        gap: 10px;
+      }
+
+      .brand {
+        min-width: 0;
+        gap: 8px;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        font-size: 19px;
+      }
+
+      .site-title {
+        font-size: 20px;
+        white-space: nowrap;
+      }
+
+      .tagline {
+        display: none;
+      }
+
+      .menu-button {
+        display: block;
+        flex-shrink: 0;
+        padding: 7px 10px;
+        font-size: 12px;
+      }
 
       .nav {
         display: none;
@@ -695,23 +740,55 @@
         background: rgba(255,253,247,.98);
         border-bottom: 2px solid var(--line);
       }
-      .nav.is-open { display: flex; }
 
-      .hero { padding-top: 16px; }
-      .hero-frame { min-height: 420px; }
-      .hero-copy { min-height: 420px; padding: 28px; }
+      .nav.is-open {
+        display: flex;
+      }
 
+
+      /* ---------- Hero ---------- */
+      .hero {
+        padding-top: 16px;
+      }
+
+      .hero-frame {
+        min-height: 420px;
+      }
+
+      .hero-copy {
+        min-height: 420px;
+        padding: 28px;
+      }
+
+
+      /* ---------- Links / Archive ---------- */
       .links-grid,
-      .archive-grid { grid-template-columns: 1fr; }
+      .archive-grid {
+        grid-template-columns: 1fr;
+      }
 
+
+      /* ---------- About ---------- */
       .about-box {
         grid-template-columns: 1fr;
       }
 
-      .about-image { min-height: 200px; }
+      .about-image {
+        min-height: 200px;
+      }
 
-      .section { padding: 48px 0; }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
+
+      /* ---------- Section ---------- */
+      .section {
+        padding: 48px 0;
+      }
+
+
+      /* ---------- Footer ---------- */
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
@@ -957,7 +1034,8 @@
 <footer id="contact">
   <div class="footer-inner">
     <div>
-      <div class="footer-title">🐾 AOKUJILAB</div>
+      <span class="brand-mark"></span>
+      <div class="footer-title">AOKUJILAB</div>
       <p class="footer-copy">好きなことで、つくる毎日を。</p>
     </div>
 
