@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0d5b91">
   <meta name="description" content="AOKUJILAB｜あおくじらのクリエイターズラボ">
+  <link rel="icon" href="favicon.png" type="image/png">
   <title>AOKUJILAB</title>
 
   <!-- ドット風フォント。ネット接続がない環境では下のCSSフォールバックを使用 -->
@@ -27,6 +28,8 @@
       --accent-youtube: #ef4d4d;
       --accent-iriam: #ed71bd;
       --accent-notion: #465466;
+      --accent-twitter: #1DA1F2;
+      --accent-game: #66c0f4;
     }
 
     * { box-sizing: border-box; }
@@ -141,7 +144,7 @@
     }
 
     .section {
-      padding: 64px 0;
+      padding:  24px;
       scroll-margin-top: 90px;
     }
 
@@ -180,7 +183,7 @@
       position: relative;
       min-height: 470px;
       overflow: hidden;
-      border: 4px solid var(--ink);
+      border: 12px solid var(--ink);
       border-radius: 12px;
       background:
         linear-gradient(180deg, #3bb7ed 0%, #8adbf6 52%, #e8f6f8 53%, #6bb4d0 100%);
@@ -197,6 +200,8 @@
         radial-gradient(circle at 75% 24%, rgba(255,255,255,.9) 0 5px, transparent 6px),
         radial-gradient(circle at 18% 30%, rgba(255,255,255,.75) 0 7px, transparent 8px),
         linear-gradient(135deg, transparent 48%, rgba(255,255,255,.7) 49% 50%, transparent 51%);
+      background-image:url("image/site_header.png");
+      background-size: 113%;
       opacity: .95;
     }
 
@@ -230,7 +235,7 @@
     .hero-menu {
       width: min(310px, 100%);
       padding: 14px;
-      border: 3px solid #fff;
+      border: 12px solid #fff;
       background: rgba(13,91,145,.88);
       box-shadow: 5px 5px 0 rgba(18,68,107,.55);
     }
@@ -271,19 +276,88 @@
       background: var(--accent);
       border: 0;
       border-radius: 0;
-      filter: drop-shadow(4px 4px 0 color-mix(in srgb, var(--accent) 35%, #8ebbd0));
+
+            filter: drop-shadow(4px 4px 0 color-mix(in srgb, var(--accent) 35%, #8ebbd0));
       transition: transform .15s ease, filter .15s ease;
       isolation: isolate;
     }
 
-    /* カード内部を白くして、外周だけアクセント色のドット枠にする */
-    .link-card::before {
-      content: "";
-      position: absolute;
-      inset: 3px;
-      z-index: -1;
-      background: #fff;
-      clip-path: inherit;
+    /* ---------- Reusable pixel-style corners ---------- */
+    /*
+      使い方:
+      .dot-corner
+      .dot-corner-tl  左上
+      .dot-corner-tr  右上
+      .dot-corner-bl  左下
+      .dot-corner-br  右下
+
+      4つとも付ければ四隅がドット風にカットされます。
+      --dot-size でカットの大きさを変更できます。
+    */
+    .dot-corner {
+      --dot-size: 9px;
+      --dot-step: 3px;
+
+      --tl: 0px;
+      --tr: 0px;
+      --bl: 0px;
+      --br: 0px;
+
+      --tls: 0px;
+      --trs: 0px;
+      --bls: 0px;
+      --brs: 0px;
+
+      clip-path: polygon(
+        /* 左上 */
+        var(--tl) 0,
+        /* 右上 */
+        calc(100% - var(--tr)) 0,
+        calc(100% - var(--tr)) var(--trs),
+        calc(100% - var(--trs)) var(--trs),
+        calc(100% - var(--trs)) var(--tr),
+        100% var(--tr),
+
+        /* 右下 */
+        100% calc(100% - var(--br)),
+        calc(100% - var(--br)) calc(100% - var(--brs)),
+        calc(100% - var(--brs)) calc(100% - var(--brs)),
+        calc(100% - var(--brs)) calc(100% - var(--br)),
+        calc(100% - var(--br)) 100%,
+
+        /* 左下 */
+        var(--bl) 100%,
+        var(--bl) calc(100% - var(--bls)),
+        var(--bls) calc(100% - var(--bls)),
+        var(--bls) calc(100% - var(--bl)),
+        0 calc(100% - var(--bl)),
+
+        /* 左上へ */
+        0 var(--tl),
+        var(--tls) var(--tl),
+        var(--tls) var(--tls),
+        var(--tl) var(--tls)
+      );
+    }
+
+    .dot-corner-tl {
+      --tl: var(--dot-size);
+      --tls: var(--dot-step);
+    }
+
+    .dot-corner-tr {
+      --tr: var(--dot-size);
+      --trs: var(--dot-step);
+    }
+
+    .dot-corner-bl {
+      --bl: var(--dot-size);
+      --bls: var(--dot-step);
+    }
+
+    .dot-corner-br {
+      --br: var(--dot-size);
+      --brs: var(--dot-step);
     }
 
     .link-card:hover,
@@ -309,7 +383,16 @@
       font-size: 13px;
       line-height: 1;
       letter-spacing: .05em;
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 6px 100%, 6px calc(100% - 4px), 0 calc(100% - 4px));
+      clip-path: polygon(
+       0 0,
+       calc(100% - 6px) 0,
+       calc(100% - 6px) 4px,
+       100% 4px,
+       100% 100%,
+       6px 100%,
+       6px calc(100% - 4px),
+       0 calc(100% - 4px)
+      );
     }
 
     .link-card.note { --accent: var(--accent-note); }
@@ -318,6 +401,8 @@
     .link-card.youtube { --accent: var(--accent-youtube); }
     .link-card.iriam { --accent: var(--accent-iriam); }
     .link-card.notion { --accent: var(--accent-notion); }
+    .link-card.twitter { --accent: var(--accent-twitter); }
+    .link-card.game { --accent: var(--accent-game); }
 
     .card-icon {
       width: 46px;
@@ -335,6 +420,7 @@
       margin: 0;
       font-size: 19px;
       line-height: 1.2;
+      color: #f0f0f0;
     }
 
     .card-arrow {
@@ -348,7 +434,7 @@
     .card-description {
       margin: 0;
       font-size: 11px;
-      color: #5c7788;
+      color: #f0f0f0;
     }
 
     .card-image {
@@ -368,7 +454,7 @@
     /* ---------- About ---------- */
     .about-box {
       display: grid;
-      grid-template-columns: 260px 1fr 280px;
+      grid-template-columns: 260px 1fr 360px;
       gap: 26px;
       align-items: center;
       padding: 24px;
@@ -379,12 +465,16 @@
     }
 
     .about-image {
-      min-height: 240px;
+      aspect-ratio: 1 / 1;
+      min-height: 0;
       display: grid;
       place-items: center;
       border: 3px solid var(--blue);
       border-radius: 10px;
       background: linear-gradient(160deg, #dff6ff, #9fdcf0);
+      background-image: url("image/profile_icon.png");
+      background-size: cover;
+      background-position: center;
       font-size: 14px;
       font-family: "DotGothic16", monospace;
       text-align: center;
@@ -484,18 +574,22 @@
       isolation: isolate;
     }
 
-    /* CSSだけで作る、ゲームっぽいゆるい波形 */
+    /* CSSだけで作る、なめらかにつながる波形 */
     footer::before {
       content: "";
       position: absolute;
       z-index: -1;
       left: 0;
       right: 0;
-      top: -24px;
-      height: 48px;
+      top: -30px;
+      height: 60px;
       background: var(--blue-dark);
-      -webkit-mask: radial-gradient(38px 20px at 19px 24px, #000 98%, transparent 100%) 0 0 / 76px 48px repeat-x;
-      mask: radial-gradient(38px 20px at 19px 24px, #000 98%, transparent 100%) 0 0 / 76px 48px repeat-x;
+      -webkit-mask:
+        radial-gradient(52px 30px at 52px 30px, #000 99%, transparent 100%)
+        0 0 / 104px 60px repeat-x;
+      mask:
+        radial-gradient(52px 30px at 52px 30px, #000 99%, transparent 100%)
+        0 0 / 104px 60px repeat-x;
     }
 
     .footer-inner {
@@ -635,7 +729,7 @@
        ========================= -->
   <section class="hero">
     <div class="container">
-      <div class="hero-frame">
+      <div class="hero-frame dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" style=" --dot-size: 12px;">
         <div class="hero-art" aria-hidden="true"></div>
 
         <div class="hero-copy">
@@ -643,7 +737,7 @@
           <h1 class="hero-title">AOKUJILAB</h1>
           <p class="hero-subtitle">— PLAY YOUR LIFE —</p>
 
-          <nav class="hero-menu" aria-label="ゲーム風メニュー">
+          <nav class="hero-menu dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br"  style=" --dot-size: 12px;" aria-label="ゲーム風メニュー">
             <a href="#contents">START</a>
             <a href="#contents">CONTENTS</a>
             <a href="#about">ABOUT</a>
@@ -662,43 +756,17 @@
     <div class="container">
       <div class="section-heading">
         <div>
-          <p class="pixel-label">LINKS</p>
           <h2 class="section-title">🎮 CONTENTS</h2>
           <p class="section-kicker">いろんな場所に遊びに行けるよ！</p>
         </div>
       </div>
 
       <div class="links-grid">
+      
+      
 
-        <a class="link-card note unset-link" href="https://note.com/aokujilabo" data-name="NOTE">
+        <a class="link-card youtube dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://youtube.com/channel/UCYAWC5bZuWkPHHFl5GdZfZw?si=6W3SsUh6A2aOwEgI" data-name="YOUTUBE">
           <span class="card-number" aria-hidden="true">01</span>
-          <span class="card-icon">📖</span>
-          <h3 class="card-title">NOTE</h3>
-          <span class="card-arrow">→</span>
-          <p class="card-description">日記・活動記録・考えごと</p>
-          <div class="card-image">NOTE IMAGE / THUMBNAIL</div>
-        </a>
-
-        <a class="link-card suzuri unset-link" href="https://suzuri.jp/aokujira/favorites" data-name="SUZURI">
-          <span class="card-number" aria-hidden="true">02</span>
-          <span class="card-icon">🛒</span>
-          <h3 class="card-title">SUZURI</h3>
-          <span class="card-arrow">→</span>
-          <p class="card-description">グッズの販売はこちら</p>
-          <div class="card-image">SUZURI IMAGE / THUMBNAIL</div>
-        </a>
-
-        <a class="link-card discord unset-link" href="https://discord.gg/PF42aRMBz9" data-name="DISCORD">
-          <span class="card-number" aria-hidden="true">03</span>
-          <span class="card-icon">💬</span>
-          <h3 class="card-title">DISCORD</h3>
-          <span class="card-arrow">→</span>
-          <p class="card-description">みんなとおしゃべりしよう</p>
-          <div class="card-image">DISCORD IMAGE / THUMBNAIL</div>
-        </a>
-
-        <a class="link-card youtube unset-link" href="https://youtube.com/channel/UCYAWC5bZuWkPHHFl5GdZfZw?si=6W3SsUh6A2aOwEgI" data-name="YOUTUBE">
-          <span class="card-number" aria-hidden="true">04</span>
           <span class="card-icon">▶</span>
           <h3 class="card-title">YOUTUBE</h3>
           <span class="card-arrow">→</span>
@@ -706,8 +774,8 @@
           <div class="card-image">YOUTUBE IMAGE / THUMBNAIL</div>
         </a>
 
-        <a class="link-card iriam unset-link" href="https://web.iriam.app/s/user/7iqMoj5s8y?uuid=40876107" data-name="IRIAM">
-          <span class="card-number" aria-hidden="true">05</span>
+        <a class="link-card iriam dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://web.iriam.app/s/user/7iqMoj5s8y?uuid=40876107" data-name="IRIAM">
+          <span class="card-number" aria-hidden="true">02</span>
           <span class="card-icon">🎤</span>
           <h3 class="card-title">IRIAM</h3>
           <span class="card-arrow">→</span>
@@ -715,13 +783,58 @@
           <div class="card-image">IRIAM IMAGE / THUMBNAIL</div>
         </a>
 
-        <a class="link-card notion unset-link" href="https://app.notion.com/p/28ce40d9968e809a9bebd7bf3812b6b8?v=28ce40d9968e80468338000c461960ff&source=copy_link" data-name="NOTION">
+        <a class="link-card note dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://note.com/aokujilabo" data-name="NOTE">
+          <span class="card-number"aria-hidden="true">03</span>
+          <span class="card-icon">📖</span>
+          <h3 class="card-title">NOTE</h3>
+          <span class="card-arrow">→</span>
+          <p class="card-description">日記・活動記録・考えごと</p>
+          <div class="card-image">NOTE IMAGE / THUMBNAIL</div>
+        </a>
+
+        <a class="link-card suzuri dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://suzuri.jp/aokujira/favorites" data-name="SUZURI">
+          <span class="card-number" aria-hidden="true">04</span>
+          <span class="card-icon">🛒</span>
+          <h3 class="card-title">SUZURI</h3>
+          <span class="card-arrow">→</span>
+          <p class="card-description">グッズの販売はこちら</p>
+          <div class="card-image">SUZURI IMAGE / THUMBNAIL</div>
+        </a>
+
+        <a class="link-card discord dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://discord.gg/PF42aRMBz9" data-name="DISCORD">
+          <span class="card-number" aria-hidden="true">05</span>
+          <span class="card-icon">💬</span>
+          <h3 class="card-title">DISCORD</h3>
+          <span class="card-arrow">→</span>
+          <p class="card-description">みんなとおしゃべりしよう</p>
+          <div class="card-image">DISCORD IMAGE / THUMBNAIL</div>
+        </a>
+
+        <a class="link-card notion dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://app.notion.com/p/28ce40d9968e809a9bebd7bf3812b6b8?v=28ce40d9968e80468338000c461960ff&source=copy_link" data-name="NOTION">
           <span class="card-number" aria-hidden="true">06</span>
           <span class="card-icon">N</span>
           <h3 class="card-title">NOTION</h3>
           <span class="card-arrow">→</span>
           <p class="card-description">各種情報・資料</p>
           <div class="card-image">NOTION IMAGE / THUMBNAIL</div>
+        </a>
+
+        <a class="link-card twitter dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="https://x.com/aokujira_iriam" data-name="TWITTER">
+          <span class="card-number" aria-hidden="true">07</span>
+          <span class="card-icon">🕊</span>
+          <h3 class="card-title">TWITTER</h3>
+          <span class="card-arrow">→</span>
+          <p class="card-description">日常・歌枠セトリ</p>
+          <div class="card-image">TWITTER IMAGE / THUMBNAIL</div>
+        </a>
+
+        <a class="link-card game dot-corner dot-corner-tl dot-corner-tr dot-corner-bl dot-corner-br" href="#" data-name="GAME">
+          <span class="card-number" aria-hidden="true">08</span>
+          <span class="card-icon">🎮</span>
+          <h3 class="card-title">GAME</h3>
+          <span class="card-arrow">→</span>
+          <p class="card-description">あそびどころ</p>
+          <div class="card-image">GAME IMAGE / THUMBNAIL</div>
         </a>
 
       </div>
@@ -734,12 +847,7 @@
   <section class="section" id="about">
     <div class="container">
       <div class="about-box">
-        <div class="about-image">
-          <div>
-            <div style="font-size:72px">🦊</div>
-            <div>ABOUT IMAGE<br>ここにイラストを配置</div>
-          </div>
-        </div>
+        <div class="about-image"></div>
 
         <div class="about-text">
           <p class="pixel-label">PLAYER DATA</p>
@@ -764,7 +872,7 @@
           <h4>PLAYER DATA</h4>
           <div class="data-row"><span>NAME</span><strong>あおくじら</strong></div>
           <div class="data-row"><span>TYPE</span><strong>KEMONO</strong></div>
-          <div class="data-row"><span>HEIGHT</span><strong>約40cm（設定）</strong></div>
+          <div class="data-row"><span>HEIGHT</span><strong>約20cm～40cm（可変する）</strong></div>
           <div class="data-row"><span>WEAPON</span><strong>ウクレレ</strong></div>
           <div class="data-row"><span>SKILL</span><strong>歌・動画・配信・制作</strong></div>
         </div>
@@ -842,12 +950,6 @@
       <a href="#about">ABOUT</a>
       <a href="#archive">ARCHIVE</a>
       <a href="#contents">LINKS</a>
-    </nav>
-    <br>
-    <nav class="footer-nav">
-      <a href="https://youtube.com/channel/UCYAWC5bZuWkPHHFl5GdZfZw?si=6W3SsUh6A2aOwEgI">▶</a>
-      <a href="https://x.com/aokujira_iriam">X</a>
-      <a href="https://web.iriam.app/s/user/7iqMoj5s8y?uuid=40876107">IRIAM</a>
     </nav>
   </div>
 </footer>
