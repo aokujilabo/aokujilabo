@@ -1585,10 +1585,9 @@
         left: 5px;
       }
 
-      .hero-copy {
-        margin-top: -80px;
-        padding: 15px;
-      }
+        .hero-copy {
+            padding: 25px 15px;
+        }
 
       .hero-menu {
         display: none;
@@ -1623,18 +1622,6 @@
         flex-direction: column;
 
         align-items: flex-start;
-      }
-    }
-    
-    @media (max-height:800px) {
-      .hero-copy {
-        margin-top: -80px;
-        padding: 15px;
-      }
-
-      .hero-menu {
-        --menu-border: 5px;
-        --menu-cut: 5px;
       }
     }
 </style>
