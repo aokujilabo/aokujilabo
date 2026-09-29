@@ -1586,9 +1586,8 @@
       }
 
       .hero-copy {
-        min-height: 420px;
-
-        padding: 5px;
+        margin-top: -80px;
+        padding: 15px;
       }
 
       .hero-menu {
