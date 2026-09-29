@@ -440,14 +440,11 @@
       --pixel-width: 5px;
       --pixel-frame-color: var(--ink);
       --pixel-inner-color: transparent;
-      --frame-color: var(--ink);
-      --frame-width: 5px;
-      --frame-cut: 5px;
-      --inner-color: transparent;
 
       position: relative;
 
-      min-height: 470px;
+      aspect-ratio: 2.4 / 1;
+      min-height: 0;
 
       overflow: hidden;
 
@@ -920,7 +917,6 @@
       grid-column: 1 / -1;
       
       margin-top: -50px;
-      padding-top: 50px;
 
       position: relative;
 
@@ -954,6 +950,9 @@
     }
 
 
+    .card-image img {
+      margin-top: 50px;
+    }
 
     .card-image > * {
       position: relative;
@@ -1544,8 +1543,8 @@
       }
 
       .hero-frame {
-        min-height: 420px;
-
+        aspect-ratio: 2.4 / 1;
+        min-height: 0;
         --pixel-width: 5px;
       }
 
@@ -1598,4 +1597,16 @@
         align-items: flex-start;
       }
     }
-  </style>
+    
+    @media (max-height:700px) {
+      .hero-copy {
+        margin-top: -80px;
+        padding: 15px;
+      }
+
+      .hero-menu {
+        --menu-border: 5px;
+        --menu-cut: 5px;
+      }
+    }
+</style>
