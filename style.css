@@ -32,14 +32,14 @@
       --line: #BFA87E;
       --shadow: #8ebbd0;
 
-      --accent-note: #19a7d8;
-      --accent-suzuri: #1765a6;
-      --accent-discord: #6864d9;
-      --accent-youtube: #ef4d4d;
-      --accent-iriam: #ed71bd;
-      --accent-notion: #465466;
-      --accent-twitter: #1da1f2;
-      --accent-game: #66c0f4;
+      --accent-note: #C9A44C;
+      --accent-suzuri: #55AFC4;
+      --accent-discord: #6856A5;
+      --accent-youtube: #E94A4A;
+      --accent-iriam: #B98AAE;
+      --accent-notion: #C97845;
+      --accent-twitter: #34383D;
+      --accent-game: #5E9568;
 
       /* ピクセル角の大きさ */
       --pixel-cut: 12px;
@@ -428,6 +428,122 @@
       letter-spacing: .08em;
     }
 
+	/* =========================================================
+	   かくれんぼ
+	   ========================================================= */
+
+	#hide-game {
+	  position: absolute;
+	  inset: 0;
+	  pointer-events: none;
+	  z-index: 20;
+	}
+	/* あおくじらが隠れる側 */
+	.link-card,
+	.hero-menu a,
+	.menu-button,
+	.section-title,
+	.archive-card,
+	.about-box,
+	footer {
+	  position: relative;
+	  z-index: 21;
+	}
+
+	#hidden-character {
+	  position: absolute;
+
+	  width: 120px;
+	  height: auto;
+
+	  cursor: pointer;
+	  pointer-events: auto;
+	  user-select: none;
+
+	  display: block;
+
+	  /* 普通のイラストなのでドット補間はしない */
+	  image-rendering: auto;
+
+	  /* 少しだけ自然に見せる */
+	  transition:
+	    left .15s ease,
+	    top .15s ease;
+	}
+
+
+	/* ---------------------------------------------------------
+	   見つけたときのポップアップ
+	   --------------------------------------------------------- */
+
+	.hide-popup {
+	  position: fixed;
+
+	  left: 50%;
+	  top: 50%;
+
+	  transform: translate(-50%, -50%);
+
+	  z-index: 1000;
+
+	  padding: 20px 28px;
+
+	  background: #fff;
+
+	  border: 4px solid #6d83a8;
+
+	  box-shadow:
+	    6px 6px 0 rgba(0, 0, 0, 0.2);
+
+	  font-family: "PixelMplus12", sans-serif;
+
+	  text-align: center;
+
+	  display: none;
+	}
+
+	.hide-popup.show {
+	  display: block;
+	}
+
+	.hide-popup p {
+	  margin: 4px 0;
+	}
+	
+	#hide-popup-close {
+	  margin-top: 14px;
+	  padding: 8px 18px;
+
+	  font-family: "PixelMplus12", sans-serif;
+	  font-size: 14px;
+
+	  background: #fff;
+	  color: #3B6FA5 !important;
+	  -webkit-text-fill-color: #3B6FA5 !important;
+
+	  cursor: pointer;
+
+	  border: 0;
+	  border-radius: 0;
+
+	  /* pixel-frame */
+	  --pixel-frame-color: #3B6FA5;
+	  --pixel-inner-color: #fff;
+
+	  transition:
+	    transform .1s ease,
+	    filter .1s ease;
+	}
+
+	#hide-popup-close:hover {
+	  filter: brightness(1.05);
+	  transform: translate(-2px, -2px);
+	}
+
+	#hide-popup-close:active {
+	  transform: translate(2px, 2px);
+	}
+
     /* =========================================================
        HERO
        ========================================================= */
@@ -454,7 +570,59 @@
 
       isolation: isolate;
     }
+    
+	.hero-icon {
+		position: absolute;
+	    width: 15%;
+	    height: auto;
+		right: 250px;
+		bottom: 30px;
+		z-index: 10;
+	}
 
+	/* ヘッダー内キャラクター */
+	.hero-character {
+	    position: absolute;
+	    inset: 0;
+	    z-index: 10;
+	    pointer-events: none;
+	  image-rendering: pixelated;
+	}
+
+	.hero-icon {
+	    pointer-events: auto;
+	    cursor: pointer;
+	}
+	
+	.speech-bubble {
+	    --pixel-frame-color: #3B6FA5;
+	    --pixel-inner-color: #fff;
+
+	    position: absolute;
+	    right: 250px;
+	    bottom: 250px;
+
+	    padding: 12px 18px;
+
+	    color: #3B6FA5 !important;
+
+	    display: none;
+	    z-index: 20;
+	    pointer-events: none;
+
+	    font-size: 14px;
+	    line-height: 1.5;
+	}
+
+	/* 吹き出しの文字を確実に前面へ */
+	.speech-bubble {
+	    isolation: isolate;
+	}
+
+	.speech-bubble::before {
+	    z-index: -1;
+	}
+	
     /*
      * HERO画像は「内側のフレーム」に合わせて配置。
      * ここで内側の角もカクカクにする。
