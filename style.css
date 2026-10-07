@@ -25,11 +25,11 @@
 
     :root {
       --ink: #12446b;
-      --blue: #159bd3;
-      --blue-dark: #0d5b91;
+      --blue: #6495ED;
+      --blue-dark: #4C65F5;
       --sky: #C2DBFF;
       --paper: #fffdf7;
-      --line: #BFA87E;
+      --line: #EA9934;
       --shadow: #8ebbd0;
 
       --accent-note: #C9A44C;
@@ -573,6 +573,7 @@
       isolation: isolate;
     }
     
+	/* ぼくポジション設定 */
 	.hero-icon {
 	    position: absolute;
 	    width: 15%;
@@ -585,18 +586,27 @@
 	    pointer-events: auto;
 	    cursor: pointer;
 	}
+	
+	/* 風鈴ポジション設定 */
+	.hero-windbell {
+	    position: absolute;
+	    width: 5%;
+	    height: auto;
+	    
+	    right: clamp(16px, 18vw, 250px);
+	    
+	    z-index: 10;
+	    pointer-events: auto;
+	    cursor: pointer;
+	}
+	
 	/* ヘッダー内キャラクター */
 	.hero-character {
 	    position: absolute;
 	    inset: 0;
 	    z-index: 10;
 	    pointer-events: none;
-	  image-rendering: pixelated;
-	}
-
-	.hero-icon {
-	    pointer-events: auto;
-	    cursor: pointer;
+	    image-rendering: pixelated;
 	}
 	
 	.speech-bubble {
