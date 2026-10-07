@@ -435,9 +435,13 @@
 	#hide-game {
 	  position: absolute;
 	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+
 	  pointer-events: none;
 	  z-index: 20;
 	}
+
 	/* あおくじらが隠れる側 */
 	.link-card,
 	.hero-menu a,
@@ -462,10 +466,8 @@
 
 	  display: block;
 
-	  /* 普通のイラストなのでドット補間はしない */
 	  image-rendering: auto;
 
-	  /* 少しだけ自然に見せる */
 	  transition:
 	    left .15s ease,
 	    top .15s ease;
@@ -486,7 +488,7 @@
 
 	  z-index: 1000;
 
-	  padding: 20px 28px;
+ 	 padding: 35px 50px; 
 
 	  background: #fff;
 

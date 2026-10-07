@@ -180,540 +180,140 @@ icon.addEventListener('click', () => {
 });
 
 
-	/* =========================================================
-	   かくれんぼ
-	   ========================================================= */
 
-	const hiddenCharacter =
-	  document.getElementById("hidden-character");
+  /* =========================================================
+     かくれんぼ
+     ========================================================= */
 
-	const hidePopup =
-	  document.getElementById("hide-popup");
-
-	const hidePopupClose =
-	  document.getElementById("hide-popup-close");
-
-
-	// ---------------------------------------------------------
-	// あおくじら画像
-	// ---------------------------------------------------------
+	// ===== かくれんぼ設定 =====
 
 	const hideImages = [
-	  "image/hide00.png",
-	  "image/hide01.png",
-	  "image/hide02.png",
-	  "image/hide03.png"
+	"image/hide00.png",
+	"image/hide01.png",
+	"image/hide02.png",
+	"image/hide03.png"
+	];
+
+	const hideSpots = [
+	[".link-card", "left",   -35, 35, 105],
+	[".link-card", "right",   35, 35, 105],
+	[".link-card", "bottom",   0, 20, 100],
+
+	[".hero-menu a", "left",  -25,  5, 85],
+	[".hero-menu a", "right", 25,  5, 85],
+
+	[".brand", "right",         25,  5, 90],
+	[".site-header", "bottom", 120,  5, 90],
+
+	[".hero-copy", "left",    -20, 80, 100],
+	[".hero-copy", "right",    20, 80, 100],
+
+	[".section-title", "right", 25, 5, 80],
+	[".section-title", "left", -25, 5, 80],
+
+	[".about-box", "left",     -25, 80, 110],
+	[".about-box", "right",     25, 80, 110],
+
+	[".archive-card", "left",  -30, 30, 100],
+	[".archive-card", "right", 30, 30, 100],
+	[".archive-card", "bottom", 0, 15, 95],
+
+	["footer", "top",          120, -15, 105],
+	["footer", "right",        -30, 30, 100]
 	];
 
 
-	// ---------------------------------------------------------
-	// 隠れる場所
-	//
-	// selector : 目印にするHTML要素
-	// side     : どちら側から隠れるか
-	// offsetX  : 横方向の微調整
-	// offsetY  : 縦方向の微調整
-	// size     : あおくじらの大きさ
-	// ---------------------------------------------------------
+	// ===== 本体 =====
 
-	const hideSpotSettings = [
-
-	  /* =====================================================
-	     CONTENTS
-	     ===================================================== */
-
-	  {
-	    selector: ".link-card",
-	    side: "left",
-	    offsetX: -35,
-	    offsetY: 35,
-	    size: 105
-	  },
-
-	  {
-	    selector: ".link-card",
-	    side: "right",
-	    offsetX: 35,
-	    offsetY: 35,
-	    size: 105
-	  },
-
-	  {
-	    selector: ".link-card",
-	    side: "bottom",
-	    offsetX: 0,
-	    offsetY: 20,
-	    size: 100
-	  },
-
-
-	  /* =====================================================
-	     HERO MENU
-	     ===================================================== */
-
-	  {
-	    selector: ".hero-menu a",
-	    side: "left",
-	    offsetX: -25,
-	    offsetY: 5,
-	    size: 85
-	  },
-
-	  {
-	    selector: ".hero-menu a",
-	    side: "right",
-	    offsetX: 25,
-	    offsetY: 5,
-	    size: 85
-	  },
-
-
-	  /* =====================================================
-	     HEADER
-	     ===================================================== */
-
-	  {
-	    selector: ".brand",
-	    side: "right",
-	    offsetX: 25,
-	    offsetY: 5,
-	    size: 90
-	  },
-
-	  {
-	    selector: ".site-header",
-	    side: "bottom",
-	    offsetX: 120,
-	    offsetY: 5,
-	    size: 90
-	  },
-
-
-	  /* =====================================================
-	     HERO
-	     ===================================================== */
-
-	  {
-	    selector: ".hero-copy",
-	    side: "left",
-	    offsetX: -20,
-	    offsetY: 80,
-	    size: 100
-	  },
-
-	  {
-	    selector: ".hero-copy",
-	    side: "right",
-	    offsetX: 20,
-	    offsetY: 80,
-	    size: 100
-	  },
-
-
-	  /* =====================================================
-	     SECTION TITLE
-	     ===================================================== */
-
-	  {
-	    selector: ".section-title",
-	    side: "right",
-	    offsetX: 25,
-	    offsetY: 5,
-	    size: 80
-	  },
-
-	  {
-	    selector: ".section-title",
-	    side: "left",
-	    offsetX: -25,
-	    offsetY: 5,
-	    size: 80
-	  },
-
-
-	  /* =====================================================
-	     ABOUT
-	     ===================================================== */
-
-	  {
-	    selector: ".about-box",
-	    side: "left",
-	    offsetX: -25,
-	    offsetY: 80,
-	    size: 110
-	  },
-
-	  {
-	    selector: ".about-box",
-	    side: "right",
-	    offsetX: 25,
-	    offsetY: 80,
-	    size: 110
-	  },
-
-
-	  /* =====================================================
-	     ARCHIVE
-	     ===================================================== */
-
-	  {
-	    selector: ".archive-card",
-	    side: "left",
-	    offsetX: -30,
-	    offsetY: 30,
-	    size: 100
-	  },
-
-	  {
-	    selector: ".archive-card",
-	    side: "right",
-	    offsetX: 30,
-	    offsetY: 30,
-	    size: 100
-	  },
-
-	  {
-	    selector: ".archive-card",
-	    side: "bottom",
-	    offsetX: 0,
-	    offsetY: 15,
-	    size: 95
-	  },
-
-
-	  /* =====================================================
-	     FOOTER
-	     ===================================================== */
-
-	  {
-	    selector: "footer",
-	    side: "top",
-	    offsetX: 120,
-	    offsetY: -15,
-	    size: 105
-	  },
-
-	  {
-	    selector: "footer",
-	    side: "right",
-	    offsetX: -30,
-	    offsetY: 30,
-	    size: 100
-	  }
-
-	];
-
-
-	// ---------------------------------------------------------
-	// 実際の隠れ場所を作る
-	// ---------------------------------------------------------
-
-	function createHideSpots() {
-
-	  const spots = [];
-
-	  hideSpotSettings.forEach(setting => {
-
-	    const elements =
-	      document.querySelectorAll(setting.selector);
-
-	    elements.forEach(element => {
-
-	      spots.push({
-	        element: element,
-	        side: setting.side,
-	        offsetX: setting.offsetX || 0,
-	        offsetY: setting.offsetY || 0,
-	        size: setting.size || 120
-	      });
-
-	    });
-
-	  });
-
-	  return spots;
-	}
-
-
-	// ---------------------------------------------------------
-	// 前回と同じ画像・場所をなるべく避ける
-	// ---------------------------------------------------------
+	const hiddenCharacter = document.getElementById("hidden-character");
+	const hidePopup = document.getElementById("hide-popup");
+	const hidePopupClose = document.getElementById("hide-popup-close");
 
 	let lastImage = -1;
 	let lastSpot = -1;
 
 
-	// ---------------------------------------------------------
-	// あおくじらを隠す
-	// ---------------------------------------------------------
-
 	function hideAokujira() {
-
-	  const hideSpots =
-	    createHideSpots();
-
-	  if (!hideSpots.length) {
-	    return;
-	  }
-
-
-	  /* ---------------------------------------------
-	     画像を選ぶ
-	     --------------------------------------------- */
-
-	  let imageIndex;
-
-	  do {
-
-	    imageIndex =
-	      Math.floor(
-	        Math.random() *
-	        hideImages.length
-	      );
-
-	  } while (
-	    hideImages.length > 1 &&
-	    imageIndex === lastImage
-	  );
-
-
-	  /* ---------------------------------------------
-	     場所を選ぶ
-	     --------------------------------------------- */
-
-	  let spotIndex;
-
-	  do {
-
-	    spotIndex =
-	      Math.floor(
-	        Math.random() *
-	        hideSpots.length
-	      );
-
-	  } while (
-	    hideSpots.length > 1 &&
-	    spotIndex === lastSpot
-	  );
-
-
-	  lastImage = imageIndex;
-	  lastSpot = spotIndex;
-
-
-	  const spot =
-	    hideSpots[spotIndex];
-
-	  const rect =
-	    spot.element.getBoundingClientRect();
-
-
-	  /* ---------------------------------------------
-	     画像サイズ
-	     --------------------------------------------- */
-
-	  hiddenCharacter.style.width =
-	    `${spot.size}px`;
-
-
-	  /* ---------------------------------------------
-	     基本位置
-	     --------------------------------------------- */
-
-	  let left =
-	    rect.left +
-	    window.scrollX;
-
-	  let top =
-	    rect.top +
-	    window.scrollY;
-
-
-	  /* ---------------------------------------------
-	     隠れる方向
-	     --------------------------------------------- */
-
-	  switch (spot.side) {
-
-	    case "left":
-
-	      left =
-	        rect.left +
-	        window.scrollX -
-	        spot.size * 0.55;
-
-	      top =
-	        rect.top +
-	        window.scrollY +
-	        rect.height * 0.35;
-
-	      break;
-
-
-	    case "right":
-
-	      left =
-	        rect.right +
-	        window.scrollX -
-	        spot.size * 0.45;
-
-	      top =
-	        rect.top +
-	        window.scrollY +
-	        rect.height * 0.35;
-
-	      break;
-
-
-	    case "top":
-
-	      left =
-	        rect.left +
-	        window.scrollX +
-	        rect.width * 0.5 -
-	        spot.size * 0.5;
-
-	      top =
-	        rect.top +
-	        window.scrollY -
-	        spot.size * 0.55;
-
-	      break;
-
-
-	    case "bottom":
-
-	      left =
-	        rect.left +
-	        window.scrollX +
-	        rect.width * 0.5 -
-	        spot.size * 0.5;
-
-	      top =
-	        rect.bottom +
-	        window.scrollY -
-	        spot.size * 0.45;
-
-	      break;
-
-	  }
-
-
-	  /* ---------------------------------------------
-	     微調整
-	     --------------------------------------------- */
-
-	  left += spot.offsetX;
-	  top += spot.offsetY;
-
-
-	  /* ---------------------------------------------
-	     画面から完全にはみ出さないようにする
-	     --------------------------------------------- */
-
-	  const margin = 8;
-
-	  const maxLeft =
-	    document.documentElement.scrollWidth -
-	    spot.size -
-	    margin;
-
-	  const maxTop =
-	    document.documentElement.scrollHeight -
-	    spot.size -
-	    margin;
-
-
-	  left =
-	    Math.max(
-	      margin,
-	      Math.min(left, maxLeft)
-	    );
-
-	  top =
-	    Math.max(
-	      margin,
-	      Math.min(top, maxTop)
-	    );
-
-
-	  /* ---------------------------------------------
-	     表示
-	     --------------------------------------------- */
-
-	  hiddenCharacter.src =
-	    hideImages[imageIndex];
-
-	  hiddenCharacter.style.left =
-	    `${left}px`;
-
-	  hiddenCharacter.style.top =
-	    `${top}px`;
-
-	  hiddenCharacter.style.display =
-	    "block";
+		const game = document.getElementById("hide-game");
+		const spots = [];
+
+		hideSpots.forEach(([selector, side, x, y, size]) => {
+		document.querySelectorAll(selector).forEach(element => {
+		spots.push({ element, side, x, y, size });
+		});
+		});
+
+		if (!spots.length) return;
+
+		let image;
+		do {
+		image = Math.floor(Math.random() * hideImages.length);
+		} while (image === lastImage && hideImages.length > 1);
+
+		let index;
+		do {
+		index = Math.floor(Math.random() * spots.length);
+		} while (index === lastSpot && spots.length > 1);
+
+		lastImage = image;
+		lastSpot = index;
+
+		const spot = spots[index];
+		const rect = spot.element.getBoundingClientRect();
+		const base = game.getBoundingClientRect();
+		const s = spot.size;
+
+		let left = rect.left - base.left;
+		let top = rect.top - base.top;
+
+		if (spot.side === "left") {
+		left -= s * .55;
+		top += rect.height * .35;
+		}
+
+		if (spot.side === "right") {
+		left += rect.width - s * .45;
+		top += rect.height * .35;
+		}
+
+		if (spot.side === "top") {
+		left += rect.width / 2 - s / 2;
+		top -= s * .55;
+		}
+
+		if (spot.side === "bottom") {
+		left += rect.width / 2 - s / 2;
+		top += rect.height - s * .45;
+		}
+
+		left += spot.x;
+		top += spot.y;
+
+		hiddenCharacter.src = hideImages[image];
+		hiddenCharacter.style.width = `${s}px`;
+		hiddenCharacter.style.left = `${left}px`;
+		hiddenCharacter.style.top = `${top}px`;
+		hiddenCharacter.style.display = "block";
 	}
 
 
-	// ---------------------------------------------------------
-	// 見つけた！
-	// ---------------------------------------------------------
+	hiddenCharacter.onclick = () => {
+		hidePopup.classList.add("show");
+		hiddenCharacter.style.display = "none";
+	};
 
-	hiddenCharacter.addEventListener(
-	  "click",
-	  () => {
-
-	    hidePopup.classList.add("show");
-
-	    hiddenCharacter.style.display =
-	      "none";
-
-	  }
-	);
-
-
-	// ---------------------------------------------------------
-	// OK → また別の場所へ
-	// ---------------------------------------------------------
-
-	hidePopupClose.addEventListener(
-	  "click",
-	  () => {
-
-	    hidePopup.classList.remove("show");
-
-	    hideAokujira();
-
-	  }
-	);
-
-
-	// ---------------------------------------------------------
-	// 最初の1匹
-	// ---------------------------------------------------------
+	hidePopupClose.onclick = () => {
+		hidePopup.classList.remove("show");
+		hideAokujira();
+	};
 
 	hideAokujira();
 
-
-	// ---------------------------------------------------------
-	// 画面サイズ変更時に位置を更新
-	// ---------------------------------------------------------
-
-	window.addEventListener(
-	  "resize",
-	  () => {
-
-	    if (
-	      hiddenCharacter.style.display !==
-	      "none"
-	    ) {
-
-	      hideAokujira();
-
-	    }
-
-	  }
-	);
+	window.addEventListener("resize", () => {
+		if (hiddenCharacter.style.display !== "none") {
+		hideAokujira();
+		}
+	});
 
   /* =========================================================
      今日の日付
