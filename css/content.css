@@ -1,0 +1,575 @@
+    /* =========================================================
+       CONTENTS
+       ========================================================= */
+
+    .links-grid {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 18px;
+    }
+
+    /*
+     * link-card
+     *
+     * カード自体も外側の角を段付きにする。
+     * 中に別のフレームを持たせるためborder-radiusは完全撤去。
+     */
+    .link-card {
+      --pixel-width: 3px;
+      --pixel-frame-color: var(--accent);
+      --pixel-inner-color: transparent;
+      --accent: var(--blue);
+      --card-cut: 5px;
+
+      display: grid;
+
+      grid-template-columns: 52px 1fr 28px;
+      grid-template-rows: auto auto 100px;
+
+      gap: 2px 5px;
+
+      padding: 7px;
+
+      position: relative;
+
+      overflow: hidden;
+
+      background: var(--accent);
+
+      border: 0;
+      border-radius: 0;
+
+      filter:
+        drop-shadow(
+          4px 4px 0
+          color-mix(
+            in srgb,
+            var(--accent) 35%,
+            #8ebbd0
+          )
+        );
+
+      transition:
+        transform .15s ease,
+        filter .15s ease;
+
+      isolation: isolate;
+    }
+
+    .link-card:hover,
+    .link-card:focus-within {
+      transform: translate(-2px, -3px);
+
+      filter:
+        drop-shadow(
+          7px 7px 0
+          color-mix(
+            in srgb,
+            var(--accent) 35%,
+            #8ebbd0
+          )
+        );
+    }
+
+    .link-card.note {
+      --accent: var(--accent-note);
+    }
+
+    .link-card.suzuri {
+      --accent: var(--accent-suzuri);
+    }
+
+    .link-card.discord {
+      --accent: var(--accent-discord);
+    }
+
+    .link-card.youtube {
+      --accent: var(--accent-youtube);
+    }
+
+    .link-card.iriam {
+      --accent: var(--accent-iriam);
+    }
+
+    .link-card.notion {
+      --accent: var(--accent-notion);
+    }
+
+    .link-card.twitter {
+      --accent: var(--accent-twitter);
+    }
+
+    .link-card.game {
+      --accent: var(--accent-game);
+    }
+
+    /* ---------- Card number ---------- */
+
+    .card-number {
+      position: absolute;
+
+      left: 0;
+      bottom: 0;
+
+      z-index: 3;
+
+      min-width: 38px;
+      height: 27px;
+
+      padding: 3px 8px 2px 9px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: #fff;
+
+      background: var(--accent);
+
+      font-size: 13px;
+
+      line-height: 1;
+      letter-spacing: .05em;
+
+      clip-path: polygon(
+        0 0,
+        calc(100% - 6px) 0,
+        calc(100% - 6px) 4px,
+        100% 4px,
+        100% 100%,
+        6px 100%,
+        6px calc(100% - 4px),
+        0 calc(100% - 4px)
+      );
+    }
+
+    /* ---------- Card icon ---------- */
+
+    .card-icon {
+      width: 46px;
+      height: 46px;
+
+      display: grid;
+      place-items: center;
+
+      z-index: 3;
+
+      font-size: 24px;
+      
+      margin-left: 5px;
+
+      grid-row: span 2;
+
+      /*
+       * 外側だけでなく角を段階的に。
+       */
+      clip-path: polygon(
+        5px 0,
+        calc(100% - 5px) 0,
+        calc(100% - 5px) 2px,
+        calc(100% - 2px) 2px,
+        calc(100% - 2px) 5px,
+        100% 5px,
+        100% calc(100% - 5px),
+        calc(100% - 2px) calc(100% - 5px),
+        calc(100% - 2px) calc(100% - 2px),
+        calc(100% - 5px) calc(100% - 2px),
+        5px calc(100% - 2px),
+        5px 100%,
+        2px 100%,
+        2px calc(100% - 5px),
+        0 calc(100% - 5px),
+        0 5px,
+        2px 5px,
+        2px 2px,
+        5px 2px
+      );
+    }
+
+    .card-title {
+      margin: 0;
+
+      z-index: 3;
+
+      font-size: 19px;
+      line-height: 1.2;
+    }
+
+    .card-arrow {
+      align-self: start;
+      justify-self: end;
+
+      z-index: 3;
+
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .card-description {
+      margin: 0;
+
+      z-index: 3;
+
+      font-size: 11px;
+    }
+
+    /*
+     * カード内のIMAGEフレーム。
+     *
+     * borderではなく、外側のフレーム＋
+     * 内側の面を別々に作ることで
+     * 内側角までカクカクにする。
+     */
+    .card-image {
+      --pixel-width: 2px;
+      --pixel-frame-color: linear-gradient(135deg, color-mix(in srgb, var(--accent) 40%, #fff), #fff);
+      --pixel-inner-color: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, #fff), #e9f7ff);
+      grid-column: 1 / -1;
+      
+      margin-top: -50px;
+
+      position: relative;
+
+      border: 0;
+      border-radius: 0;
+
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(
+            in srgb,
+            var(--accent) 40%,
+            #fff
+          ),
+          #fff
+        );
+
+      display: grid;
+      place-items: center;
+
+      color:
+        color-mix(
+          in srgb,
+          var(--accent) 65%,
+          #333
+        );
+
+      font-size: 12px;
+
+      overflow: hidden;
+    }
+
+
+    .card-image img {
+      margin-top: 50px;
+    }
+
+    .card-image > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================================================
+       ABOUT
+       ========================================================= */
+
+    .about-box {
+      --pixel-width: 7px;
+      --pixel-frame-color: var(--line);
+      --pixel-inner-color: rgba(255,255,255,.86);
+      display: grid;
+
+      grid-template-columns: 260px 1fr 360px;
+
+      gap: 26px;
+
+      align-items: center;
+
+      padding: 12px;
+
+      background: rgba(255,255,255,.86);
+
+      border: 0;
+      border-radius: 0;
+
+      box-shadow: 5px 5px 0 #d4eaf3;
+
+      /*
+       * 外側の角を段付きに。
+       */
+    }
+
+    .about-image {
+      aspect-ratio: 1 / 1;
+
+      min-height: 0;
+
+      display: grid;
+      place-items: center;
+
+      border: 3px solid var(--blue);
+      border-radius: 0;
+
+      background:
+        linear-gradient(
+          160deg,
+          #dff6ff,
+          #9fdcf0
+        );
+
+      background-image: url("../image/profile_icon.png");
+      background-size: cover;
+      background-position: center;
+
+      font-size: 14px;
+
+      text-align: center;
+
+      /*
+       * 外側＋内側を段付き。
+       */
+      clip-path: polygon(
+        10px 0,
+        calc(100% - 10px) 0,
+        calc(100% - 10px) 2px,
+        calc(100% - 2px) 2px,
+        calc(100% - 2px) 10px,
+        100% 10px,
+
+        100% calc(100% - 10px),
+        calc(100% - 2px) calc(100% - 10px),
+        calc(100% - 2px) calc(100% - 2px),
+        calc(100% - 10px) calc(100% - 2px),
+        calc(100% - 10px) 100%,
+
+        10px 100%,
+        10px calc(100% - 2px),
+        2px calc(100% - 2px),
+        2px calc(100% - 10px),
+        0 calc(100% - 10px),
+
+        0 10px,
+        2px 10px,
+        2px 2px,
+        10px 2px
+      );
+    }
+
+    .about-text h3 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .about-text p {
+      margin: 10px 0;
+    }
+
+    /* =========================================================
+       Tags
+       ========================================================= */
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 7px;
+
+      margin-top: 16px;
+    }
+
+    .tag {
+      padding: 3px 9px;
+
+      border: 1px solid #a9cbdc;
+      border-radius: 0;
+
+      background: #f2fbff;
+
+      font-size: 11px;
+
+      clip-path: polygon(
+        4px 0,
+        calc(100% - 4px) 0,
+        calc(100% - 4px) 1px,
+        calc(100% - 1px) 1px,
+        calc(100% - 1px) 4px,
+        100% 4px,
+        100% calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 4px),
+        calc(100% - 1px) calc(100% - 1px),
+        calc(100% - 4px) calc(100% - 1px),
+        4px calc(100% - 1px),
+        4px 100%,
+        1px 100%,
+        1px calc(100% - 4px),
+        0 calc(100% - 4px),
+        0 4px,
+        1px 4px,
+        1px 1px,
+        4px 1px
+      );
+    }
+
+    /* =========================================================
+       PLAYER DATA
+       ========================================================= */
+
+    .player-data {
+      --pixel-width: 2px;
+      --pixel-frame-color: #9bc9df;
+      --pixel-inner-color: #f9fdff;
+      padding: 18px;
+
+      border: 0;
+
+      background: #f9fdff;
+
+      position: relative;
+    }
+
+    /*
+     * PLAYER DATAの枠線を疑似要素で作る。
+     * 内側の角もカクカク。
+     */
+
+    .player-data h4 {
+      margin: 0 0 12px;
+    }
+
+    .data-row {
+      display: grid;
+
+      grid-template-columns: 1fr 1.2fr;
+
+      gap: 10px;
+
+      border-top: 1px dashed #b7dced;
+
+      padding: 6px 0;
+
+      font-size: 12px;
+    }
+
+    .data-row span:first-child {
+      color: #5e8aa2;
+    }
+
+    /* =========================================================
+       ARCHIVE
+       ========================================================= */
+
+    .archive-box {
+      --pixel-width: 7px;
+      --pixel-frame-color: var(--line);
+      --pixel-inner-color: rgba(255,255,255,.86);
+      padding: 24px;
+
+      background: rgba(255,255,255,.86);
+
+      border: 0;
+      border-radius: 0;
+    }
+
+    .archive-grid {
+      display: grid;
+
+      grid-template-columns: repeat(4, 1fr);
+
+      gap: 14px;
+    }
+
+    .archive-card {
+      --pixel-width: 2px;
+      --pixel-frame-color: #c5dce7;
+      --pixel-inner-color: #fff;
+      position: relative;
+
+      border: 0;
+      border-radius: 0;
+
+      overflow: hidden;
+
+      background: #c5dce7;
+
+      transition: transform .15s;
+    }
+
+    /*
+     * Archiveカード内部。
+     * 2pxのフレームを作り、内側の角もカット。
+     */
+
+
+    .archive-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .archive-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .archive-thumb {
+      width: 100%;
+
+      aspect-ratio: 16 / 9;
+
+      position: relative;
+
+      overflow: hidden;
+
+      background:
+        linear-gradient(
+          135deg,
+          #b9e8f8,
+          #dff6ff
+        );
+
+      border-radius: 0;
+    }
+
+    .archive-thumb img {
+      position: absolute;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      display: block;
+
+      object-fit: cover;
+      object-position: 50% 50%;
+    }
+
+    .archive-info {
+      padding: 9px;
+    }
+
+    .archive-type {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--blue-dark);
+    }
+
+    .archive-info h3 {
+      margin: 4px 0 2px;
+
+      font-size: 13px;
+    }
+
+    .archive-info time {
+      font-size: 9px;
+      color: #7794a3;
+    }
+
+    .suzuri-embed {
+      width: 100%;
+      height: 162px;
+
+      border: none;
+
+      display: block;
+    }

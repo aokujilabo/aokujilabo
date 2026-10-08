@@ -1,0 +1,440 @@
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    .hero {
+      padding: 24px 0 52px;
+    }
+
+    .hero-frame {
+      --pixel-width: 5px;
+      --pixel-frame-color: var(--ink);
+      --pixel-inner-color: transparent;
+
+      position: relative;
+
+      aspect-ratio: 2.4 / 1;
+      min-height: 0;
+
+      overflow: hidden;
+
+      background: var(--ink);
+
+      box-shadow: 7px 7px 0 var(--shadow);
+
+      isolation: isolate;
+    }
+    
+	/* ぼくポジション設定 */
+	.hero-icon {
+	    position: absolute;
+	    width: 15%;
+	    height: auto;
+	    
+	    right: clamp(16px, 18vw, 250px);
+	    bottom: clamp(15px, 1vw, 30px);
+	    
+	    z-index: 10;
+	    pointer-events: auto;
+	    cursor: pointer;
+	}
+	
+	/* 風鈴ポジション設定 */
+	.hero-windbell {
+	    position: absolute;
+	    width: 5%;
+	    height: auto;
+	    
+	    right: clamp(16px, 18vw, 250px);
+	    
+	    z-index: 10;
+	    pointer-events: auto;
+	    cursor: pointer;
+	}
+	
+	/* ヘッダー内キャラクター */
+	.hero-character {
+	    position: absolute;
+	    inset: 0;
+	    z-index: 10;
+	    pointer-events: none;
+	    image-rendering: pixelated;
+	}
+	
+	.speech-bubble {
+	    --pixel-frame-color: #3B6FA5;
+	    --pixel-inner-color: #fff;
+
+	    position: absolute;
+	    	    
+	    right: clamp(16px, 18vw, 250px);
+	    bottom: clamp(150px, 15vw, 250px);
+
+	    padding: 12px 18px;
+
+	    color: #3B6FA5 !important;
+
+	    display: none;
+	    z-index: 20;
+	    pointer-events: none;
+
+	    font-size: 14px;
+	    line-height: 1.5;
+	}
+
+	/* 吹き出しの文字を確実に前面へ */
+	.speech-bubble {
+	    isolation: isolate;
+	}
+
+	.speech-bubble::before {
+	    z-index: -1;
+	}
+	
+    /*
+     * HERO画像は「内側のフレーム」に合わせて配置。
+     * ここで内側の角もカクカクにする。
+     */
+    .hero-art {
+      position: absolute;
+
+      top: var(--pixel-width);
+      right: var(--pixel-width);
+      bottom: var(--pixel-width);
+      left: var(--pixel-width);
+
+      z-index: 0;
+
+      background:
+        radial-gradient(
+          circle at 75% 24%,
+          rgba(255,255,255,.9) 0 5px,
+          transparent 6px
+        ),
+        radial-gradient(
+          circle at 18% 30%,
+          rgba(255,255,255,.75) 0 7px,
+          transparent 8px
+        ),
+        linear-gradient(
+          135deg,
+          transparent 48%,
+          rgba(255,255,255,.7) 49% 50%,
+          transparent 51%
+        );
+
+      background-image: url("../image/site_header.png");
+      background-size: 113%;
+      background-position: center;
+
+      opacity: .95;
+
+      /*
+       * 内側の4角を段付きカット。
+       */
+      clip-path: polygon(
+        12px 0,
+        calc(100% - 12px) 0,
+
+        calc(100% - 12px) 4px,
+        calc(100% - 4px) 4px,
+        calc(100% - 4px) 12px,
+        100% 12px,
+
+        100% calc(100% - 12px),
+        calc(100% - 4px) calc(100% - 12px),
+        calc(100% - 4px) calc(100% - 4px),
+        calc(100% - 12px) calc(100% - 4px),
+        calc(100% - 12px) 100%,
+
+        12px 100%,
+        12px calc(100% - 4px),
+        4px calc(100% - 4px),
+        4px calc(100% - 12px),
+        0 calc(100% - 12px),
+
+        0 12px,
+        4px 12px,
+        4px 4px,
+        12px 4px
+      );
+    }
+
+    .hero-copy {
+      position: relative;
+
+      z-index: 2;
+
+      min-height: 470px;
+
+      padding: clamp(30px, 6vw, 72px);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title {
+      width: fit-content;
+
+      margin: 0 0 12px;
+
+      font-size: clamp(42px, 8vw, 86px);
+
+      line-height: 1;
+
+      color: #fff;
+
+      text-shadow: 4px 4px 0 var(--blue-dark);
+    }
+
+    .hero-subtitle {
+      margin: 0 0 26px;
+
+      color: #fff;
+
+      font-size: clamp(16px, 2.4vw, 24px);
+
+      text-shadow: 2px 2px 0 var(--blue-dark);
+    }
+
+    /*
+     * HERO MENU
+     *
+     * 外側：白
+     * 内側：青
+     * 内側の青部分もpolygonでカット
+     */
+    .hero-menu {
+      --menu-cut: 6px;
+      --menu-border: 6px;
+
+      width: min(310px, 100%);
+
+      position: relative;
+
+      padding: var(--menu-border);
+
+      border: 0;
+
+      background: #fff;
+
+      box-shadow: 5px 5px 0 rgba(18,68,107,.55);
+
+      clip-path: polygon(
+        var(--menu-cut) 0,
+        calc(100% - var(--menu-cut)) 0,
+
+        calc(100% - var(--menu-cut)) 4px,
+        calc(100% - 4px) 4px,
+        calc(100% - 4px) var(--menu-cut),
+        100% var(--menu-cut),
+
+        100% calc(100% - var(--menu-cut)),
+        calc(100% - 4px) calc(100% - var(--menu-cut)),
+        calc(100% - 4px) calc(100% - 4px),
+        calc(100% - var(--menu-cut)) calc(100% - 4px),
+        calc(100% - var(--menu-cut)) 100%,
+
+        var(--menu-cut) 100%,
+        var(--menu-cut) calc(100% - 4px),
+        4px calc(100% - 4px),
+        4px calc(100% - var(--menu-cut)),
+        0 calc(100% - var(--menu-cut)),
+
+        0 var(--menu-cut),
+        4px var(--menu-cut),
+        4px 4px,
+        var(--menu-cut) 4px
+      );
+    }
+
+    .hero-menu::before {
+      content: "";
+
+      position: absolute;
+
+      top: var(--menu-border);
+      right: var(--menu-border);
+      bottom: var(--menu-border);
+      left: var(--menu-border);
+
+      z-index: 0;
+
+      background: rgba(13,91,145,.92);
+
+      clip-path: polygon(
+        5px 0,
+        calc(100% - 5px) 0,
+
+        calc(100% - 5px) 3px,
+        calc(100% - 3px) 3px,
+        calc(100% - 3px) 5px,
+        100% 5px,
+
+        100% calc(100% - 5px),
+        calc(100% - 3px) calc(100% - 5px),
+        calc(100% - 3px) calc(100% - 3px),
+        calc(100% - 5px) calc(100% - 3px),
+        calc(100% - 5px) 100%,
+
+        5px 100%,
+        5px calc(100% - 3px),
+        3px calc(100% - 3px),
+        3px calc(100% - 5px),
+        0 calc(100% - 5px),
+
+        0 5px,
+        3px 5px,
+        3px 3px,
+        5px 3px
+      );
+    }
+
+    .hero-menu a {
+      display: block;
+
+      position: relative;
+      z-index: 1;
+
+      padding: 4px 6px;
+
+      color: #fff;
+
+      transition:
+        background .15s,
+        transform .15s;
+    }
+
+    .hero-menu a::before {
+      content: "▶ ";
+      opacity: 0;
+    }
+
+    .hero-menu a:hover,
+    .hero-menu a:focus-visible {
+      background: rgba(255,255,255,.16);
+      transform: translateX(4px);
+    }
+
+    .hero-menu a:hover::before,
+    .hero-menu a:focus-visible::before {
+      opacity: 1;
+    }
+/* =========================================================
+      かくれんぼ
+   ========================================================= */
+
+	#hide-game {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+
+	  pointer-events: none;
+	  z-index: 20;
+	}
+
+	/* あおくじらが隠れる側 */
+	.link-card,
+	.hero-menu a,
+	.menu-button,
+	.section-title,
+	.archive-card,
+	.about-box,
+	footer {
+	  position: relative;
+	  z-index: 21;
+	}
+
+	#hidden-character {
+	  position: absolute;
+
+	  width: 120px;
+	  height: auto;
+
+	  cursor: pointer;
+	  pointer-events: auto;
+	  user-select: none;
+
+	  display: block;
+
+	  image-rendering: auto;
+
+	  transition:
+	    left .15s ease,
+	    top .15s ease;
+	}
+
+
+	/* ---------------------------------------------------------
+	   見つけたときのポップアップ
+	   --------------------------------------------------------- */
+
+	.hide-popup {
+	  position: fixed;
+
+	  left: 50%;
+	  top: 50%;
+
+	  transform: translate(-50%, -50%);
+
+	  z-index: 1000;
+
+ 	 padding: 35px 50px; 
+
+	  background: #fff;
+
+	  border: 4px solid #6d83a8;
+
+	  box-shadow:
+	    6px 6px 0 rgba(0, 0, 0, 0.2);
+
+	  font-family: "PixelMplus12", sans-serif;
+
+	  text-align: center;
+
+	  display: none;
+	}
+
+	.hide-popup.show {
+	  display: block;
+	}
+
+	.hide-popup p {
+	  margin: 4px 0;
+	}
+	
+	#hide-popup-close {
+	  margin-top: 14px;
+	  padding: 8px 18px;
+
+	  font-family: "PixelMplus12", sans-serif;
+	  font-size: 14px;
+
+	  background: #fff;
+	  color: #3B6FA5 !important;
+	  -webkit-text-fill-color: #3B6FA5 !important;
+
+	  cursor: pointer;
+
+	  border: 0;
+	  border-radius: 0;
+
+	  /* pixel-frame */
+	  --pixel-frame-color: #3B6FA5;
+	  --pixel-inner-color: #fff;
+
+	  transition:
+	    transform .1s ease,
+	    filter .1s ease;
+	}
+
+	#hide-popup-close:hover {
+	  filter: brightness(1.05);
+	  transform: translate(-2px, -2px);
+	}
+
+	#hide-popup-close:active {
+	  transform: translate(2px, 2px);
+	}

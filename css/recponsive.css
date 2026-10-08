@@ -1,0 +1,182 @@
+    /* =========================================================
+       Responsive
+       ========================================================= */
+
+    @media (max-width: 900px) {
+      header {
+        position: relative;
+      }
+      
+      .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .about-box {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .player-data {
+        grid-column: 1 / -1;
+      }
+
+      .archive-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav {
+        display: none;
+
+        position: absolute;
+
+        top: 62px;
+        left: 0;
+        right: 0;
+
+        padding: 12px 12px 12px;
+
+        flex-direction: column;
+
+        gap: 2px;
+
+        background: rgba(255,253,247,.98);
+
+        border-bottom: 2px solid var(--line);
+      }
+
+      .nav.is-open {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 680px) {
+
+      /* ---------- Header ---------- */
+      header {
+        position: relative;
+      }
+       
+      .header-inner {
+        width: calc(100% - 20px);
+
+        min-height: 62px;
+
+        gap: 10px;
+      }
+
+      .brand {
+        min-width: 0;
+
+        gap: 8px;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+
+        flex-shrink: 0;
+
+        font-size: 19px;
+      }
+
+      .site-title {
+        font-size: 20px;
+
+        white-space: nowrap;
+      }
+
+      .tagline {
+        display: none;
+      }
+
+      .menu-button {
+        display: block;
+
+        flex-shrink: 0;
+
+        padding: 7px 10px;
+
+        font-size: 12px;
+      }
+
+      .nav {
+        display: none;
+
+        position: absolute;
+
+        top: 62px;
+        left: 0;
+        right: 0;
+
+        padding: 12px 12px 12px;
+
+        flex-direction: column;
+
+        gap: 2px;
+
+        background: rgba(255,253,247,.98);
+
+        border-bottom: 2px solid var(--line);
+      }
+
+      .nav.is-open {
+        display: flex;
+      }
+
+      /* ---------- Hero ---------- */
+
+      .hero {
+        padding-top: 5px;
+      }
+
+      .hero-frame {
+        aspect-ratio: 2.4 / 1;
+        min-height: 0;
+        --pixel-width: 5px;
+      }
+
+      .hero-art {
+        top: 5px;
+        right: 5px;
+        bottom: 5px;
+        left: 5px;
+      }
+
+        .hero-copy {
+            padding: 25px 15px;
+        }
+
+      .hero-menu {
+        display: none;
+      }
+
+      /* ---------- Links / Archive ---------- */
+
+      .links-grid,
+      .archive-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* ---------- About ---------- */
+
+      .about-box {
+        grid-template-columns: 1fr;
+      }
+
+      .about-image {
+        min-height: 200px;
+      }
+
+      /* ---------- Section ---------- */
+
+      .section {
+        padding: 5px 0;
+      }
+
+      /* ---------- Footer ---------- */
+
+      .footer-inner {
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+    }
