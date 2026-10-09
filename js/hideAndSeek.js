@@ -116,20 +116,51 @@
 
 	    hidePopup.innerHTML = `
 	        <p>見つかっちゃった！</p>
+	        <p><img src=${hiddenCharacter.src} width="20%"/></p>
 	        <p>今日の運勢は……</p>
 	        <p><strong>${fortune.name}</strong></p>
 	        <p>${fortune.text.replace(/\n/g, "<br>")}</p>
-	        <p>また探してね！</p>
+	        <p>また遊びに来てね！</p>
 
-	        <button id="hide-popup-close" class="pixel-frame">
+	        <div class="fortune-actions">
+	            <button
+	                id="fortune-share"
+	                class="pixel-frame"
+	                type="button"
+	            >
+	            <span>Twitterに<br>投稿する</span>
+	            </button>
+
+	            <button
+	                id="hide-popup-close"
+	                class="pixel-frame"
+	                type="button"
+	            >
 	            <span>またね！</span>
-	        </button>
+	            </button>
+	        </div>
 	    `;
 
 	    hidePopup.classList.add("show");
 	    hiddenCharacter.style.display = "none";
 
-	    // 新しく作ったボタンにクリック処理を設定
+	    // Xの投稿画面を開く
+	    document.getElementById("fortune-share").onclick = () => {
+	        const message =
+	            `あおくじらのひみつきちで占ってみた！\n` +
+	            `今日の運勢は「${fortune.name}」！\n` +
+	            `${fortune.text}\n\n` +
+	            `#あおくじらのひみつきち\n` +
+	            `https://aokujilabo.github.io/aokujilabo/`;
+
+	        const url =
+	            "https://twitter.com/intent/tweet?text=" +
+	            encodeURIComponent(message);
+
+	        window.open(url, "_blank", "noopener,noreferrer");
+	    };
+
+	    // またね！を押したら結果画面を閉じる
 	    document.getElementById("hide-popup-close").onclick = () => {
 	        hidePopup.classList.remove("show");
 	        hideAokujira();
