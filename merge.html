@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マージ・ガーデン＆アドベンチャー</title>
+	<!-- ゲームの見た目 -->
+	<link rel="stylesheet" href="css/merge.css">
+	<!-- HTMLの読み込み後にJavaScriptを実行 -->
+	<script src="js/merge.js" defer></script>
+</head>
+<body>
+
+    <!-- ヘッダー：スタミナ・コイン情報 -->
+    <header>
+        <div class="status-group">
+            <div class="status-item">
+                ⚡ スタミナ: <span id="stamina-text">10000</span> / 10000
+                <div class="stamina-container">
+                    <button class="recover-btn" onclick="recoverStamina()">100コインで回復</button>
+                </div>
+            </div>
+        </div>
+        <div class="status-group" style="align-items: flex-end;">
+            <div class="status-item">💰 コイン: <span id="coin-text">500</span></div>
+        </div>
+    </header>
+
+    <!-- 採集ボタン & 初期化ボタンパネル -->
+    <div class="action-panel">
+        <button class="gather-btn" onclick="gatherItem()">🌱 採集する (消費: 10)</button>
+        <button class="reset-data-btn" onclick="resetGameData()">初期化</button>
+    </div>
+
+    <!-- マス目の上に常時表示されるランダムクエストパネル -->
+    <div class="quest-top-panel">
+        <div class="quest-top-header">
+            <span>📜 納品クエスト (最大5つ)</span>
+            <span style="font-size: 10px; color: #7f8c8d;">横スクロール可能 ➔</span>
+        </div>
+        <div id="quest-horizontal-list" class="quest-horizontal-list"></div>
+    </div>
+
+    <!-- メインフィールド (7列 × 9行 = 63マス) -->
+    <div class="game-container">
+        <div id="grid-field" class="grid-field"></div>
+    </div>
+
+    <!-- フッターナビゲーション -->
+    <footer>
+        <button class="footer-btn" onclick="openBagModal()">🎒 バッグ</button>
+        <button class="footer-btn" onclick="openDailyModal()">⭐ デイリー</button>
+        <button class="footer-btn" onclick="openZukanModal()">📖 図鑑 ＆ クラフト</button>
+        <a href="index.html" ><button class="footer-btn" >🐾 TOP</button></a>
+    </footer>
+
+    <!-- 図鑑 ＆ クラフト モーダル -->
+    <div id="zukan-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">図鑑 ＆ クラフト</div>
+                <button class="close-btn" onclick="closeZukanModal()">×</button>
+            </div>
+            <div class="tab-bar">
+                <button class="tab-btn active" onclick="switchTab('zukan')">アイテム図鑑</button>
+                <button class="tab-btn" onclick="switchTab('craft')">クラフト</button>
+            </div>
+            <div id="tab-zukan" class="tab-pane active"><div id="zukan-content-container"></div></div>
+            <div id="tab-craft" class="tab-pane"><div class="craft-list" id="craft-list-container"></div></div>
+        </div>
+    </div>
+
+    <!-- バッグ モーダル -->
+    <div id="bag-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🎒 アイテムバッグ</div>
+                <button class="close-btn" onclick="closeBagModal()">×</button>
+            </div>
+            <div class="bag-grid" id="bag-grid-container"></div>
+        </div>
+    </div>
+
+    <!-- デイリークエスト モーダル -->
+    <div id="daily-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">⭐ デイリークエスト</div>
+                <button class="close-btn" onclick="closeDailyModal()">×</button>
+            </div>
+            <div class="daily-list">
+                <div class="daily-card">
+                    <span class="daily-text">・アイテムのマージを１回する</span>
+                    <span id="daily-merge-status" class="daily-status">未完了</span>
+                </div>
+                <div class="daily-card">
+                    <span class="daily-text">・アイテムを売却する</span>
+                    <span id="daily-sell-status" class="daily-status">未完了</span>
+                </div>
+                <div class="daily-card">
+                    <span class="daily-text">・クエストを一つクリアする</span>
+                    <span id="daily-quest-status" class="daily-status">未完了</span>
+                </div>
+                <div class="daily-reward-box">
+                    <p>全クリア報酬: <b>体力全回復 (⚡10000)</b></p>
+                    <button id="daily-claim-btn" class="daily-claim-btn" onclick="claimDailyReward()" disabled>報酬を受け取る</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- アイテム操作メニューポップアップ (売却 or バッグへ) -->
+    <div id="item-menu-modal" class="modal" style="z-index: 200;">
+        <div class="menu-modal-content">
+            <h3 id="menu-item-title">アイテム操作</h3>
+            <button class="menu-btn" onclick="menuActionBag()">バッグにしまう</button>
+            <button class="menu-btn sell" onclick="menuActionSell()">売却する</button>
+            <button class="menu-btn cancel" onclick="closeItemMenuModal()">キャンセル</button>
+        </div>
+    </div>
+</body>
+</html>
