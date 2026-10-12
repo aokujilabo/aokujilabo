@@ -1,4 +1,3 @@
-
         /* ==========================================
            定数・データ定義
            ========================================== */
@@ -6,13 +5,52 @@
             { id: 'grass', name: '草', iconBaseColor: '#2ecc71', secondaryColor: '#27ae60' },
             { id: 'flower', name: '花', iconBaseColor: '#e84393', secondaryColor: '#fd79a8' },
             { id: 'tree', name: '木', iconBaseColor: '#e67e22', secondaryColor: '#d35400' },
-            { id: 'stone', name: '石', iconBaseColor: '#718093', secondaryColor: '#4a5568' }
+            { id: 'stone', name: '石', iconBaseColor: '#718093', secondaryColor: '#4a5568' },
+            { id: 'crafted', name: '特製品', iconBaseColor: '#9b59b6', secondaryColor: '#8e44ad' } // クラフト品用系統
         ];
 
         const MAX_LEVEL = 10;
         const COLS = 7;
         const ROWS = 9;
         const TOTAL_CELLS = COLS * ROWS;
+
+        // 全30種のクラフトレシピ定義 (素材1, 素材2 ➔ 結果)
+        // 素材の指定方法: { type: 'base', cat: '...', level: ... } または { type: 'crafted', id: '...' }
+        const CRAFT_RECIPES = [
+            { id: 'thread', name: '糸', item: { cat: 'crafted', id: 'thread', name: '糸', level: 1, baseColor: '#9b59b6', secColor: '#8e44ad', symbol: '🧵' }, ing1: { cat: 'grass', level: 3 }, ing2: { cat: 'stone', level: 3 } },
+            { id: 'knife', name: 'ナイフ', item: { cat: 'crafted', id: 'knife', name: 'ナイフ', level: 1, baseColor: '#95a5a6', secColor: '#7f8c8d', symbol: '🔪' }, ing1: { cat: 'stone', level: 3 }, ing2: { cat: 'tree', level: 3 } },
+            { id: 'sand', name: '砂', item: { cat: 'crafted', id: 'sand', name: '砂', level: 1, baseColor: '#f1c40f', secColor: '#f39c12', symbol: '⏳' }, ing1: { cat: 'stone', level: 1 }, ing2: { craftedId: 'knife' } },
+            { id: 'gear', name: '歯車', item: { cat: 'crafted', id: 'gear', name: '歯車', level: 1, baseColor: '#7f8c8d', secColor: '#34495e', symbol: '⚙️' }, ing1: { cat: 'stone', level: 2 }, ing2: { craftedId: 'knife' } },
+            { id: 'pot', name: '石の器', item: { cat: 'crafted', id: 'pot', name: '石の器', level: 1, baseColor: '#95a5a6', secColor: '#34495e', symbol: '🥣' }, ing1: { cat: 'stone', level: 3 }, ing2: { craftedId: 'knife' } },
+            { id: 'flint', name: '火打石', item: { cat: 'crafted', id: 'flint', name: '火打石', level: 1, baseColor: '#e74c3c', secColor: '#c0392b', symbol: '🔥' }, ing1: { cat: 'stone', level: 2 }, ing2: { craftedId: 'knife' } },
+            { id: 'shell', name: '貝殻', item: { cat: 'crafted', id: 'shell', name: '貝殻', level: 1, baseColor: '#ff9ff3', secColor: '#f368e0', symbol: '🐚' }, ing1: { cat: 'stone', level: 1 }, ing2: { cat: 'flower', level: 2 } },
+            { id: 'nuts', name: '木の実', item: { cat: 'crafted', id: 'nuts', name: '木の実', level: 1, baseColor: '#d35400', secColor: '#e67e22', symbol: '🌰' }, ing1: { cat: 'tree', level: 2 }, ing2: { cat: 'flower', level: 2 } },
+            { id: 'letter', name: '手紙', item: { cat: 'crafted', id: 'letter', name: '手紙', level: 1, baseColor: '#ecf0f1', secColor: '#bdc3c7', symbol: '✉️' }, ing1: { cat: 'flower', level: 1 }, ing2: { craftedId: 'thread' } },
+            { id: 'rod', name: '釣竿', item: { cat: 'crafted', id: 'rod', name: '釣竿', level: 1, baseColor: '#d35400', secColor: '#e67e22', symbol: '🎣' }, ing1: { cat: 'tree', level: 3 }, ing2: { craftedId: 'thread' } },
+            { id: 'net', name: '投網', item: { cat: 'crafted', id: 'net', name: '投網', level: 1, baseColor: '#3498db', secColor: '#2980b9', symbol: '🥅' }, ing1: { craftedId: 'thread' }, ing2: { craftedId: 'thread' } },
+            { id: 'bignet', name: '丈夫な投網', item: { cat: 'crafted', id: 'bignet', name: '丈夫な投網', level: 1, baseColor: '#2980b9', secColor: '#1f618d', symbol: '🕸️' }, ing1: { craftedId: 'net' }, ing2: { craftedId: 'net' } },
+            { id: 'bait', name: '釣り餌', item: { cat: 'crafted', id: 'bait', name: '釣り餌', level: 1, baseColor: '#e67e22', secColor: '#d35400', symbol: '🪱' }, ing1: { craftedId: 'nuts' }, ing2: { cat: 'grass', level: 2 } },
+            { id: 'baitedthread', name: '釣り餌の着いた糸', item: { cat: 'crafted', id: 'baitedthread', name: '釣り餌の着いた糸', level: 1, baseColor: '#d35400', secColor: '#e67e22', symbol: '🪡' }, ing1: { craftedId: 'bait' }, ing2: { craftedId: 'thread' } },
+            { id: 'baitedrod', name: '釣り餌の着いた釣竿', item: { cat: 'crafted', id: 'baitedrod', name: '釣り餌の着いた釣竿', level: 1, baseColor: '#e67e22', secColor: '#b9770e', symbol: '🥢' }, ing1: { craftedId: 'baitedthread' }, ing2: { cat: 'tree', level: 3 } },
+            { id: 'lure', name: 'ルアー', item: { cat: 'crafted', id: 'lure', name: 'ルアー', level: 1, baseColor: '#1abc9c', secColor: '#16a085', symbol: '🐟' }, ing1: { cat: 'stone', level: 2 }, ing2: { cat: 'tree', level: 2 } },
+            { id: 'lurethread', name: 'ルアーの付いた糸', item: { cat: 'crafted', id: 'lurethread', name: 'ルアーの付いた糸', level: 1, baseColor: '#1abc9c', secColor: '#117a65', symbol: '🧶' }, ing1: { craftedId: 'lure' }, ing2: { craftedId: 'thread' } },
+            { id: 'lurerod', name: 'ルアーの付いた釣竿', item: { cat: 'crafted', id: 'lurerod', name: 'ルアーの付いた釣竿', level: 1, baseColor: '#16a085', secColor: '#0e6655', symbol: '🎋' }, ing1: { craftedId: 'lurethread' }, ing2: { cat: 'tree', level: 3 } },
+            { id: 'frypan', name: 'フライパン', item: { cat: 'crafted', id: 'frypan', name: 'フライパン', level: 1, baseColor: '#34495e', secColor: '#2c3e50', symbol: '🍳' }, ing1: { craftedId: 'pot' }, ing2: { cat: 'tree', level: 4 } },
+            { id: 'potpan', name: '鍋', item: { cat: 'crafted', id: 'potpan', name: '鍋', level: 1, baseColor: '#7f8c8d', secColor: '#95a5a6', symbol: '🍲' }, ing1: { craftedId: 'pot' }, ing2: { cat: 'tree', level: 3 } },
+            { id: 'axe', name: '斧', item: { cat: 'crafted', id: 'axe', name: '斧', level: 1, baseColor: '#e74c3c', secColor: '#c0392b', symbol: '🪓' }, ing1: { craftedId: 'knife' }, ing2: { cat: 'tree', level: 5 } },
+            { id: 'maki', name: 'まき', item: { cat: 'crafted', id: 'maki', name: 'まき', level: 1, baseColor: '#d35400', secColor: '#ba4a00', symbol: '🪵' }, ing1: { cat: 'tree', level: 5 }, ing2: { craftedId: 'axe' } },
+            { id: 'campfire', name: '焚き火', item: { cat: 'crafted', id: 'campfire', name: '焚き火', level: 1, baseColor: '#e67e22', secColor: '#cf711f', symbol: '🏕️' }, ing1: { craftedId: 'maki' }, ing2: { craftedId: 'flint' } },
+            { id: 'bottle', name: 'きれいな小瓶', item: { cat: 'crafted', id: 'bottle', name: 'きれいな小瓶', level: 1, baseColor: '#00d2d3', secColor: '#01a3a4', symbol: '🍾' }, ing1: { craftedId: 'pot' }, ing2: { craftedId: 'sand' } },
+            { id: 'hourglass', name: '砂時計', item: { cat: 'crafted', id: 'hourglass', name: '砂時計', level: 1, baseColor: '#ff9f43', secColor: '#ee5253', symbol: '⌛' }, ing1: { craftedId: 'bottle' }, ing2: { craftedId: 'sand' } },
+            { id: 'clock', name: '時計', item: { cat: 'crafted', id: 'clock', name: '時計', level: 1, baseColor: '#54a0ff', secColor: '#2e86de', symbol: '⏰' }, ing1: { craftedId: 'gear' }, ing2: { craftedId: 'gear' } },
+            { id: 'boundflower', name: '縛った花', item: { cat: 'crafted', id: 'boundflower', name: '縛った花', level: 1, baseColor: '#ff6b81', secColor: '#ff4757', symbol: '💐' }, ing1: { cat: 'flower', level: 5 }, ing2: { craftedId: 'thread' } },
+            { id: 'smallbouquet', name: '小さい花束', item: { cat: 'crafted', id: 'smallbouquet', name: '小さい花束', level: 1, baseColor: '#ff4757', secColor: '#ff6b81', symbol: '🌷' }, ing1: { craftedId: 'boundflower' }, ing2: { craftedId: 'boundflower' } },
+            { id: 'midbouquet', name: '中くらいの花束', item: { cat: 'crafted', id: 'midbouquet', name: '中くらいの花束', level: 1, baseColor: '#ff3838', secColor: '#ff4d4d', symbol: '🌻' }, ing1: { craftedId: 'smallbouquet' }, ing2: { craftedId: 'boundflower' } },
+            { id: 'bigbouquet', name: '大きい花束', item: { cat: 'crafted', id: 'bigbouquet', name: '大きい花束', level: 1, baseColor: '#ff4d4d', secColor: '#fa8231', symbol: '🌹' }, ing1: { craftedId: 'midbouquet' }, ing2: { craftedId: 'boundflower' } },
+            { id: 'ukuleleparts', name: '弦楽器のパーツ', item: { cat: 'crafted', id: 'ukuleleparts', name: '弦楽器のパーツ', level: 1, baseColor: '#e67e22', secColor: '#d35400', symbol: '🪵' }, ing1: { cat: 'tree', level: 4 }, ing2: { craftedId: 'thread' } },
+            { id: 'miniyuku', name: 'ミニウクレレ', item: { cat: 'crafted', id: 'miniyuku', name: 'ミニウクレレ', level: 1, baseColor: '#f39c12', secColor: '#d35400', symbol: '🎸' }, ing1: { craftedId: 'ukuleleparts' }, ing2: { cat: 'tree', level: 4 } },
+            { id: 'charm', name: 'お守り', item: { cat: 'crafted', id: 'charm', name: 'お守り', level: 1, baseColor: '#e74c3c', secColor: '#c0392b', symbol: '🎋' }, ing1: { craftedId: 'boundflower' }, ing2: { cat: 'stone', level: 3 } }
+        ];
 
         let stamina = 10000;
         let maxStamina = 10000;
@@ -21,33 +59,22 @@
         let fieldData = new Array(TOTAL_CELLS).fill(null);
         let bagData = new Array(20).fill(null);
         let unlockedZukan = {};
+        let unlockedRecipes = {}; // 解放されたレシピID記録
         let itemIcons = {};
 
         let randomQuests = [];
-        let dailyProgress = {
-            merged: false,
-            sold: false,
-            questCleared: false,
-            claimed: false
-        };
+        let dailyProgress = { merged: false, sold: false, questCleared: false, claimed: false };
 
-        let currentSelectedItem = null;
+        let currentSelectedItem = null; // フィールド操作用
+        let currentBagSelectedItem = null; // バッグ操作用
 
         /* ==========================================
-           ローカルストレージ セーブ ＆ ロード機能
+           ローカルストレージ セーブ ＆ ロード
            ========================================== */
-        const SAVE_KEY = 'merge_game_save_data_v1';
+        const SAVE_KEY = 'merge_game_save_data_v2';
 
         function saveGame() {
-            const saveData = {
-                stamina,
-                coins,
-                fieldData,
-                bagData,
-                unlockedZukan,
-                randomQuests,
-                dailyProgress
-            };
+            const saveData = { stamina, coins, fieldData, bagData, unlockedZukan, unlockedRecipes, randomQuests, dailyProgress };
             localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
         }
 
@@ -61,12 +88,11 @@
                     fieldData = data.fieldData ?? new Array(TOTAL_CELLS).fill(null);
                     bagData = data.bagData ?? new Array(20).fill(null);
                     unlockedZukan = data.unlockedZukan ?? {};
+                    unlockedRecipes = data.unlockedRecipes ?? {};
                     randomQuests = data.randomQuests ?? [];
                     dailyProgress = data.dailyProgress ?? { merged: false, sold: false, questCleared: false, claimed: false };
                     return true;
-                } catch (e) {
-                    console.error('セーブデータの読み込みに失敗しました', e);
-                }
+                } catch (e) { console.error(e); }
             }
             return false;
         }
@@ -81,19 +107,18 @@
         /* ==========================================
            アイコン生成
            ========================================== */
-        function generateItemIcon(catId, level) {
+        function generateItemIcon(baseColor, secColor, symbol, levelText) {
             const canvas = document.createElement('canvas');
             canvas.width = 64;
             canvas.height = 64;
             const ctx = canvas.getContext('2d');
-            const cat = CATEGORIES.find(c => c.id === catId);
 
-            ctx.fillStyle = cat.iconBaseColor;
+            ctx.fillStyle = baseColor;
             ctx.beginPath();
             ctx.arc(32, 32, 28, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.strokeStyle = cat.secondaryColor;
+            ctx.strokeStyle = secColor;
             ctx.lineWidth = 3;
             ctx.stroke();
 
@@ -101,26 +126,44 @@
             ctx.font = 'bold 20px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-
-            let symbol = '🌿';
-            if (catId === 'flower') symbol = '🌸';
-            else if (catId === 'tree') symbol = '🌲';
-            else if (catId === 'stone') symbol = '💎';
-
             ctx.fillText(symbol, 32, 26);
-            ctx.fillStyle = 'rgba(0,0,0,0.7)';
-            ctx.font = 'bold 14px sans-serif';
-            ctx.fillText(`Lv.${level}`, 32, 52);
 
+            if (levelText) {
+                ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.fillText(levelText, 32, 52);
+            }
             return canvas.toDataURL();
         }
 
         function initIcons() {
+            // 通常系統 (草・花・木・石)
             CATEGORIES.forEach(cat => {
-                for (let lv = 1; lv <= MAX_LEVEL; lv++) {
-                    itemIcons[`${cat.id}_${lv}`] = generateItemIcon(cat.id, lv);
+                if (cat.id !== 'crafted') {
+                    let symbol = '🌿';
+                    if (cat.id === 'flower') symbol = '🌸';
+                    else if (cat.id === 'tree') symbol = '🌲';
+                    else if (cat.id === 'stone') symbol = '💎';
+
+                    for (let lv = 1; lv <= MAX_LEVEL; lv++) {
+                        itemIcons[`${cat.id}_${lv}`] = generateItemIcon(cat.iconBaseColor, cat.secondaryColor, symbol, `Lv.${lv}`);
+                    }
                 }
             });
+
+            // クラフト品系統
+            CRAFT_RECIPES.forEach(rec => {
+                itemIcons[`crafted_${rec.id}`] = generateItemIcon(rec.item.baseColor, rec.item.secColor, rec.item.symbol, '');
+            });
+        }
+
+        // アイテムデータからアイコンを取得するヘルパー
+        function getItemIconUrl(item) {
+            if (item.category === 'crafted') {
+                return itemIcons[`crafted_${item.craftedId}`];
+            } else {
+                return itemIcons[`${item.category}_${item.level}`];
+            }
         }
 
         /* ==========================================
@@ -131,7 +174,6 @@
             initFieldDOM();
             initBagDOM();
 
-            // セーブデータがあれば読み込み、なければ初期配置
             if (!loadGame()) {
                 fieldData[0] = { category: 'grass', level: 1 };
                 fieldData[1] = { category: 'grass', level: 1 };
@@ -147,8 +189,6 @@
                 saveGame();
             }
 
-            buildZukanUI();
-            buildCraftUI();
             updateStatusDisplay();
             renderTopQuestUI();
             renderField();
@@ -181,23 +221,23 @@
                     cell.appendChild(createItemElement(itemData, 'field', i));
                 }
             }
-            saveGame(); // 状態が変わるごとに自動セーブ
+            saveGame();
         }
 
         /* ==========================================
-           アイテム要素 ＆ ポインターイベントD&D処理
+           アイテム要素 ＆ ポインターイベントD&D・マージ・クラフト判定
            ========================================== */
         function createItemElement(itemData, locationType, index) {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'item';
 
             const iconImg = document.createElement('img');
-            iconImg.src = itemIcons[`${itemData.category}_${itemData.level}`];
+            iconImg.src = getItemIconUrl(itemData);
             itemDiv.appendChild(iconImg);
 
             const lvBadge = document.createElement('div');
             lvBadge.className = 'item-level';
-            lvBadge.innerText = `Lv${itemData.level}`;
+            lvBadge.innerText = itemData.category === 'crafted' ? '特製' : `Lv${itemData.level}`;
             itemDiv.appendChild(lvBadge);
 
             let hasMoved = false;
@@ -205,13 +245,12 @@
             itemDiv.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (!hasMoved) {
-                    openItemMenuModal(locationType, index, itemData);
+                    if (locationType === 'field') openItemMenuModal(locationType, index, itemData);
+                    else openBagMenuModal(index, itemData);
                 }
             });
 
-            let startX = 0, startY = 0;
-            let isDragging = false;
-
+            let startX = 0, startY = 0, isDragging = false;
             itemDiv.onpointerdown = function(event) {
                 if (event.button !== 0 && event.pointerType === 'mouse') return;
                 startX = event.clientX;
@@ -222,12 +261,10 @@
 
             itemDiv.onpointermove = function(event) {
                 if (event.buttons) {
-                    const moveDist = Math.hypot(event.clientX - startX, event.clientY - startY);
-                    if (moveDist > 4) {
+                    if (Math.hypot(event.clientX - startX, event.clientY - startY) > 4) {
                         hasMoved = true;
                         isDragging = true;
                     }
-
                     if (isDragging) {
                         this.style.left     = (parseInt(this.style.left || 0) + event.movementX) + 'px';
                         this.style.top      = (parseInt(this.style.top || 0) + event.movementY) + 'px';
@@ -261,25 +298,21 @@
             const bagSlotElem = dropTarget.closest('.bag-slot');
             if (bagSlotElem) {
                 const destBagIndex = parseInt(bagSlotElem.dataset.bagIndex);
-                if (srcLocation === 'field') {
-                    moveFieldToBag(srcIndex, destBagIndex);
-                }
+                if (srcLocation === 'field') moveFieldToBag(srcIndex, destBagIndex);
                 return;
             }
 
             const cellElem = dropTarget.closest('.cell');
             if (cellElem) {
                 const destIndex = parseInt(cellElem.dataset.index);
-                if (srcLocation === 'field') {
-                    processFieldMergeOrMove(srcIndex, destIndex);
-                } else if (srcLocation === 'bag') {
-                    moveBagToField(srcIndex, destIndex);
-                }
+                if (srcLocation === 'field') processFieldInteraction(srcIndex, destIndex);
+                else if (srcLocation === 'bag') moveBagToField(srcIndex, destIndex);
                 return;
             }
         }
 
-        function processFieldMergeOrMove(srcIdx, destIdx) {
+        // フィールド上でのマージおよび新クラフト判定ロジック
+        function processFieldInteraction(srcIdx, destIdx) {
             if (srcIdx === destIdx) return;
             const srcItem = fieldData[srcIdx];
             const destItem = fieldData[destIdx];
@@ -289,7 +322,21 @@
                 fieldData[destIdx] = srcItem;
                 fieldData[srcIdx] = null;
             } else {
-                if (srcItem.category === destItem.category && srcItem.level === destItem.level) {
+                // 1. クラフトレシピの合体判定チェック
+                const craftedResult = checkCraftRecipe(srcItem, destItem);
+                if (craftedResult) {
+                    // クラフト成立！
+                    fieldData[destIdx] = craftedResult;
+                    fieldData[srcIdx] = null;
+                    unlockZukanOrCraft(craftedResult);
+                    alert(`✨ クラフト成功: ${craftedResult.name} を作成しました！`);
+                    renderField();
+                    return;
+                }
+
+                // 2. 通常のマージ判定 (同種・同レベル)
+                if (srcItem.category !== 'crafted' && destItem.category !== 'crafted' &&
+                    srcItem.category === destItem.category && srcItem.level === destItem.level) {
                     if (destItem.level < MAX_LEVEL) {
                         destItem.level += 1;
                         fieldData[srcIdx] = null;
@@ -301,6 +348,7 @@
                         fieldData[destIdx] = srcItem;
                     }
                 } else {
+                    // 3. スワップ
                     fieldData[srcIdx] = destItem;
                     fieldData[destIdx] = srcItem;
                 }
@@ -308,28 +356,61 @@
             renderField();
         }
 
+        // 2つのアイテムがレシピに一致するか検証
+        function checkCraftRecipe(itemA, itemB) {
+            for (let rec of CRAFT_RECIPES) {
+                if (matchRecipeIng(itemA, rec.ing1) && matchRecipeIng(itemB, rec.ing2)) {
+                    unlockedRecipes[rec.id] = true;
+                    return {
+                        category: 'crafted',
+                        craftedId: rec.id,
+                        name: rec.item.name,
+                        level: 1
+                    };
+                }
+                if (matchRecipeIng(itemA, rec.ing2) && matchRecipeIng(itemB, rec.ing1)) {
+                    unlockedRecipes[rec.id] = true;
+                    return {
+                        category: 'crafted',
+                        craftedId: rec.id,
+                        name: rec.item.name,
+                        level: 1
+                    };
+                }
+            }
+            return null;
+        }
+
+        function matchRecipeIng(item, ing) {
+            if (ing.craftedId) {
+                return item.category === 'crafted' && item.craftedId === ing.craftedId;
+            } else {
+                return item.category === ing.cat && item.level === ing.level;
+            }
+        }
+
         /* ==========================================
-           採集・スタミナ
+           採集・一括採集・スタミナ
            ========================================== */
+        // 空きマスに左から右へ、上から下へ詰めていくヘルパー
+        function getFirstEmptyCellIndex() {
+            for (let i = 0; i < TOTAL_CELLS; i++) {
+                if (fieldData[i] === null) return i;
+            }
+            return -1;
+        }
+
         function gatherItem() {
-            if (stamina < 10) {
-                alert('スタミナが足りません！');
-                return;
-            }
-            const emptyIndices = [];
-            for (let i = 0; i < TOTAL_CELLS; i++) if (fieldData[i] === null) emptyIndices.push(i);
-            if (emptyIndices.length === 0) {
-                alert('フィールドに空きマスがありません！');
-                return;
-            }
+            if (stamina < 10) { alert('スタミナが足りません！'); return; }
+            const emptyIdx = getFirstEmptyCellIndex();
+            if (emptyIdx === -1) { alert('フィールドに空きマスがありません！'); return; }
 
             stamina -= 10;
             updateStatusDisplay();
 
             const rand = Math.random() * 100;
-            let chosenCat = rand < 40 ? 'grass' : rand < 70 ? 'flower' : rand < 90 ? 'tree' : 'stone';
-            const randomCellIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-            fieldData[randomCellIdx] = { category: chosenCat, level: 1 };
+            let chosenCat = rand < 40 ? 'grass' : rand < 70 ? 'stone' : rand < 90 ? 'tree' : 'flower';
+            fieldData[emptyIdx] = { category: chosenCat, level: 1 };
             unlockZukanItem(chosenCat, 1);
             renderField();
 
@@ -340,11 +421,44 @@
             saveGame();
         }
 
-        function recoverStamina() {
-            if (coins < 100) {
-                alert('コインが足りません！');
+        // 一括採集：空いているマスすべてに左上から順にLv1アイテムを生成
+        function gatherBatch() {
+            const costPerItem = 10;
+            // 空きマスのリストアップ
+            const emptyIndices = [];
+            for (let i = 0; i < TOTAL_CELLS; i++) {
+                if (fieldData[i] === null) emptyIndices.push(i);
+            }
+
+            if (emptyIndices.length === 0) { alert('フィールドに空きマスがありません！'); return; }
+
+            const totalCost = emptyIndices.length * costPerItem;
+            if (stamina < totalCost) {
+                alert(`スタミナが足りません！（必要スタミナ: ${totalCost}）`);
                 return;
             }
+
+            stamina -= totalCost;
+            updateStatusDisplay();
+
+            emptyIndices.forEach(idx => {
+                const rand = Math.random() * 100;
+            let chosenCat = rand < 40 ? 'grass' : rand < 70 ? 'stone' : rand < 90 ? 'tree' : 'flower';
+                fieldData[idx] = { category: chosenCat, level: 1 };
+                unlockZukanItem(chosenCat, 1);
+            });
+
+            renderField();
+            while (randomQuests.length < 5) {
+                randomQuests.push(generateRandomQuest());
+            }
+            renderTopQuestUI();
+            saveGame();
+            alert(`⚡ 一括採集を行いました！（消費スタミナ: ${totalCost}）`);
+        }
+
+        function recoverStamina() {
+            if (coins < 100) { alert('コインが足りません！'); return; }
             coins -= 100;
             stamina = Math.min(maxStamina, stamina + 5000);
             updateStatusDisplay();
@@ -359,20 +473,33 @@
         }
 
         /* ==========================================
-           常時表示のクエスト機能
+           常時表示クエスト機能
            ========================================== */
         function generateRandomQuest() {
-            const cat = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
-            const levels = [3, 3, 4, 4, 5, 5, 6, 7, 8];
-            const lv = levels[Math.floor(Math.random() * levels.length)];
-            const rewardCoins = lv * 50 + Math.floor(Math.random() * 50);
+            // クエスト対象として通常Lv3〜8、または作成可能な特製品を指定
+            const questTypes = ['base', 'crafted'];
+            const t = Math.random() < 0.7 ? 'base' : 'crafted';
 
-            return {
-                category: cat.id,
-                catName: cat.name,
-                level: lv,
-                reward: rewardCoins
-            };
+            if (t === 'base') {
+                const cat = CATEGORIES.filter(c => c.id !== 'crafted')[Math.floor(Math.random() * 4)];
+                const levels = [3, 3, 4, 4, 5, 5, 6, 7, 8];
+                const lv = levels[Math.floor(Math.random() * levels.length)];
+                return {
+                    type: 'base',
+                    category: cat.id,
+                    catName: cat.name,
+                    level: lv,
+                    reward: lv * 50 + Math.floor(Math.random() * 50)
+                };
+            } else {
+                const rec = CRAFT_RECIPES[Math.floor(Math.random() * CRAFT_RECIPES.length)];
+                return {
+                    type: 'crafted',
+                    craftedId: rec.id,
+                    catName: rec.item.name,
+                    reward: 300 + Math.floor(Math.random() * 200)
+                };
+            }
         }
 
         function renderTopQuestUI() {
@@ -384,12 +511,16 @@
                 card.className = 'quest-card-mini';
 
                 const img = document.createElement('img');
-                img.src = itemIcons[`${quest.category}_${quest.level}`];
+                if (quest.type === 'base') {
+                    img.src = itemIcons[`${quest.category}_${quest.level}`];
+                } else {
+                    img.src = itemIcons[`crafted_${quest.craftedId}`];
+                }
                 card.appendChild(img);
 
                 const title = document.createElement('div');
                 title.className = 'quest-card-title';
-                title.innerText = `${quest.catName} (Lv.${quest.level})`;
+                title.innerText = quest.type === 'base' ? `${quest.catName} (Lv.${quest.level})` : `${quest.catName}`;
                 card.appendChild(title);
 
                 const reward = document.createElement('div');
@@ -410,39 +541,26 @@
 
         function fulfillQuest(questIndex) {
             const quest = randomQuests[questIndex];
-
-            let foundLocation = null;
-            let foundIndex = -1;
+            let foundLocation = null, foundIndex = -1;
 
             for (let i = 0; i < fieldData.length; i++) {
-                if (fieldData[i] && fieldData[i].category === quest.category && fieldData[i].level === quest.level) {
-                    foundLocation = 'field';
-                    foundIndex = i;
-                    break;
-                }
+                const item = fieldData[i];
+                if (item && matchesQuestItem(item, quest)) { foundLocation = 'field'; foundIndex = i; break; }
             }
             if (!foundLocation) {
                 for (let i = 0; i < bagData.length; i++) {
-                    if (bagData[i] && bagData[i].category === quest.category && bagData[i].level === quest.level) {
-                        foundLocation = 'bag';
-                        foundIndex = i;
-                        break;
-                    }
+                    const item = bagData[i];
+                    if (item && matchesQuestItem(item, quest)) { foundLocation = 'bag'; foundIndex = i; break; }
                 }
             }
 
             if (!foundLocation) {
-                alert(`ボード上（フィールドまたはバッグ）に対象の「${quest.catName} Lv.${quest.level}」が見つかりません！`);
+                alert(`ボード上（フィールドまたはバッグ）に対象の「${quest.catName}」が見つかりません！`);
                 return;
             }
 
-            if (foundLocation === 'field') {
-                fieldData[foundIndex] = null;
-                renderField();
-            } else {
-                bagData[foundIndex] = null;
-                renderBag();
-            }
+            if (foundLocation === 'field') { fieldData[foundIndex] = null; renderField(); }
+            else { bagData[foundIndex] = null; renderBag(); }
 
             coins += quest.reward;
             updateStatusDisplay();
@@ -452,38 +570,32 @@
 
             dailyProgress.questCleared = true;
             updateDailyUI();
-
             alert('クエストをクリアしました！');
         }
 
+        function matchesQuestItem(item, quest) {
+            if (quest.type === 'base') {
+                return item.category === quest.category && item.level === quest.level;
+            } else {
+                return item.category === 'crafted' && item.craftedId === quest.craftedId;
+            }
+        }
+
         /* ==========================================
-           アイテムメニュー (売却 or バッグへ)
+           アイテムメニューポップアップ (フィールド用 / バッグ用)
            ========================================== */
         function openItemMenuModal(locationType, index, itemData) {
             currentSelectedItem = { type: locationType, index: index, data: itemData };
-            const catObj = CATEGORIES.find(c => c.id === itemData.category);
-            document.getElementById('menu-item-title').innerText = `${catObj.name} (Lv.${itemData.level})`;
+            const nameStr = itemData.category === 'crafted' ? itemData.name : `${CATEGORIES.find(c=>c.id===itemData.category).name} (Lv.${itemData.level})`;
+            document.getElementById('menu-item-title').innerText = nameStr;
             document.getElementById('item-menu-modal').style.display = 'flex';
         }
-
-        function closeItemMenuModal() {
-            document.getElementById('item-menu-modal').style.display = 'none';
-            currentSelectedItem = null;
-        }
+        function closeItemMenuModal() { document.getElementById('item-menu-modal').style.display = 'none'; currentSelectedItem = null; }
 
         function menuActionBag() {
             if (!currentSelectedItem) return;
-            if (currentSelectedItem.type === 'bag') {
-                alert('すでにバッグに入っています');
-                closeItemMenuModal();
-                return;
-            }
             const emptyBagIdx = bagData.findIndex(slot => slot === null);
-            if (emptyBagIdx === -1) {
-                alert('バッグがいっぱいです！');
-                closeItemMenuModal();
-                return;
-            }
+            if (emptyBagIdx === -1) { alert('バッグがいっぱいです！'); closeItemMenuModal(); return; }
             bagData[emptyBagIdx] = fieldData[currentSelectedItem.index];
             fieldData[currentSelectedItem.index] = null;
             renderField();
@@ -494,22 +606,50 @@
         function menuActionSell() {
             if (!currentSelectedItem) return;
             const item = currentSelectedItem.data;
-            const price = item.level * 15;
+            const price = item.category === 'crafted' ? 150 : item.level * 15;
             coins += price;
-
-            if (currentSelectedItem.type === 'field') {
-                fieldData[currentSelectedItem.index] = null;
-                renderField();
-            } else {
-                bagData[currentSelectedItem.index] = null;
-                renderBag();
-            }
+            fieldData[currentSelectedItem.index] = null;
+            renderField();
 
             dailyProgress.sold = true;
             updateDailyUI();
-
             updateStatusDisplay();
             closeItemMenuModal();
+        }
+
+        // バッグ内アイテム操作ポップアップ (取り出すボタン)
+        function openBagMenuModal(index, itemData) {
+            currentBagSelectedItem = { index: index, data: itemData };
+            const nameStr = itemData.category === 'crafted' ? itemData.name : `${CATEGORIES.find(c=>c.id===itemData.category).name} (Lv.${itemData.level})`;
+            document.getElementById('bag-menu-item-title').innerText = nameStr;
+            document.getElementById('bag-menu-modal').style.display = 'flex';
+        }
+        function closeBagMenuModal() { document.getElementById('bag-menu-modal').style.display = 'none'; currentBagSelectedItem = null; }
+
+        function menuActionTakeOut() {
+            if (!currentBagSelectedItem) return;
+            const emptyFieldIdx = getFirstEmptyCellIndex();
+            if (emptyFieldIdx === -1) { alert('フィールドに空きマスがありません！'); closeBagMenuModal(); return; }
+
+            fieldData[emptyFieldIdx] = bagData[currentBagSelectedItem.index];
+            bagData[currentBagSelectedItem.index] = null;
+            renderField();
+            renderBag();
+            closeBagMenuModal();
+        }
+
+        function menuActionBagSell() {
+            if (!currentBagSelectedItem) return;
+            const item = currentBagSelectedItem.data;
+            const price = item.category === 'crafted' ? 150 : item.level * 15;
+            coins += price;
+            bagData[currentBagSelectedItem.index] = null;
+            renderBag();
+
+            dailyProgress.sold = true;
+            updateDailyUI();
+            updateStatusDisplay();
+            closeBagMenuModal();
         }
 
         /* ==========================================
@@ -543,10 +683,7 @@
         }
 
         function moveFieldToBag(fieldIdx, bagIdx) {
-            if (bagData[bagIdx] !== null) {
-                alert('そのバッグスロットには既にアイテムがあります！');
-                return;
-            }
+            if (bagData[bagIdx] !== null) { alert('そのバッグスロットには既にアイテムがあります！'); return; }
             bagData[bagIdx] = fieldData[fieldIdx];
             fieldData[fieldIdx] = null;
             renderField();
@@ -554,10 +691,7 @@
         }
 
         function moveBagToField(bagIdx, fieldIdx) {
-            if (fieldData[fieldIdx] !== null) {
-                alert('フィールドのそのマスには既にアイテムがあります！');
-                return;
-            }
+            if (fieldData[fieldIdx] !== null) { alert('フィールドのそのマスには既にアイテムがあります！'); return; }
             fieldData[fieldIdx] = bagData[bagIdx];
             bagData[bagIdx] = null;
             renderField();
@@ -570,10 +704,7 @@
         /* ==========================================
            デイリークエスト機能
            ========================================== */
-        function openDailyModal() {
-            updateDailyUI();
-            document.getElementById('daily-modal').style.display = 'flex';
-        }
+        function openDailyModal() { updateDailyUI(); document.getElementById('daily-modal').style.display = 'flex'; }
         function closeDailyModal() { document.getElementById('daily-modal').style.display = 'none'; }
 
         function updateDailyUI() {
@@ -589,10 +720,7 @@
             if (dailyProgress.merged && dailyProgress.sold && dailyProgress.questCleared && !dailyProgress.claimed) {
                 claimBtn.disabled = false;
             }
-            if (dailyProgress.claimed) {
-                claimBtn.innerText = '受取済み';
-                claimBtn.disabled = true;
-            }
+            if (dailyProgress.claimed) { claimBtn.innerText = '受取済み'; claimBtn.disabled = true; }
             saveGame();
         }
 
@@ -605,10 +733,11 @@
         }
 
         /* ==========================================
-           図鑑 ＆ クラフト
+           図鑑 ＆ クラフトレシピブック
            ========================================== */
-        function openZukanModal() { document.getElementById('zukan-modal').style.display = 'flex'; buildZukanUI(); buildCraftUI(); }
+        function openZukanModal() { document.getElementById('zukan-modal').style.display = 'flex'; buildZukanUI(); buildRecipeBookUI(); }
         function closeZukanModal() { document.getElementById('zukan-modal').style.display = 'none'; }
+
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -620,8 +749,14 @@
                 document.getElementById('tab-craft').classList.add('active');
             }
         }
+
         function unlockZukanItem(catId, level) {
             unlockedZukan[`${catId}_${level}`] = true;
+            saveGame();
+        }
+
+        function unlockZukanOrCraft(craftedItem) {
+            unlockedZukan[`crafted_${craftedItem.craftedId}`] = true;
             saveGame();
         }
 
@@ -629,6 +764,7 @@
             const container = document.getElementById('zukan-content-container');
             container.innerHTML = '';
             CATEGORIES.forEach(cat => {
+                if (cat.id === 'crafted') return;
                 const catDiv = document.createElement('div');
                 catDiv.className = 'zukan-category';
                 catDiv.innerHTML = `<div class="zukan-cat-title">${cat.name}系統</div>`;
@@ -651,39 +787,51 @@
             });
         }
 
-        function buildCraftUI() {
-            const container = document.getElementById('craft-list-container');
+        // クラフトレシピブックUI (未発見のものはすべて「？」で表示)
+        function buildRecipeBookUI() {
+            const container = document.getElementById('recipe-list-container');
             container.innerHTML = '';
-            const recipes = [
-                { cat: 'grass', level: 3, cost: 200, name: '上質な草 (Lv3)' },
-                { cat: 'flower', level: 3, cost: 250, name: '美しい花束 (Lv3)' },
-                { cat: 'tree', level: 3, cost: 300, name: '若木 (Lv3)' },
-                { cat: 'stone', level: 3, cost: 350, name: '硬い岩石 (Lv3)' }
-            ];
-            recipes.forEach(recipe => {
+
+            CRAFT_RECIPES.forEach(rec => {
                 const card = document.createElement('div');
-                card.className = 'craft-card';
-                card.innerHTML = `<div class="craft-info"><img src="${itemIcons[`${recipe.cat}_${recipe.level}`]}"><div><div class="craft-name">${recipe.name}</div><div class="craft-desc">必要コイン: ${recipe.cost} 💰</div></div></div>`;
-                const btn = document.createElement('button');
-                btn.className = 'craft-btn';
-                btn.innerText = 'クラフト';
-                btn.onclick = () => executeCraft(recipe.cat, recipe.level, recipe.cost);
-                card.appendChild(btn);
+                card.className = 'recipe-card';
+
+                const isUnlocked = unlockedRecipes[rec.id];
+
+                const formulaDiv = document.createElement('div');
+                formulaDiv.className = 'recipe-formula';
+
+                if (isUnlocked) {
+                    // 解開済み：素材1 ＋ 素材2 ＝ 結果
+                    formulaDiv.innerHTML = `
+                        <div class="recipe-icon-box"><img src="${getIngIconUrl(rec.ing1)}"></div>
+                        <span>＋</span>
+                        <div class="recipe-icon-box"><img src="${getIngIconUrl(rec.ing2)}"></div>
+                        <span>＝</span>
+                        <div class="recipe-icon-box" style="border-color:#2ed573;"><img src="${itemIcons[`crafted_${rec.id}`]}"></div>
+                        <span style="margin-left:6px;">${rec.item.name}</span>
+                    `;
+                } else {
+                    // 未発見：？表示
+                    formulaDiv.innerHTML = `
+                        <div class="recipe-icon-box"><span class="recipe-unknown">?</span></div>
+                        <span>＋</span>
+                        <div class="recipe-icon-box"><span class="recipe-unknown">?</span></div>
+                        <span>＝</span>
+                        <div class="recipe-icon-box"><span class="recipe-unknown">?</span></div>
+                        <span style="margin-left:6px; color:#a4b0be;">??? (未発見)</span>
+                    `;
+                }
+                card.appendChild(formulaDiv);
                 container.appendChild(card);
             });
         }
 
-        function executeCraft(catId, level, cost) {
-            if (coins < cost) { alert('コインが足りません！'); return; }
-            const emptyIndices = [];
-            for (let i = 0; i < TOTAL_CELLS; i++) if (fieldData[i] === null) emptyIndices.push(i);
-            if (emptyIndices.length === 0) { alert('フィールドに空きマスがありません！'); return; }
-
-            coins -= cost;
-            updateStatusDisplay();
-            const randomCellIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-            fieldData[randomCellIdx] = { category: catId, level: level };
-            unlockZukanItem(catId, level);
-            renderField();
-            alert('クラフト成功！');
+        function getIngIconUrl(ing) {
+            if (ing.craftedId) {
+                const targetRec = CRAFT_RECIPES.find(r => r.id === ing.craftedId);
+                return itemIcons[`crafted_${targetRec.id}`];
+            } else {
+                return itemIcons[`${ing.cat}_${ing.level}`];
+            }
         }

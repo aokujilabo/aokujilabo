@@ -1,4 +1,3 @@
-
         /* ==========================================
            全体スタイルとリセット
            ========================================== */
@@ -8,7 +7,6 @@
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
-            /* ★すべてのボタンや要素で拡縮が防げます */
             touch-action: manipulation;
         }
 
@@ -23,6 +21,7 @@
             overflow-x: hidden;
             padding-bottom: 70px;
         }
+
         /* ==========================================
            ヘッダー（ステータス表示）
            ========================================== */
@@ -72,12 +71,10 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .recover-btn:hover {
-            background: #219653;
-        }
+        .recover-btn:hover { background: #219653; }
 
         /* ==========================================
-           常時表示のクエストパネル (マス目の上に配置)
+           常時表示のクエストパネル
            ========================================== */
         .quest-top-panel {
             width: 100%;
@@ -108,13 +105,8 @@
             padding-bottom: 4px;
         }
 
-        .quest-horizontal-list::-webkit-scrollbar {
-            height: 4px;
-        }
-        .quest-horizontal-list::-webkit-scrollbar-thumb {
-            background: #b2bec3;
-            border-radius: 2px;
-        }
+        .quest-horizontal-list::-webkit-scrollbar { height: 4px; }
+        .quest-horizontal-list::-webkit-scrollbar-thumb { background: #b2bec3; border-radius: 2px; }
 
         .quest-card-mini {
             flex: 0 0 110px;
@@ -129,26 +121,9 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .quest-card-mini img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-        }
-
-        .quest-card-title {
-            font-size: 10px;
-            font-weight: bold;
-            color: #2f3640;
-            text-align: center;
-            margin: 2px 0;
-        }
-
-        .quest-card-reward {
-            font-size: 9px;
-            color: #e67e22;
-            font-weight: bold;
-        }
-
+        .quest-card-mini img { width: 28px; height: 28px; object-fit: contain; }
+        .quest-card-title { font-size: 10px; font-weight: bold; color: #2f3640; text-align: center; margin: 2px 0; }
+        .quest-card-reward { font-size: 9px; color: #e67e22; font-weight: bold; }
         .quest-card-btn {
             background: #2ed573;
             color: white;
@@ -161,6 +136,47 @@
             margin-top: 4px;
             width: 100%;
         }
+
+        /* ==========================================
+           操作パネル (採集ボタン・一括採集ボタン)
+           ========================================== */
+        .action-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .gather-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+            transition: transform 0.1s;
+        }
+        .gather-btn.batch {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+        .gather-btn:active { transform: scale(0.96); }
+
+        .reset-data-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .reset-data-btn:hover { background: rgba(255, 255, 255, 0.3); }
 
         /* ==========================================
            メインゲームフィールド (7列 × 9行)
@@ -197,7 +213,7 @@
         }
 
         /* ==========================================
-           アイテム要素 & ポインタードラッグ処理
+           アイテム要素 ＆ ドラッグ処理
            ========================================== */
         .item {
             width: 42px;
@@ -212,20 +228,9 @@
             cursor: grab;
             position: relative;
             z-index: 5;
-            touch-action: none;
         }
-
-        .item:active {
-            cursor: grabbing;
-        }
-
-        .item img {
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-            pointer-events: none;
-        }
-
+        .item:active { cursor: grabbing; }
+        .item img { width: 26px; height: 26px; object-fit: contain; pointer-events: none; }
         .item-level {
             font-size: 9px;
             font-weight: bold;
@@ -240,46 +245,6 @@
         }
 
         /* ==========================================
-           操作パネル (採集ボタン & セーブ初期化ボタン)
-           ========================================== */
-        .action-panel {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .gather-btn {
-            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            padding: 10px 26px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
-            transition: transform 0.1s;
-        }
-
-        .gather-btn:active {
-            transform: scale(0.96);
-        }
-
-        .reset-data-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-        .reset-data-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* ==========================================
            下部フッターナビゲーション
            ========================================== */
         footer {
@@ -290,7 +255,7 @@
             background: rgba(255, 255, 255, 0.95);
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             padding: 10px 0;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
             z-index: 20;
@@ -300,7 +265,7 @@
             background: #3498db;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 13px;
@@ -329,9 +294,9 @@
 
         .modal-content {
             background: white;
-            width: 90%;
-            max-width: 480px;
-            max-height: 80vh;
+            width: 92%;
+            max-width: 500px;
+            max-height: 82vh;
             border-radius: 20px;
             display: flex;
             flex-direction: column;
@@ -354,11 +319,7 @@
             border-bottom: 1px solid #dfe4ea;
         }
 
-        .modal-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2f3640;
-        }
+        .modal-title { font-size: 16px; font-weight: bold; color: #2f3640; }
 
         .close-btn {
             background: #ff4757;
@@ -378,11 +339,7 @@
         /* ==========================================
            タブ切り替え (図鑑 ＆ クラフト)
            ========================================== */
-        .tab-bar {
-            display: flex;
-            background: #dfe4ea;
-        }
-
+        .tab-bar { display: flex; background: #dfe4ea; }
         .tab-btn {
             flex: 1;
             padding: 10px;
@@ -394,24 +351,12 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .tab-btn.active {
-            background: white;
-            color: #2f3640;
-            border-bottom: 3px solid #3498db;
-        }
-
-        .tab-pane {
-            display: none;
-            padding: 15px;
-            overflow-y: auto;
-            max-height: calc(80vh - 100px);
-        }
-
+        .tab-btn.active { background: white; color: #2f3640; border-bottom: 3px solid #3498db; }
+        .tab-pane { display: none; padding: 15px; overflow-y: auto; max-height: calc(82vh - 100px); }
         .tab-pane.active { display: block; }
 
         /* ==========================================
-           図鑑 & クラフト UI
+           図鑑 UI
            ========================================== */
         .zukan-category { margin-bottom: 15px; }
         .zukan-cat-title {
@@ -422,11 +367,7 @@
             border-left: 4px solid #3498db;
             padding-left: 6px;
         }
-        .zukan-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-        }
+        .zukan-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
         .zukan-slot {
             background: #f1f2f6;
             border: 2px solid #ced6e0;
@@ -452,30 +393,40 @@
         }
         .unknown-mark { font-size: 20px; font-weight: bold; color: #a4b0be; }
 
-        .craft-list { display: flex; flex-direction: column; gap: 10px; }
-        .craft-card {
+        /* ==========================================
+           クラフトレシピUI (はてな表示対応)
+           ========================================== */
+        .recipe-list { display: flex; flex-direction: column; gap: 8px; }
+        .recipe-card {
             background: #f8f9fa;
             border: 1px solid #dfe4ea;
             border-radius: 10px;
-            padding: 10px 15px;
+            padding: 10px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
-        .craft-info { display: flex; align-items: center; gap: 10px; }
-        .craft-info img { width: 32px; height: 32px; object-fit: contain; }
-        .craft-name { font-size: 13px; font-weight: bold; color: #2f3640; }
-        .craft-desc { font-size: 11px; color: #718093; }
-        .craft-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+        .recipe-formula {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-size: 12px;
             font-weight: bold;
-            cursor: pointer;
+            color: #2f3640;
         }
+        .recipe-icon-box {
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            border: 1px solid #ced6e0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .recipe-icon-box img { width: 24px; height: 24px; object-fit: contain; }
+        .recipe-unknown { font-size: 16px; color: #a4b0be; }
 
         /* ==========================================
            バッグ画面
@@ -486,7 +437,7 @@
             gap: 10px;
             padding: 15px;
             overflow-y: auto;
-            max-height: calc(80vh - 60px);
+            max-height: calc(82vh - 60px);
         }
         .bag-slot {
             background: #f1f2f6;
@@ -508,7 +459,7 @@
             flex-direction: column;
             gap: 10px;
             overflow-y: auto;
-            max-height: calc(80vh - 60px);
+            max-height: calc(82vh - 60px);
         }
         .daily-card {
             background: #f8f9fa;
@@ -522,7 +473,6 @@
         .daily-text { font-size: 13px; font-weight: bold; color: #2f3640; }
         .daily-status { font-size: 12px; font-weight: bold; color: #e74c3c; }
         .daily-status.done { color: #2ed573; }
-
         .daily-reward-box {
             margin-top: 10px;
             background: #fff3cd;
@@ -544,7 +494,7 @@
         .daily-claim-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
         /* ==========================================
-           アイテムメニュー選択ポップアップ
+           アイテム操作メニューポップアップ (フィールド用 / バッグ用)
            ========================================== */
         .menu-modal-content {
             background: white;

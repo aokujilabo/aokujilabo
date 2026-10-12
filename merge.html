@@ -35,9 +35,10 @@
         <div id="quest-horizontal-list" class="quest-horizontal-list"></div>
     </div>
 
-    <!-- 採集ボタン & 初期化ボタンパネル -->
+    <!-- 操作パネル (採集・一括採集・初期化ボタン) -->
     <div class="action-panel">
-        <button class="gather-btn" onclick="gatherItem()">🌱 採集する (消費: 10)</button>
+        <button class="gather-btn" onclick="gatherItem()">🌱 採集 (10)</button>
+        <button class="gather-btn batch" onclick="gatherBatch()">⚡ 一括採集</button>
         <button class="reset-data-btn" onclick="resetGameData()">初期化</button>
     </div>
 
@@ -50,11 +51,10 @@
     <footer>
         <button class="footer-btn" onclick="openBagModal()">🎒 バッグ</button>
         <button class="footer-btn" onclick="openDailyModal()">⭐ デイリー</button>
-        <button class="footer-btn" onclick="openZukanModal()">📖 図鑑 ＆ クラフト</button>
-        <a href="index.html" ><button class="footer-btn" >🐾 TOP</button></a>
+        <button class="footer-btn" onclick="openZukanModal()">📖 図鑑 & クラフト</button>
     </footer>
 
-    <!-- 図鑑 ＆ クラフト モーダル -->
+    <!-- 図鑑 ＆ クラフト レシピブック モーダル -->
     <div id="zukan-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -63,10 +63,10 @@
             </div>
             <div class="tab-bar">
                 <button class="tab-btn active" onclick="switchTab('zukan')">アイテム図鑑</button>
-                <button class="tab-btn" onclick="switchTab('craft')">クラフト</button>
+                <button class="tab-btn" onclick="switchTab('craft')">クラフトレシピ</button>
             </div>
             <div id="tab-zukan" class="tab-pane active"><div id="zukan-content-container"></div></div>
-            <div id="tab-craft" class="tab-pane"><div class="craft-list" id="craft-list-container"></div></div>
+            <div id="tab-craft" class="tab-pane"><div class="recipe-list" id="recipe-list-container"></div></div>
         </div>
     </div>
 
@@ -109,13 +109,23 @@
         </div>
     </div>
 
-    <!-- アイテム操作メニューポップアップ (売却 or バッグへ) -->
+    <!-- アイテム操作メニューポップアップ (フィールド用) -->
     <div id="item-menu-modal" class="modal" style="z-index: 200;">
         <div class="menu-modal-content">
             <h3 id="menu-item-title">アイテム操作</h3>
             <button class="menu-btn" onclick="menuActionBag()">バッグにしまう</button>
             <button class="menu-btn sell" onclick="menuActionSell()">売却する</button>
             <button class="menu-btn cancel" onclick="closeItemMenuModal()">キャンセル</button>
+        </div>
+    </div>
+
+    <!-- バッグ内アイテム操作メニューポップアップ (バッグ用：取り出すボタン) -->
+    <div id="bag-menu-modal" class="modal" style="z-index: 200;">
+        <div class="menu-modal-content">
+            <h3 id="bag-menu-item-title">バッグ内アイテム</h3>
+            <button class="menu-btn" onclick="menuActionTakeOut()">バッグから取り出す</button>
+            <button class="menu-btn sell" onclick="menuActionBagSell()">売却する</button>
+            <button class="menu-btn cancel" onclick="closeBagMenuModal()">キャンセル</button>
         </div>
     </div>
 </body>
