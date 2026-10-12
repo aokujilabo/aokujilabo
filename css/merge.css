@@ -1,535 +1,538 @@
-        /* ==========================================
-           全体スタイルとリセット
-           ========================================== */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
+/* ==========================================
+   全体スタイルとリセット
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
 
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            padding-bottom: 70px;
-        }
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    padding-bottom: 70px;
+}
 
-        /* ==========================================
-           ヘッダー（ステータス表示）
-           ========================================== */
-        header {
-            width: 100%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
-            margin-bottom: 10px;
-            z-index: 10;
-        }
+/* ヘッダー */
+header {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    margin-bottom: 10px;
+    z-index: 10;
+}
 
-        .status-group {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+.status-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
 
-        .status-item {
-            font-size: 13px;
-            font-weight: bold;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+.status-item {
+    font-size: 13px;
+    font-weight: bold;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-        .stamina-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.stamina-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        .recover-btn {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .recover-btn:hover { background: #219653; }
+.recover-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.recover-btn:hover { background: #219653; }
 
-        /* ==========================================
-           常時表示のクエストパネル
-           ========================================== */
-        .quest-top-panel {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+/* クエストパネル */
+.quest-top-panel {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
 
-        .quest-top-header {
-            font-size: 12px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px dashed #b2bec3;
-            padding-bottom: 4px;
-        }
+.quest-top-header {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #b2bec3;
+    padding-bottom: 4px;
+}
 
-        .quest-refresh-btn {
-            background: #e67e22;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .quest-refresh-btn:hover { background: #d35400; }
+.quest-refresh-btn {
+    background: #e67e22;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.quest-refresh-btn:hover { background: #d35400; }
 
-        .quest-horizontal-list {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
+.quest-horizontal-list {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
 
-        .quest-horizontal-list::-webkit-scrollbar { height: 4px; }
-        .quest-horizontal-list::-webkit-scrollbar-thumb { background: #b2bec3; border-radius: 2px; }
+.quest-horizontal-list::-webkit-scrollbar { height: 4px; }
+.quest-horizontal-list::-webkit-scrollbar-thumb { background: #b2bec3; border-radius: 2px; }
 
-        .quest-card-mini {
-            flex: 0 0 110px;
-            background: #f8f9fa;
-            border: 1px solid #dfe4ea;
-            border-radius: 8px;
-            padding: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+.quest-card-mini {
+    flex: 0 0 110px;
+    background: #f8f9fa;
+    border: 1px solid #dfe4ea;
+    border-radius: 8px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: background 0.2s;
+}
 
-        .quest-card-mini img { width: 28px; height: 28px; object-fit: contain; }
-        .quest-card-title { font-size: 10px; font-weight: bold; color: #2f3640; text-align: center; margin: 2px 0; }
-        .quest-card-reward { font-size: 9px; color: #e67e22; font-weight: bold; }
-        .quest-card-btn {
-            background: #2ed573;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 4px;
-            width: 100%;
-        }
+.quest-card-mini.deliverable {
+    background: #e8f8f5 !important;
+    border: 2px solid #2ed573 !important;
+}
 
-        /* ==========================================
-           操作パネル (採集・一括採集ボタン)
-           ========================================== */
-        .action-panel {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+.quest-card-mini img { width: 28px; height: 28px; object-fit: contain; }
+.quest-card-title { font-size: 10px; font-weight: bold; color: #2f3640; text-align: center; margin: 2px 0; }
+.quest-card-reward { font-size: 9px; color: #e67e22; font-weight: bold; }
+.quest-card-btn {
+    background: #2ed573;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 4px;
+    width: 100%;
+}
 
-        .gather-btn {
-            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
-            transition: transform 0.1s;
-        }
-        .gather-btn.batch {
-            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
-        }
-        .gather-btn:active { transform: scale(0.96); }
+/* 操作パネル */
+.action-panel {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-        .reset-data-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-        .reset-data-btn:hover { background: rgba(255, 255, 255, 0.3); }
+.gather-btn {
+    background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+    transition: transform 0.1s;
+}
+.gather-btn.batch {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+}
+.gather-btn:active { transform: scale(0.96); }
 
-        /* ==========================================
-           メインゲームフィールド (7列 × 9行)
-           ========================================== */
-        .game-container {
-            position: relative;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 10px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
-        }
+.reset-data-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    cursor: pointer;
+}
+.reset-data-btn:hover { background: rgba(255, 255, 255, 0.3); }
 
-        .grid-field {
-            display: grid;
-            grid-template-columns: repeat(7, 48px);
-            grid-template-rows: repeat(9, 48px);
-            gap: 4px;
-            background: #dcdde1;
-            padding: 4px;
-            border-radius: 10px;
-        }
+/* フィールド */
+.game-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 10px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
 
-        .cell {
-            width: 48px;
-            height: 48px;
-            background: #f5f6fa;
-            border-radius: 8px;
-            border: 2px dashed #b2bec3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+.grid-field {
+    display: grid;
+    grid-template-columns: repeat(7, 48px);
+    grid-template-rows: repeat(7, 48px);
+    gap: 4px;
+    background: #dcdde1;
+    padding: 4px;
+    border-radius: 10px;
+}
 
-        /* ==========================================
-           アイテム要素 ＆ ドラッグ処理
-           ========================================== */
-        .item {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            background: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: grab;
-            position: relative;
-            z-index: 5;
-            touch-action: none; /* D&D時の画面スクロール誤作動を防止 */
-        }
-        .item:active { cursor: grabbing; }
-        .item img { width: 26px; height: 26px; object-fit: contain; pointer-events: none; }
-        .item-level {
-            font-size: 9px;
-            font-weight: bold;
-            color: #fff;
-            background: rgba(0,0,0,0.6);
-            padding: 0 3px;
-            border-radius: 3px;
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            pointer-events: none;
-        }
+.cell {
+    width: 48px;
+    height: 48px;
+    background: #f5f6fa;
+    border-radius: 8px;
+    border: 2px dashed #b2bec3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
 
-        /* ==========================================
-           下部フッターナビゲーション
-           ========================================== */
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 10px 0;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-            z-index: 20;
-        }
+/* アイテム要素 */
+/* 【追加】納品可能な場合のクエストカードのグリーン背景ハイライト */
+.quest-card-mini.deliverable {
+    background: #e8f8f5 !important;
+    border: 2px solid #2ed573 !important;
+}
+.item {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    position: relative;
+    z-index: 5;
+    touch-action: none;
+    border: 2px solid transparent;
+}
+.item:active { cursor: grabbing; }
+.item img { width: 26px; height: 26px; object-fit: contain; pointer-events: none; }
+.item-level {
+    font-size: 9px;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0,0,0,0.6);
+    padding: 0 3px;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    pointer-events: none;
+}
+/* 【追加】納品可能なアイテムのふちをグリーンにするスタイル */
+.item.deliverable-item {
+    border: 2px solid #2ed573 !important;
+    box-shadow: 0 0 8px rgba(46, 213, 115, 0.6);
+}
 
-        .footer-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
-            transition: background 0.2s, transform 0.1s;
-        }
-        .footer-btn:hover { background: #2980b9; }
-        .footer-btn:active { transform: scale(0.95); }
+/* フッター */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+    z-index: 20;
+}
 
-        /* ==========================================
-           ポップアップモーダル共通
-           ========================================== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
+.footer-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+    transition: background 0.2s, transform 0.1s;
+}
+.footer-btn:hover { background: #2980b9; }
+.footer-btn:active { transform: scale(0.95); }
 
-        .modal-content {
-            background: white;
-            width: 92%;
-            max-width: 500px;
-            max-height: 82vh;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            overflow: hidden;
-            animation: modalFadeIn 0.2s ease;
-        }
+/* モーダル共通 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
 
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.modal-content {
+    background: white;
+    width: 92%;
+    max-width: 500px;
+    max-height: 82vh;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    overflow: hidden;
+    animation: modalFadeIn 0.2s ease;
+}
 
-        .modal-header {
-            background: #f1f2f6;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #dfe4ea;
-        }
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        .modal-title { font-size: 16px; font-weight: bold; color: #2f3640; }
+.modal-header {
+    background: #f1f2f6;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dfe4ea;
+}
 
-        .close-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.modal-title { font-size: 16px; font-weight: bold; color: #2f3640; }
 
-        /* ==========================================
-           タブ切り替え (図鑑 ＆ クラフト)
-           ========================================== */
-        .tab-bar { display: flex; background: #dfe4ea; }
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            background: none;
-            border: none;
-            font-weight: bold;
-            font-size: 13px;
-            color: #747d8c;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .tab-btn.active { background: white; color: #2f3640; border-bottom: 3px solid #3498db; }
-        .tab-pane { display: none; padding: 15px; overflow-y: auto; max-height: calc(82vh - 100px); }
-        .tab-pane.active { display: block; }
+.close-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        /* ==========================================
-           図鑑 UI
-           ========================================== */
-        .zukan-category { margin-bottom: 15px; }
-        .zukan-cat-title {
-            font-size: 13px;
-            font-weight: bold;
-            color: #2f3640;
-            margin-bottom: 6px;
-            border-left: 4px solid #3498db;
-            padding-left: 6px;
-        }
-        .zukan-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-        .zukan-slot {
-            background: #f1f2f6;
-            border: 2px solid #ced6e0;
-            border-radius: 8px;
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        .zukan-slot.unlocked { background: #fff; border-color: #2ed573; }
-        .zukan-slot img { width: 24px; height: 24px; object-fit: contain; }
-        .zukan-slot .lv-badge {
-            font-size: 8px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 0 2px;
-            border-radius: 2px;
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-        }
-        .unknown-mark { font-size: 20px; font-weight: bold; color: #a4b0be; }
+/* タブ切り替え */
+.tab-bar { display: flex; background: #dfe4ea; }
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    font-weight: bold;
+    font-size: 13px;
+    color: #747d8c;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.tab-btn.active { background: white; color: #2f3640; border-bottom: 3px solid #3498db; }
+.tab-pane { display: none; padding: 15px; overflow-y: auto; max-height: calc(82vh - 100px); }
+.tab-pane.active { display: block; }
 
-        /* ==========================================
-           クラフトレシピUI (はてな表示対応)
-           ========================================== */
-        .recipe-list { display: flex; flex-direction: column; gap: 8px; }
-        .recipe-card {
-            background: #f8f9fa;
-            border: 1px solid #dfe4ea;
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .recipe-formula {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #2f3640;
-        }
-        .recipe-icon-box {
-            width: 32px;
-            height: 32px;
-            background: #fff;
-            border: 1px solid #ced6e0;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        .recipe-icon-box img { width: 24px; height: 24px; object-fit: contain; }
-        .recipe-unknown { font-size: 16px; color: #a4b0be; }
+/* 図鑑 UI */
+.zukan-category { margin-bottom: 15px; }
+.zukan-cat-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #2f3640;
+    margin-bottom: 6px;
+    border-left: 4px solid #3498db;
+    padding-left: 6px;
+}
+.zukan-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.zukan-slot {
+    background: #f1f2f6;
+    border: 2px solid #ced6e0;
+    border-radius: 8px;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.zukan-slot.unlocked { background: #fff; border-color: #2ed573; }
+.zukan-slot img { width: 24px; height: 24px; object-fit: contain; }
+.zukan-slot .lv-badge {
+    font-size: 8px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    padding: 0 2px;
+    border-radius: 2px;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+}
+.unknown-mark { font-size: 20px; font-weight: bold; color: #a4b0be; }
 
-        /* ==========================================
-           バッグ画面
-           ========================================== */
-        .bag-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 15px;
-            overflow-y: auto;
-            max-height: calc(82vh - 60px);
-        }
-        .bag-slot {
-            background: #f1f2f6;
-            border: 2px dashed #b2bec3;
-            border-radius: 10px;
-            aspect-ratio: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+/* クラフトヒントバナー */
+.craft-hint-banner {
+    background: #e8f8f5;
+    border: 1px solid #2ed573;
+    color: #2c3e50;
+    font-size: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
 
-        /* ==========================================
-           デイリークエスト画面
-           ========================================== */
-        .daily-list {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-            max-height: calc(82vh - 60px);
-        }
-        .daily-card {
-            background: #f8f9fa;
-            border: 1px solid #dfe4ea;
-            border-radius: 10px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .daily-text { font-size: 13px; font-weight: bold; color: #2f3640; }
-        .daily-status { font-size: 12px; font-weight: bold; color: #e74c3c; }
-        .daily-status.done { color: #2ed573; }
-        .daily-reward-box {
-            margin-top: 10px;
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .daily-claim-btn {
-            background: #f39c12;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-        .daily-claim-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+/* クラフトレシピUI */
+.recipe-list { display: flex; flex-direction: column; gap: 8px; }
+.recipe-card {
+    background: #f8f9fa;
+    border: 1px solid #dfe4ea;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.recipe-formula {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #2f3640;
+}
+.recipe-icon-box {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border: 1px solid #ced6e0;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.recipe-icon-box img { width: 24px; height: 24px; object-fit: contain; }
+.recipe-unknown { font-size: 16px; color: #a4b0be; }
 
-        /* ==========================================
-           アイテム操作メニューポップアップ
-           ========================================== */
-        .menu-modal-content {
-            background: white;
-            width: 80%;
-            max-width: 300px;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .menu-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .menu-btn.sell { background: #ff4757; }
-        .menu-btn.cancel { background: #a4b0be; }
+/* バッグ画面 */
+.bag-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    max-height: calc(82vh - 60px);
+}
+.bag-slot {
+    background: #f1f2f6;
+    border: 2px dashed #b2bec3;
+    border-radius: 10px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* デイリー画面 */
+.daily-list {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    max-height: calc(82vh - 60px);
+}
+.daily-card {
+    background: #f8f9fa;
+    border: 1px solid #dfe4ea;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.daily-text { font-size: 13px; font-weight: bold; color: #2f3640; }
+.daily-status { font-size: 12px; font-weight: bold; color: #e74c3c; }
+.daily-status.done { color: #2ed573; }
+.daily-reward-box {
+    margin-top: 10px;
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+}
+.daily-claim-btn {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.daily-claim-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+/* メニューポップアップ */
+.menu-modal-content {
+    background: white;
+    width: 80%;
+    max-width: 300px;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.menu-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+}
+.menu-btn.sell { background: #ff4757; }
+.menu-btn.cancel { background: #a4b0be; }
