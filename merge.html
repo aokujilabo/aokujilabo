@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>マージ・ガーデン＆アドベンチャー</title>
 	<!-- ゲームの見た目 -->
@@ -27,12 +26,6 @@
         </div>
     </header>
 
-    <!-- 採集ボタン & 初期化ボタンパネル -->
-    <div class="action-panel">
-        <button class="gather-btn" onclick="gatherItem()">🌱 採集する (消費: 10)</button>
-        <button class="reset-data-btn" onclick="resetGameData()">初期化</button>
-    </div>
-
     <!-- マス目の上に常時表示されるランダムクエストパネル -->
     <div class="quest-top-panel">
         <div class="quest-top-header">
@@ -40,6 +33,12 @@
             <span style="font-size: 10px; color: #7f8c8d;">横スクロール可能 ➔</span>
         </div>
         <div id="quest-horizontal-list" class="quest-horizontal-list"></div>
+    </div>
+
+    <!-- 採集ボタン & 初期化ボタンパネル -->
+    <div class="action-panel">
+        <button class="gather-btn" onclick="gatherItem()">🌱 採集する (消費: 10)</button>
+        <button class="reset-data-btn" onclick="resetGameData()">初期化</button>
     </div>
 
     <!-- メインフィールド (7列 × 9行 = 63マス) -->

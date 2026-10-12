@@ -8,6 +8,8 @@
             padding: 0;
             user-select: none;
             -webkit-user-select: none;
+            /* ★すべてのボタンや要素で拡縮が防げます */
+            touch-action: manipulation;
         }
 
         body {
@@ -567,8 +569,3 @@
         }
         .menu-btn.sell { background: #ff4757; }
         .menu-btn.cancel { background: #a4b0be; }
-        
-        /* ズームやダブルタップ拡大を防止する設定 */
-        button, .gather-btn, .footer-btn, .item {
-            touch-action: manipulation;
-        }
