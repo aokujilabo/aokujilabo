@@ -21,7 +21,6 @@
             overflow-x: hidden;
             padding-bottom: 70px;
         }
-
         /* ==========================================
            ヘッダー（ステータス表示）
            ========================================== */
@@ -568,3 +567,8 @@
         }
         .menu-btn.sell { background: #ff4757; }
         .menu-btn.cancel { background: #a4b0be; }
+        
+        /* ズームやダブルタップ拡大を防止する設定 */
+        button, .gather-btn, .footer-btn, .item {
+            touch-action: manipulation;
+        }
