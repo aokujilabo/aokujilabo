@@ -26,16 +26,16 @@
         </div>
     </header>
 
-    <!-- マス目の上に常時表示されるランダムクエストパネル -->
+    <!-- マス目の上の納品クエストパネル -->
     <div class="quest-top-panel">
         <div class="quest-top-header">
             <span>📜 納品クエスト (最大5つ)</span>
-            <span style="font-size: 10px; color: #7f8c8d;">横スクロール可能 ➔</span>
+            <button class="quest-refresh-btn" onclick="refreshAllQuests()">🔄 クエスト更新 (50💰)</button>
         </div>
         <div id="quest-horizontal-list" class="quest-horizontal-list"></div>
     </div>
 
-    <!-- 操作パネル (採集・一括採集・初期化ボタン) -->
+    <!-- 操作パネル -->
     <div class="action-panel">
         <button class="gather-btn" onclick="gatherItem()">🌱 採集 (10)</button>
         <button class="gather-btn batch" onclick="gatherBatch()">⚡ 一括採集</button>
@@ -63,7 +63,7 @@
             </div>
             <div class="tab-bar">
                 <button class="tab-btn active" onclick="switchTab('zukan')">アイテム図鑑</button>
-                <button class="tab-btn" onclick="switchTab('craft')">クラフトレシピ</button>
+                <button class="tab-btn" onclick="switchTab('craft')">クラフトレシピ (全37種)</button>
             </div>
             <div id="tab-zukan" class="tab-pane active"><div id="zukan-content-container"></div></div>
             <div id="tab-craft" class="tab-pane"><div class="recipe-list" id="recipe-list-container"></div></div>
@@ -119,7 +119,7 @@
         </div>
     </div>
 
-    <!-- バッグ内アイテム操作メニューポップアップ (バッグ用：取り出すボタン) -->
+    <!-- バッグ内アイテム操作メニューポップアップ -->
     <div id="bag-menu-modal" class="modal" style="z-index: 200;">
         <div class="menu-modal-content">
             <h3 id="bag-menu-item-title">バッグ内アイテム</h3>

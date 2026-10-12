@@ -98,6 +98,19 @@
             padding-bottom: 4px;
         }
 
+        .quest-refresh-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .quest-refresh-btn:hover { background: #d35400; }
+
         .quest-horizontal-list {
             display: flex;
             gap: 8px;
@@ -138,7 +151,7 @@
         }
 
         /* ==========================================
-           操作パネル (採集ボタン・一括採集ボタン)
+           操作パネル (採集・一括採集ボタン)
            ========================================== */
         .action-panel {
             display: flex;
@@ -228,6 +241,7 @@
             cursor: grab;
             position: relative;
             z-index: 5;
+            touch-action: none; /* D&D時の画面スクロール誤作動を防止 */
         }
         .item:active { cursor: grabbing; }
         .item img { width: 26px; height: 26px; object-fit: contain; pointer-events: none; }
@@ -494,7 +508,7 @@
         .daily-claim-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
         /* ==========================================
-           アイテム操作メニューポップアップ (フィールド用 / バッグ用)
+           アイテム操作メニューポップアップ
            ========================================== */
         .menu-modal-content {
             background: white;
