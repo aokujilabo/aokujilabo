@@ -64,6 +64,10 @@
         let stamina = 10000;
         let maxStamina = 10000;
         let coins = 500;
+        
+        // プレイヤーレベルと経験値
+        let playerLevel = 1;
+        let playerExp = 0;
 
         let fieldData = new Array(TOTAL_CELLS).fill(null);
         let bagData = new Array(20).fill(null);
@@ -83,7 +87,7 @@
         const SAVE_KEY = 'merge_game_save_data_v5';
 
         function saveGame() {
-            const saveData = { stamina, coins, fieldData, bagData, unlockedZukan, unlockedRecipes, randomQuests, dailyProgress };
+            const saveData = { stamina, coins, fieldData, bagData, unlockedZukan, unlockedRecipes, randomQuests, dailyProgress, playerExp };
             localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
             
             updateItemDeliverableHighlights();
@@ -96,6 +100,8 @@
                     const data = JSON.parse(savedJson);
                     stamina = data.stamina ?? 10000;
                     coins = data.coins ?? 500;
+                    playerLevel = data.playerLevel ?? 1; // ← 追加
+                    playerExp = data.playerExp ?? 0;     // ← 追加
                     fieldData = data.fieldData ?? new Array(TOTAL_CELLS).fill(null);
                     bagData = data.bagData ?? new Array(20).fill(null);
                     unlockedZukan = data.unlockedZukan ?? {};
@@ -327,6 +333,7 @@
 
             itemDiv.onpointerdown = function(event) {
                 if (event.button !== 0 && event.pointerType === 'mouse') return;
+                event.preventDefault(); // スマホ等のスクロール誤作動を防止
                 startX = event.clientX;
                 startY = event.clientY;
                 hasMoved = false;
@@ -574,6 +581,23 @@
         function updateStatusDisplay() {
             document.getElementById('stamina-text').innerText = stamina;
             document.getElementById('coin-text').innerText = coins;
+            
+            // スタミナの左側に置いたレベル表示を更新
+            const levelEl = document.getElementById('level-text');
+            if (levelEl) levelEl.innerText = playerLevel;
+
+            // レベル表示ボックス自体の緑ゲージを更新
+            const gaugeEl = document.getElementById('level-exp-gauge');
+            if (gaugeEl) {
+                if (playerLevel >= 999) {
+                    gaugeEl.style.width = '100%';
+                } else {
+                    const reqExp = getRequiredExp(playerLevel);
+                    const percentage = Math.min(100, Math.max(0, (playerExp / reqExp) * 100));
+                    gaugeEl.style.width = `${percentage}%`;
+                }
+            }
+
             saveGame();
         }
 
@@ -675,9 +699,11 @@
                 title.innerText = quest.type === 'base' ? `${quest.catName} (Lv.${quest.level})` : `${quest.catName}`;
                 card.appendChild(title);
 
+                // 報酬コインと、数値としてのEXP表示
+                const earnedExp = Math.floor(quest.reward * 0.5);
                 const reward = document.createElement('div');
                 reward.className = 'quest-card-reward';
-                reward.innerText = `💰 ${quest.reward}`;
+                reward.innerHTML = `<div>💰 ${quest.reward}</div><div style="font-size:10px; color:#2ed573; font-weight:bold;">✨ +${earnedExp} EXP</div>`;
                 card.appendChild(reward);
 
                 const btn = document.createElement('button');
@@ -759,6 +785,11 @@
             else { bagData[foundIndex] = null; renderBag(); }
 
             coins += quest.reward;
+            
+            // 報酬に応じたEXPを獲得（例：報酬コインの半分、またはクエスト難易度に応じた数値）
+            const earnedExp = Math.floor(quest.reward * 0.5);
+            addExp(earnedExp);
+            
             updateStatusDisplay();
 
             randomQuests[questIndex] = generateRandomQuest();
@@ -1017,4 +1048,29 @@
                 card.appendChild(formulaDiv);
                 container.appendChild(card);
             });
+        }
+
+        // 次のレベルに必要な経験値を計算する関数（Lvに応じて必要量が少しずつ増える例）
+        function getRequiredExp(level) {
+            if (level >= 999) return Infinity; // 最大Lv.999
+            return Math.floor(100 * Math.pow(1.05, level - 1));
+        }
+
+        // EXPを加算し、レベルアップ判定を行う関数
+        function addExp(amount) {
+            if (playerLevel >= 999) return;
+
+            playerExp += amount;
+            let requiredExp = getRequiredExp(playerLevel);
+
+            while (playerExp >= requiredExp && playerLevel < 999) {
+                playerExp -= requiredExp;
+                playerLevel += 1;
+                requiredExp = getRequiredExp(playerLevel);
+                
+                // レベルアップ時のボーナス（お好みでスタミナ全快など）
+                stamina = maxStamina;
+                alert(`🎉 レベルが ${playerLevel} に上がりました！スタミナが全回復しました！`);
+            }
+            updateStatusDisplay();
         }

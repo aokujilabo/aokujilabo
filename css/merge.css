@@ -10,6 +10,12 @@
     touch-action: manipulation;
 }
 
+/* グリッドやアイテムエリア全体で引っ張った時のスクロールやズームを防止 */
+#grid-field, .bag-grid, .item {
+    touch-action: none;
+}
+
+
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
@@ -40,8 +46,9 @@ header {
 
 .status-group {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex-direction: row; /* column から row に変更 */
+    align-items: center;  /* 高さを中央揃えにする場合 */
+    gap: 8px;             /* 要素同士の間隔を少しあける */
 }
 
 .status-item {
@@ -57,6 +64,55 @@ header {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.status-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.status-item {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 8px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+/* レベル表示のステータスボックス自体をバーの枠にする */
+.level-status-box {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 20px !important; /* 左右のパディングを広げて横長にする */
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    min-width: 100px; /* 最小幅をもたせてしっかりしたサイズ感にする（お好みで 100px〜120px 等に調整可） */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ボックス内で左から右へ増えていく緑色のゲージ */
+.level-exp-gauge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%; /* 初期値・JSで変動 */
+    background-color: #2ed573; /* 綺麗な緑色 */
+    opacity: 0.35; /* 文字が読みやすいように少し透過させる（お好みで調整可） */
+    transition: width 0.3s ease;
+    z-index: 1;
+}
+
+/* レベルの文字テキストをゲージより手前に表示 */
+.level-text-content {
+    position: relative;
+    z-index: 2;
+    font-weight: bold;
 }
 
 .recover-btn {

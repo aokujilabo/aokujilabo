@@ -271,6 +271,7 @@
                 const linkTag = document.getElementById('balloon-link');
                 if (activeSign.url) {
                     linkTag.href = activeSign.url;
+                    linkTag.target = '_self'; // 同タブ遷移
                     linkTag.style.display = 'inline-block';
                 } else {
                     linkTag.style.display = 'none';

@@ -14,8 +14,15 @@
     <!-- ヘッダー：スタミナ・コイン情報 -->
     <header>
         <div class="status-group">
+			<!-- レベル表示 -->
+			<div class="level-status-box">
+			    <!-- 🟢 緑色の増加するゲージ背景 -->
+			    <div id="level-exp-gauge" class="level-exp-gauge"></div>
+			    <!-- 文字要素（重なって見えなくならないよう z-index で手前に出す） -->
+			    <span class="level-text-content">Lv.<span id="level-text">1</span></span>
+			</div>
             <div class="status-item">
-                ⚡ スタミナ: <span id="stamina-text">10000</span> / 10000
+                ⚡ : <span id="stamina-text">10000</span> / 10000
                 <div class="stamina-container">
                     <button class="recover-btn" onclick="recoverStamina()">100コインで回復</button>
                 </div>
@@ -49,7 +56,7 @@
 
     <!-- フッターナビゲーション -->
     <footer>
-        <a href="index.html" style="text-decoration: none;"><button class="footer-btn">🐾 TOP</button></a>
+        <a href="index.html" target="_self" style="text-decoration: none;"><button class="footer-btn">🐾 TOP</button></a>
         <button class="footer-btn" onclick="openBagModal()">🎒 バッグ</button>
         <button class="footer-btn" onclick="openDailyModal()">⭐ デイリー</button>
         <button class="footer-btn" onclick="openZukanModal()">📖 図鑑 & クラフト</button>
