@@ -87,7 +87,7 @@
         const SAVE_KEY = 'merge_game_save_data_v5';
 
         function saveGame() {
-            const saveData = { stamina, coins, fieldData, bagData, unlockedZukan, unlockedRecipes, randomQuests, dailyProgress, playerExp };
+            const saveData = { stamina, coins, fieldData, bagData, unlockedZukan, unlockedRecipes, randomQuests, dailyProgress, playerLevel, playerExp };
             localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
             
             updateItemDeliverableHighlights();
@@ -523,7 +523,7 @@
             updateStatusDisplay();
 
             const rand = Math.random() * 100;
-            let chosenCat = rand < 40 ? 'stone' : rand < 70 ? 'tree' : rand < 90 ? 'grass' : 'flower';
+                let chosenCat = rand < 25 ? 'stone' : rand < 50 ? 'tree' : rand < 75 ? 'grass' : 'flower';
             fieldData[emptyIdx] = { category: chosenCat, level: 1 };
             unlockZukanItem(chosenCat, 1);
             renderField();
@@ -555,7 +555,7 @@
 
             emptyIndices.forEach(idx => {
                 const rand = Math.random() * 100;
-                let chosenCat = rand < 40 ? 'stone' : rand < 70 ? 'tree' : rand < 90 ? 'grass' : 'flower';
+                let chosenCat = rand < 25 ? 'stone' : rand < 50 ? 'tree' : rand < 75 ? 'grass' : 'flower';
                 fieldData[idx] = { category: chosenCat, level: 1 };
                 unlockZukanItem(chosenCat, 1);
             });
