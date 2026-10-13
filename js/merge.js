@@ -43,9 +43,9 @@
 			{"id": "lurethread", "name": "ルアーのついた糸", "item": {"cat": "crafted", "id": "lurethread", "name": "ルアーのついた糸", "level": 1, "baseColor": "#1abc9c", "secColor": "#117a65", "symbol": "🧶"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "lure"}},
 			{"id": "boundflower", "name": "縛った花", "item": {"cat": "crafted", "id": "boundflower", "name": "縛った花", "level": 1, "baseColor": "#ff6b81", "secColor": "#ff4757", "symbol": "💐"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "flower", "level": 4}},
 			{"id": "ukuleleparts", "name": "弦楽器のパーツ", "item": {"cat": "crafted", "id": "ukuleleparts", "name": "弦楽器のパーツ", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪵"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "tree", "level": 2}},
-			{"id": "smallbouquet", "name": "小さい花束", "item": {"cat": "crafted", "id": "smallbouquet", "name": "小さい花束", "level": 1, "baseColor": "#ff4757", "secColor": "#ff6b81", "symbol": "🌷"}, "ing1": {"craftedId": "boundflower"}, "ing2": {"craftedId": "boundflower"}},
-			{"id": "midbouquet", "name": "中くらいの花束", "item": {"cat": "crafted", "id": "midbouquet", "name": "中くらいの花束", "level": 1, "baseColor": "#ff3838", "secColor": "#ff4d4d", "symbol": "🌻"}, "ing1": {"craftedId": "boundflower"}, "ing2": {"craftedId": "smallbouquet"}},
-			{"id": "bigbouquet", "name": "大きい花束", "item": {"cat": "crafted", "id": "bigbouquet", "name": "大きい花束", "level": 1, "baseColor": "#ff4d4d", "secColor": "#fa8231", "symbol": "🌹"}, "ing1": {"craftedId": "boundflower"}, "ing2": {"craftedId": "midbouquet"}},
+			{"id": "smallbouquet", "name": "小さい花束", "item": {"cat": "crafted", "id": "smallbouquet", "name": "小さい花束", "level": 1, "baseColor": "#ff4757", "secColor": "#ff6b81", "symbol": "🌷"}, "ing1": {"craftedId": "boundflower"}, "ing2": {"cat": "flower", "level": 4}},
+			{"id": "midbouquet", "name": "中くらいの花束", "item": {"cat": "crafted", "id": "midbouquet", "name": "中くらいの花束", "level": 1, "baseColor": "#ff3838", "secColor": "#ff4d4d", "symbol": "🌻"}, "ing1": {"craftedId": "smallbouquet"}, "ing2": {"cat": "flower", "level": 4}},
+			{"id": "bigbouquet", "name": "大きい花束", "item": {"cat": "crafted", "id": "bigbouquet", "name": "大きい花束", "level": 1, "baseColor": "#ff4d4d", "secColor": "#fa8231", "symbol": "🌹"}, "ing1": {"craftedId": "midbouquet"}, "ing2": {"cat": "flower", "level": 4}},
 			{"id": "letter", "name": "手紙", "item": {"cat": "crafted", "id": "letter", "name": "手紙", "level": 1, "baseColor": "#ecf0f1", "secColor": "#bdc3c7", "symbol": "✉️"}, "ing1": {"craftedId": "paper"}, "ing2": {"cat": "flower", "level": 2}},
 			{"id": "sketchbook", "name": "スケッチブック", "item": {"cat": "crafted", "id": "sketchbook", "name": "スケッチブック", "level": 1, "baseColor": "#f39c12", "secColor": "#d35400", "symbol": "📓"}, "ing1": {"craftedId": "paper"}, "ing2": {"craftedId": "paint"}},
 			{"id": "baitedrod", "name": "釣り餌のついた釣り竿", "item": {"cat": "crafted", "id": "baitedrod", "name": "釣り餌のついた釣り竿", "level": 1, "baseColor": "#e67e22", "secColor": "#b9770e", "symbol": "🥢"}, "ing1": {"craftedId": "baitedthread"}, "ing2": {"cat": "tree", "level": 3}},
@@ -604,7 +604,7 @@
         /* ==========================================
            常時表示クエスト機能 (クラフト品30%確率追加 ＆ 一括リセット)
            ========================================== */
-		// 【新規】図鑑とクラフトの開放％を計算する関数 (0.0 〜 1.0)
+		// 図鑑とクラフトの開放％を計算する関数 (0.0 〜 1.0)
 		function calculateUnlockPercentage() {
 		    const totalZukanSlots = (4 * MAX_LEVEL) + CRAFT_RECIPES.length;
 		    let unlockedCount = 0;
@@ -623,13 +623,13 @@
 
         function generateRandomQuest() {
 			const unlockRatio = calculateUnlockPercentage(); 
-		    // 【修正】解放度(0〜1)に合わせてクエストの最大レベルを 2 から 6 の間で変動
+		    // 解放度(0〜1)に合わせてクエストの最大レベルを 2 から 6 の間で変動
 		    const maxQuestLevel = Math.min(6, Math.max(2, Math.floor(2 + unlockRatio * 4)));
 		    const isCrafted = Math.random() < 0.3;
 
 		    if (isCrafted) {
 		        const rec = CRAFT_RECIPES[Math.floor(Math.random() * CRAFT_RECIPES.length)];
-		        // 【修正】クラフト品の種類によって報酬を変動させる
+		        // クラフト品の種類によって報酬を変動させる
 		        let reward = 300;
 		        if (['bigbouquet', 'lurerod', 'baitedrod', 'campfire', 'clock'].includes(rec.id)) {
 		            reward = 700 + Math.floor(Math.random() * 300);
@@ -647,7 +647,7 @@
 		        };
 		    } else {
 		        const cat = CATEGORIES.filter(c => c.id !== 'crafted')[Math.floor(Math.random() * 4)];
-		        // 【修正】1 〜 maxQuestLevel の間でランダムに難易度を決定
+		        // 1 〜 maxQuestLevel の間でランダムに難易度を決定
 		        const lv = Math.floor(Math.random() * maxQuestLevel) + 1;
 		        return {
 		            type: 'base',
@@ -684,7 +684,7 @@
                 const card = document.createElement('div');
                 card.className = 'quest-card-mini';
 
-				// 【追加】納品可能ならカード背景をグリーンにハイライト
+				// 納品可能ならカード背景をグリーンにハイライト
 		        const isDeliverable = checkIsQuestDeliverable(quest);
 		        if (isDeliverable) {
 		            card.classList.add('deliverable');
@@ -729,7 +729,7 @@
 		    return false;
 		}
 
-		// 【追加】フィールド上のアイテムのふちをグリーンに光らせる処理
+		// フィールド上のアイテムのふちをグリーンに光らせる処理
 		function updateItemDeliverableHighlights() {
             // フィールド上のアイテムかつ、現在のクエストのいずれかと一致するか判定
             // クエストカード（ミニリスト）の納品可能ハイライト
@@ -1026,22 +1026,31 @@
                 const formulaDiv = document.createElement('div');
                 formulaDiv.className = 'recipe-formula';
 
+                // ing1 または ing2 に craft（特製品）が含まれているか判定する
+                // ing.craftedId が存在すればクラフトアイテム
+                const isIng1Crafted = !!rec.ing1.craftedId;
+                const isIng2Crafted = !!rec.ing2.craftedId;
+                
+                // クラフト品が含まれているならオレンジ枠、ベースアイテムだけなら緑枠
+                const borderColor1 = isIng1Crafted ? '#e67e22' : '#2ed573'; // オレンジ or 緑
+                const borderColor2 = isIng2Crafted ? '#e67e22' : '#2ed573'; // オレンジ or 緑
                 if (isUnlocked) {
+
                     formulaDiv.innerHTML = `
-                        <div class="recipe-icon-box"><img src="${getIngIconUrl(rec.ing1)}"></div>
+                        <div class="recipe-icon-box" style="border-color:${borderColor1};"><img src="${getIngIconUrl(rec.ing1)}"></div>
                         <span>＋</span>
-                        <div class="recipe-icon-box"><img src="${getIngIconUrl(rec.ing2)}"></div>
+                        <div class="recipe-icon-box" style="border-color:${borderColor2};"><img src="${getIngIconUrl(rec.ing2)}"></div>
                         <span>＝</span>
-                        <div class="recipe-icon-box" style="border-color:#2ed573;"><img src="${getItemIconBook(rec.item)}"></div>
+                        <div class="recipe-icon-box" style="border-color:#e67e22;"><img src="${getItemIconBook(rec.item)}"></div>
                         <span style="margin-left:6px;">${rec.item.name}</span>
                     `;
                 } else {
                     formulaDiv.innerHTML = `
-                        <div class="recipe-icon-box"><span class="recipe-unknown">?</span></div>
+                        <div class="recipe-icon-box" style="border-color:${borderColor1};"><span class="recipe-unknown">?</span></div>
                         <span>＋</span>
-                        <div class="recipe-icon-box"><span class="recipe-unknown">?</span></div>
+                        <div class="recipe-icon-box" style="border-color:${borderColor2};"><span class="recipe-unknown">?</span></div>
                         <span>＝</span>
-                        <div class="recipe-icon-box"><span class="recipe-unknown">?</span></div>
+                        <div class="recipe-icon-box" style="border-color:#e67e22;"><span class="recipe-unknown">?</span></div>
                         <span style="margin-left:6px; color:#a4b0be;">??? (未発見)</span>
                     `;
                 }
