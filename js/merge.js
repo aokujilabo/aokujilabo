@@ -333,6 +333,7 @@
                 isDragging = false;
             };
 
+            // ドラッグ処理.
             itemDiv.onpointermove = function(event) {
                 if (event.buttons) {
                     if (!isDragging && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) {
@@ -340,19 +341,30 @@
                         isDragging = true;
                         dragSourceInfo = { locationType, index, itemData };
 
-                        // ドラッグ中のゴースト要素（追従用）を作成
-                        activeDragGhost = itemDiv.cloneNode(true);
+                        // 王冠やIDの重複を防ぐため、ドラッグ用ゴーストは最小限の構成で作成する
+                        activeDragGhost = document.createElement('div');
+                        activeDragGhost.className = 'item';
                         activeDragGhost.style.position = 'fixed';
                         activeDragGhost.style.zIndex = '9999';
                         activeDragGhost.style.pointerEvents = 'none';
                         activeDragGhost.style.opacity = '0.8';
+
+                        const ghostImg = document.createElement('img');
+                        ghostImg.src = getItemIconUrl(itemData);
+                        activeDragGhost.appendChild(ghostImg);
+
+                        const ghostLv = document.createElement('div');
+                        ghostLv.className = 'item-level';
+                        ghostLv.innerText = itemData.category === 'crafted' ? '特製' : `Lv${itemData.level}`;
+                        activeDragGhost.appendChild(ghostLv);
+
                         document.body.appendChild(activeDragGhost);
 
                         // 元の要素を半透明にする
                         itemDiv.style.opacity = '0.3';
                         try { this.setPointerCapture(event.pointerId); } catch(e){}
                     }
-
+                    
                     if (isDragging && activeDragGhost) {
                         event.preventDefault();
                         activeDragGhost.style.left = (event.clientX - 32) + 'px';
