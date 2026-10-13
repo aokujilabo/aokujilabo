@@ -57,7 +57,7 @@
 			{"id": "hourglass", "name": "砂時計", "item": {"cat": "crafted", "id": "hourglass", "name": "砂時計", "level": 1, "baseColor": "#ff9f43", "secColor": "#ee5253", "symbol": "⌛"}, "ing1": {"craftedId": "sand"}, "ing2": {"craftedId": "bottle"}},
 			{"id": "clock", "name": "時計", "item": {"cat": "crafted", "id": "clock", "name": "時計", "level": 1, "baseColor": "#54a0ff", "secColor": "#2e86de", "symbol": "⏰"}, "ing1": {"craftedId": "gear"}, "ing2": {"craftedId": "gear"}},
 			{"id": "potpan", "name": "鍋", "item": {"cat": "crafted", "id": "potpan", "name": "鍋", "level": 1, "baseColor": "#7f8c8d", "secColor": "#95a5a6", "symbol": "🍲"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "frypan", "name": "フライパン", "item": {"cat": "crafted", "id": "frypan", "name": "フライパン", "level": 1, "baseColor": "#34495e", "secColor": "#2c3e50", "symbol": "🍳"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 2}},
+			{"id": "", "name": "フライパン", "item": {"cat": "crafted", "id": "frypan", "name": "フライパン", "level": 1, "baseColor": "#34495e", "secColor": "#2c3e50", "symbol": "🍳"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 2}},
 			{"id": "ukulele", "name": "ウクレレ", "item": {"cat": "crafted", "id": "ukulele", "name": "ウクレレ", "level": 1, "baseColor": "#f39c12", "secColor": "#d35400", "symbol": "🎸"}, "ing1": {"craftedId": "ukuleleparts"}, "ing2": {"cat": "tree", "level": 4}}
 		];
 
@@ -169,31 +169,52 @@
             }
             return canvas.toDataURL();
         }
-
-        function initIcons() {
-            CATEGORIES.forEach(cat => {
-                if (cat.id !== 'crafted') {
-                    let symbol = '🌿';
-                    if (cat.id === 'flower') symbol = '🌸';
-                    else if (cat.id === 'tree') symbol = '🌲';
-                    else if (cat.id === 'stone') symbol = '💎';
-
-                    for (let lv = 1; lv <= MAX_LEVEL; lv++) {
-                        itemIcons[`${cat.id}_${lv}`] = generateItemIcon(cat.iconBaseColor, cat.secondaryColor, symbol, `Lv.${lv}`, lv);
-                    }
-                }
-            });
-
-            CRAFT_RECIPES.forEach(rec => {
-                itemIcons[`crafted_${rec.id}`] = generateItemIcon(rec.item.baseColor, rec.item.secColor, rec.item.symbol, '', null);
-            });
-        }
-
+        /* ==========================================
+           アイコン生成（image/merge/ 内のPNG画像を参照）
+        ========================================== */
         function getItemIconUrl(item) {
             if (item.category === 'crafted') {
-                return itemIcons[`crafted_${item.craftedId}`];
+                // 特製品の場合（例: image/merge/bait.png など、アイテムIDとレベル）
+                const lv = item.level || 1;
+                return `image/merge/${item.craftedId}.png`;
             } else {
-                return itemIcons[`${item.category}_${item.level}`];
+                // 基礎素材の場合（例: image/merge/grass1.png, flower2.png など）
+                return `image/merge/${item.category}${item.level}.png`;
+            }
+        }
+        
+
+        // クエスト用アイコン呼び出し.
+        function getItemIconQuest(quest) {
+            if (quest.type == 'base') {
+                // 基礎素材の場合（例: image/merge/grass1.png, flower2.png など）
+                return `image/merge/${quest.category}${quest.level}.png`;
+            } else {
+                // 特製品の場合（例: image/merge/bait.png など、アイテムIDとレベル）
+                return `image/merge/${quest.craftedId}.png`;
+            }
+        }
+        
+
+        // 図鑑、レシピ用アイコン呼び出し.
+        function getItemIconBook(book, level) {
+            if (book.cat == 'crafted') {
+                // 特製品の場合（例: image/merge/bait.png など、アイテムIDとレベル）
+                return `image/merge/${book.id}.png`;
+            } else {
+                // 基礎素材の場合（例: image/merge/grass1.png, flower2.png など）
+                return `image/merge/${book.id}${level}.png`;
+            }
+        }
+
+        function getIngIconUrl(ing) {
+            if (ing.craftedId) {
+                const targetRec = CRAFT_RECIPES.find(r => r.id === ing.craftedId);
+                return `image/merge/${ing.craftedId}.png`;
+            } else {
+                const cat = ing.cat || 'grass';
+                const lv = ing.level || 1;
+                return `image/merge/${cat}${lv}.png`;
             }
         }
 
@@ -201,7 +222,6 @@
            初期化処理
            ========================================== */
         window.onload = function() {
-            initIcons();
             initFieldDOM();
             initBagDOM();
 
@@ -256,8 +276,11 @@
         }
 
         /* ==========================================
-           アイテム要素 ＆ ポインターD&D (スクロール誤作動防止対応・修正版)
+           アイテム要素 ＆ ポインターD&D (プレビュー追従・座標判定版)
            ========================================== */
+        let activeDragGhost = null;
+        let dragSourceInfo = null;
+
         function createItemElement(itemData, locationType, index) {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'item';
@@ -270,8 +293,29 @@
             lvBadge.className = 'item-level';
             lvBadge.innerText = itemData.category === 'crafted' ? '特製' : `Lv${itemData.level}`;
             itemDiv.appendChild(lvBadge);
+            
+            // --- 👑 王冠マーク（進化なし判定）のロジック ---
+            let hasNoEvolution = false;
+
+            if (itemData.category === 'crafted') {
+                // 特製品の場合：「他のレシピの材料として使われていない」なら最終完成品（＝王冠）
+                const isUsedAsMaterial = isCraftedItemUsedInRecipes(itemData.craftedId);
+                hasNoEvolution = !isUsedAsMaterial; 
+            } else {
+                // 基礎素材の場合：最大レベル（Lv.6など）に達しているなら王冠
+                hasNoEvolution = (itemData.level >= MAX_LEVEL);
+            }
+
+            if (hasNoEvolution) {
+                const crownBadge = document.createElement('div');
+                crownBadge.className = 'item-crown';
+                crownBadge.innerText = '👑';
+                itemDiv.appendChild(crownBadge);
+            }
+            // ---------------------------------------------
 
             let hasMoved = false;
+            let startX = 0, startY = 0, isDragging = false;
 
             itemDiv.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -281,7 +325,6 @@
                 }
             });
 
-            let startX = 0, startY = 0, isDragging = false;
             itemDiv.onpointerdown = function(event) {
                 if (event.button !== 0 && event.pointerType === 'mouse') return;
                 startX = event.clientX;
@@ -292,17 +335,28 @@
 
             itemDiv.onpointermove = function(event) {
                 if (event.buttons) {
-                    if (Math.hypot(event.clientX - startX, event.clientY - startY) > 4) {
+                    if (!isDragging && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) {
                         hasMoved = true;
                         isDragging = true;
-                    }
-                    if (isDragging) {
-                        event.preventDefault(); // ドラッグ中の画面スクロールを完全に防止
-                        this.style.left     = (parseInt(this.style.left || 0) + event.movementX) + 'px';
-                        this.style.top      = (parseInt(this.style.top || 0) + event.movementY) + 'px';
-                        this.style.position = 'absolute';
-                        this.style.zIndex   = '1000';
+                        dragSourceInfo = { locationType, index, itemData };
+
+                        // ドラッグ中のゴースト要素（追従用）を作成
+                        activeDragGhost = itemDiv.cloneNode(true);
+                        activeDragGhost.style.position = 'fixed';
+                        activeDragGhost.style.zIndex = '9999';
+                        activeDragGhost.style.pointerEvents = 'none';
+                        activeDragGhost.style.opacity = '0.8';
+                        document.body.appendChild(activeDragGhost);
+
+                        // 元の要素を半透明にする
+                        itemDiv.style.opacity = '0.3';
                         try { this.setPointerCapture(event.pointerId); } catch(e){}
+                    }
+
+                    if (isDragging && activeDragGhost) {
+                        event.preventDefault();
+                        activeDragGhost.style.left = (event.clientX - 32) + 'px';
+                        activeDragGhost.style.top = (event.clientY - 32) + 'px';
                     }
                 }
             };
@@ -311,25 +365,32 @@
                 if (isDragging) {
                     try { this.releasePointerCapture(event.pointerId); } catch(e){}
                     
-                    // 【修正】自分自身を一時的に不可視（またはポインター無効）にして下のセルを正しく取得する
-                    this.style.display = 'none';
-                    const dropTarget = document.elementFromPoint(event.clientX, event.clientY);
-                    this.style.display = 'flex';
+                    // ゴースト要素の削除と元の透明度復元
+                    if (activeDragGhost) {
+                        activeDragGhost.remove();
+                        activeDragGhost = null;
+                    }
+                    itemDiv.style.opacity = '1';
 
-                    this.style.position = 'relative';
-                    this.style.left = '0px';
-                    this.style.top = '0px';
-                    this.style.zIndex = '5';
-
-                    handlePointerDrop(locationType, index, dropTarget);
+                    // 離した瞬間のクライアント座標からドロップ先を確定
+                    handleDropAtCoordinates(locationType, index, event.clientX, event.clientY);
                 }
                 isDragging = false;
+                dragSourceInfo = null;
             };
 
             return itemDiv;
         }
+        
+        // 指定されたクラフトIDが、他のレシピの材料として使われているか判定する関数
+        function isCraftedItemUsedInRecipes(craftedId) {
+            return CRAFT_RECIPES.some(rec => {
+                return (rec.ing1 && rec.ing1.craftedId === craftedId) || 
+                       (rec.ing2 && rec.ing2.craftedId === craftedId);
+            });
+        }
 
-        // 【新規追加】画面上の要素のgetBoundingClientRectを使って確実にドロップ先を判定する
+        // 画面上の座標からバッグまたはフィールドのセルを正確に特定する
         function handleDropAtCoordinates(srcLocation, srcIndex, clientX, clientY) {
             // 1. バッグスロットの判定
             const bagSlots = document.querySelectorAll('.bag-slot');
@@ -348,30 +409,18 @@
                 const rect = cell.getBoundingClientRect();
                 if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
                     const destIndex = parseInt(cell.dataset.index);
-                    if (srcLocation === 'field') processFieldInteraction(srcIndex, destIndex);
-                    else if (srcLocation === 'bag') moveBagToField(srcIndex, destIndex);
+                    if (srcLocation === 'field') {
+                        processFieldInteraction(srcIndex, destIndex);
+                    } else if (srcLocation === 'bag') {
+                        moveBagToField(srcIndex, destIndex);
+                    }
                     return;
                 }
             }
         }
 
         function handlePointerDrop(srcLocation, srcIndex, dropTarget) {
-            if (!dropTarget) return;
-
-            const bagSlotElem = dropTarget.closest('.bag-slot');
-            if (bagSlotElem) {
-                const destBagIndex = parseInt(bagSlotElem.dataset.bagIndex);
-                if (srcLocation === 'field') moveFieldToBag(srcIndex, destBagIndex);
-                return;
-            }
-
-            const cellElem = dropTarget.closest('.cell');
-            if (cellElem) {
-                const destIndex = parseInt(cellElem.dataset.index);
-                if (srcLocation === 'field') processFieldInteraction(srcIndex, destIndex);
-                else if (srcLocation === 'bag') moveBagToField(srcIndex, destIndex);
-                return;
-            }
+        // 上記の handleDropAtCoordinates で処理するため空でも動作します
         }
 
         function processFieldInteraction(srcIdx, destIdx) {
@@ -606,11 +655,7 @@
 		        }
 
                 const img = document.createElement('img');
-                if (quest.type === 'base') {
-                    img.src = itemIcons[`${quest.category}_${quest.level}`];
-                } else {
-                    img.src = itemIcons[`crafted_${quest.craftedId}`];
-                }
+				img.src = getItemIconQuest(quest);
                 card.appendChild(img);
 
                 const title = document.createElement('div');
@@ -913,7 +958,7 @@
                     const key = `${cat.id}_${lv}`;
                     if (unlockedZukan[key]) {
                         slot.className = 'zukan-slot unlocked';
-                        slot.innerHTML = `<img src="${itemIcons[key]}"><div class="lv-badge">Lv${lv}</div>`;
+                        slot.innerHTML = `<img src="${getItemIconBook(cat, lv)}"><div class="lv-badge">Lv${lv}</div>`;
                     } else {
                         slot.className = 'zukan-slot';
                         slot.innerHTML = `<div class="unknown-mark">?</div>`;
@@ -944,7 +989,7 @@
                         <span>＋</span>
                         <div class="recipe-icon-box"><img src="${getIngIconUrl(rec.ing2)}"></div>
                         <span>＝</span>
-                        <div class="recipe-icon-box" style="border-color:#2ed573;"><img src="${itemIcons[`crafted_${rec.id}`]}"></div>
+                        <div class="recipe-icon-box" style="border-color:#2ed573;"><img src="${getItemIconBook(rec.item)}"></div>
                         <span style="margin-left:6px;">${rec.item.name}</span>
                     `;
                 } else {
@@ -960,13 +1005,4 @@
                 card.appendChild(formulaDiv);
                 container.appendChild(card);
             });
-        }
-
-        function getIngIconUrl(ing) {
-            if (ing.craftedId) {
-                const targetRec = CRAFT_RECIPES.find(r => r.id === ing.craftedId);
-                return itemIcons[`crafted_${targetRec.id}`];
-            } else {
-                return itemIcons[`${ing.cat}_${ing.level}`];
-            }
         }

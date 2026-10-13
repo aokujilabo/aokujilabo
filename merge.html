@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>マージ・ガーデン＆アドベンチャー</title>
-	<!-- ゲームの見た目 -->
-	<link rel="stylesheet" href="css/merge.css">
-	<!-- HTMLの読み込み後にJavaScriptを実行 -->
-	<script src="js/merge.js" defer></script>
+    <!-- ゲームの見た目 -->
+    <link rel="stylesheet" href="css/merge.css">
+    <!-- HTMLの読み込み後にJavaScriptを実行 -->
+    <script src="js/merge.js" defer></script>
 </head>
 <body>
 
@@ -35,7 +35,7 @@
         <div id="quest-horizontal-list" class="quest-horizontal-list"></div>
     </div>
 
-    <!-- 操作パネル -->
+    <!-- 操作パネル（採集パネル） -->
     <div class="action-panel">
         <button class="gather-btn" onclick="gatherItem()">🌱 採集 (10)</button>
         <button class="gather-btn batch" onclick="gatherBatch()">⚡ 一括採集</button>
@@ -49,6 +49,7 @@
 
     <!-- フッターナビゲーション -->
     <footer>
+        <a href="index.html" style="text-decoration: none;"><button class="footer-btn">🐾 TOP</button></a>
         <button class="footer-btn" onclick="openBagModal()">🎒 バッグ</button>
         <button class="footer-btn" onclick="openDailyModal()">⭐ デイリー</button>
         <button class="footer-btn" onclick="openZukanModal()">📖 図鑑 & クラフト</button>
@@ -63,10 +64,13 @@
             </div>
             <div class="tab-bar">
                 <button class="tab-btn active" onclick="switchTab('zukan')">アイテム図鑑</button>
-                <button class="tab-btn" onclick="switchTab('craft')">クラフトレシピ (全37種)</button>
+                <button class="tab-btn" onclick="switchTab('craft')">クラフトレシピ (全41種)</button>
             </div>
             <div id="tab-zukan" class="tab-pane active"><div id="zukan-content-container"></div></div>
-            <div id="tab-craft" class="tab-pane"><div class="recipe-list" id="recipe-list-container"></div></div>
+            <div id="tab-craft" class="tab-pane">
+                <div class="craft-hint-banner">💡 ヒント: レベル1～3のベースアイテムや、同レベルの別アイテムをマージすると新しいクラフトができるものもあります！いろいろ試してみましょう。</div>
+                <div class="recipe-list" id="recipe-list-container"></div>
+            </div>
         </div>
     </div>
 
@@ -128,5 +132,6 @@
             <button class="menu-btn cancel" onclick="closeBagMenuModal()">キャンセル</button>
         </div>
     </div>
+
 </body>
 </html>
