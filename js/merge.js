@@ -342,7 +342,7 @@
 
             // ドラッグ処理.
             itemDiv.onpointermove = function(event) {
-                if (event.buttons) {
+                if (event.buttons || event.pointerType === 'touch' || event.pointerType === 'pen') {
                     if (!isDragging && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) {
                         hasMoved = true;
                         isDragging = true;
@@ -380,22 +380,7 @@
                 }
             };
 
-            // スマホでタッチ操作がキャンセルされた場合の残像対策
             itemDiv.onpointerup = function(event) {
-	            // ドラッグ用ゴーストを削除
-	            if (activeDragGhost) {
-	                activeDragGhost.remove();
-	                activeDragGhost = null;
-	            }
-
-	            // 元のアイテムの透明度を復元
-	            itemDiv.style.opacity = '1';
-
-	            // ドラッグ状態をリセット
-	            isDragging = false;
-	            hasMoved = false;
-	            dragSourceInfo = null;
-	            if (false){
                 if (isDragging) {
                     try { this.releasePointerCapture(event.pointerId); } catch(e){}
                     
@@ -411,7 +396,6 @@
                 }
                 isDragging = false;
                 dragSourceInfo = null;
-                }
             };
 
             return itemDiv;
