@@ -342,11 +342,21 @@
 
             // ドラッグ処理.
             itemDiv.onpointermove = function(event) {
-                if (event.buttons || event.pointerType === 'touch' || event.pointerType === 'pen') {
+                if (event.buttons) {
                     if (!isDragging && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) {
                         hasMoved = true;
                         isDragging = true;
                         dragSourceInfo = { locationType, index, itemData };
+                        
+						// 既存のドラッグ用ゴーストをすべて削除
+						document.querySelectorAll('body > .item').forEach(ghost => {
+						    if (ghost.style.position === 'fixed' && ghost.style.zIndex === '9999') {
+						        ghost.remove();
+						    }
+						});
+
+						// 参照もリセット
+						activeDragGhost = null;
 
                         // 王冠やIDの重複を防ぐため、ドラッグ用ゴーストは最小限の構成で作成する
                         activeDragGhost = document.createElement('div');
