@@ -342,7 +342,21 @@
 
             // ドラッグ処理.
             itemDiv.onpointermove = function(event) {
-                if (event.buttons) {
+	            // ドラッグ用ゴーストを削除
+	            if (activeDragGhost) {
+	                activeDragGhost.remove();
+	                activeDragGhost = null;
+	            }
+
+	            // 元のアイテムの透明度を復元
+	            itemDiv.style.opacity = '1';
+
+	            // ドラッグ状態をリセット
+	            isDragging = false;
+	            hasMoved = false;
+	            dragSourceInfo = null;
+	            
+                if (false) { //event.buttons) {
                     if (!isDragging && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) {
                         hasMoved = true;
                         isDragging = true;
@@ -436,10 +450,6 @@
                     return;
                 }
             }
-        }
-
-        function handlePointerDrop(srcLocation, srcIndex, dropTarget) {
-        // 上記の handleDropAtCoordinates で処理するため空でも動作します
         }
 
         function processFieldInteraction(srcIdx, destIdx) {
@@ -917,7 +927,7 @@
         }
 
         function moveBagToField(bagIdx, fieldIdx) {
-            if (fieldData[fieldIdx] !== null) { alert('フィールドのそのマスには既にアイテムがあります！'); return; }
+            if (fieldData[fieldIdx] !== null) { alert('フィールドのそのマス既にアイテムがあります！'); return; }
             fieldData[fieldIdx] = bagData[bagIdx];
             bagData[bagIdx] = null;
             renderField();
