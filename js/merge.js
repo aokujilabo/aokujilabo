@@ -15,51 +15,51 @@
         const TOTAL_CELLS = COLS * ROWS;
 
         const CRAFT_RECIPES = [
-			{"id": "bait", "name": "釣り餌", "item": {"cat": "crafted", "id": "bait", "name": "釣り餌", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪱"}, "ing1": {"cat": "flower", "level": 1}, "ing2": {"cat": "grass", "level": 1}},
-			{"id": "shell", "name": "貝殻", "item": {"cat": "crafted", "id": "shell", "name": "貝殻", "level": 1, "baseColor": "#ff9ff3", "secColor": "#f368e0", "symbol": "🐚"}, "ing1": {"cat": "flower", "level": 1}, "ing2": {"cat": "tree", "level": 1}},
-			{"id": "nuts", "name": "木の実", "item": {"cat": "crafted", "id": "nuts", "name": "木の実", "level": 1, "baseColor": "#d35400", "secColor": "#e67e22", "symbol": "🌰"}, "ing1": {"cat": "flower", "level": 1}, "ing2": {"cat": "stone", "level": 1}},
-			{"id": "grassflute", "name": "草笛", "item": {"cat": "crafted", "id": "grassflute", "name": "草笛", "level": 1, "baseColor": "#2ecc71", "secColor": "#27ae60", "symbol": "🌱"}, "ing1": {"cat": "grass", "level": 1}, "ing2": {"cat": "tree", "level": 1}},
-			{"id": "pendant", "name": "ペンダント", "item": {"cat": "crafted", "id": "pendant", "name": "ペンダント", "level": 1, "baseColor": "#f1c40f", "secColor": "#f39c12", "symbol": "📿"}, "ing1": {"cat": "grass", "level": 1}, "ing2": {"cat": "stone", "level": 1}},
-			{"id": "paper", "name": "紙", "item": {"cat": "crafted", "id": "paper", "name": "紙", "level": 1, "baseColor": "#ecf0f1", "secColor": "#bdc3c7", "symbol": "📄"}, "ing1": {"cat": "tree", "level": 1}, "ing2": {"cat": "stone", "level": 1}},
-			{"id": "sachet", "name": "香り袋", "item": {"cat": "crafted", "id": "sachet", "name": "香り袋", "level": 1, "baseColor": "#e84393", "secColor": "#d63031", "symbol": "袋"}, "ing1": {"cat": "flower", "level": 2}, "ing2": {"cat": "grass", "level": 2}},
-			{"id": "lure", "name": "ルアー", "item": {"cat": "crafted", "id": "lure", "name": "ルアー", "level": 1, "baseColor": "#1abc9c", "secColor": "#16a085", "symbol": "🐟"}, "ing1": {"cat": "flower", "level": 2}, "ing2": {"cat": "tree", "level": 2}},
-			{"id": "paint", "name": "絵具", "item": {"cat": "crafted", "id": "paint", "name": "絵具", "level": 1, "baseColor": "#9b59b6", "secColor": "#8e44ad", "symbol": "🎨"}, "ing1": {"cat": "flower", "level": 2}, "ing2": {"cat": "stone", "level": 2}},
-			{"id": "woodflute", "name": "木の笛", "item": {"cat": "crafted", "id": "woodflute", "name": "木の笛", "level": 1, "baseColor": "#d35400", "secColor": "#b9770e", "symbol": "🎵"}, "ing1": {"cat": "grass", "level": 2}, "ing2": {"cat": "tree", "level": 2}},
-			{"id": "thread", "name": "糸", "item": {"cat": "crafted", "id": "thread", "name": "糸", "level": 1, "baseColor": "#9b59b6", "secColor": "#8e44ad", "symbol": "🧵"}, "ing1": {"cat": "grass", "level": 2}, "ing2": {"cat": "stone", "level": 2}},
-			{"id": "knife", "name": "ナイフ", "item": {"cat": "crafted", "id": "knife", "name": "ナイフ", "level": 1, "baseColor": "#95a5a6", "secColor": "#7f8c8d", "symbol": "🔪"}, "ing1": {"cat": "tree", "level": 2}, "ing2": {"cat": "stone", "level": 2}},
-			{"id": "flowercrown", "name": "花冠", "item": {"cat": "crafted", "id": "flowercrown", "name": "花冠", "level": 1, "baseColor": "#ff7675", "secColor": "#d63031", "symbol": "👑"}, "ing1": {"cat": "flower", "level": 3}, "ing2": {"cat": "grass", "level": 3}},
-			{"id": "flowerwreath", "name": "花のリース", "item": {"cat": "crafted", "id": "flowerwreath", "name": "花のリース", "level": 1, "baseColor": "#fd79a8", "secColor": "#e84393", "symbol": "🛞"}, "ing1": {"cat": "flower", "level": 3}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "flowervase", "name": "花瓶", "item": {"cat": "crafted", "id": "flowervase", "name": "花瓶", "level": 1, "baseColor": "#00cec9", "secColor": "#00b894", "symbol": "🏺"}, "ing1": {"cat": "flower", "level": 3}, "ing2": {"cat": "stone", "level": 3}},
-			{"id": "basket", "name": "丈夫なかご", "item": {"cat": "crafted", "id": "basket", "name": "丈夫なかご", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🧺"}, "ing1": {"cat": "grass", "level": 3}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "tinder", "name": "火口", "item": {"cat": "crafted", "id": "tinder", "name": "火口", "level": 1, "baseColor": "#e74c3c", "secColor": "#c0392b", "symbol": "💥"}, "ing1": {"cat": "grass", "level": 3}, "ing2": {"cat": "stone", "level": 3}},
-			{"id": "axe", "name": "斧", "item": {"cat": "crafted", "id": "axe", "name": "斧", "level": 1, "baseColor": "#e74c3c", "secColor": "#c0392b", "symbol": "🪓"}, "ing1": {"cat": "tree", "level": 3}, "ing2": {"cat": "stone", "level": 3}},
-			{"id": "gear", "name": "歯車", "item": {"cat": "crafted", "id": "gear", "name": "歯車", "level": 1, "baseColor": "#7f8c8d", "secColor": "#34495e", "symbol": "⚙️"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "stone", "level": 3}},
-			{"id": "pot", "name": "石の器", "item": {"cat": "crafted", "id": "pot", "name": "石の器", "level": 1, "baseColor": "#95a5a6", "secColor": "#34495e", "symbol": "🥣"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "stone", "level": 2}},
-			{"id": "woodcontainer", "name": "木の器", "item": {"cat": "crafted", "id": "woodcontainer", "name": "木の器", "level": 1, "baseColor": "#d35400", "secColor": "#ba4a00", "symbol": "🪵"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "tree", "level": 2}},
-			{"id": "sand", "name": "砂", "item": {"cat": "crafted", "id": "sand", "name": "砂", "level": 1, "baseColor": "#f1c40f", "secColor": "#f39c12", "symbol": "⏳"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "stone", "level": 1}},
-			{"id": "rod", "name": "釣り竿", "item": {"cat": "crafted", "id": "rod", "name": "釣り竿", "level": 1, "baseColor": "#d35400", "secColor": "#e67e22", "symbol": "🎣"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "net", "name": "投網", "item": {"cat": "crafted", "id": "net", "name": "投網", "level": 1, "baseColor": "#3498db", "secColor": "#2980b9", "symbol": "🥅"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "thread"}},
-			{"id": "baitedthread", "name": "釣り餌のついた糸", "item": {"cat": "crafted", "id": "baitedthread", "name": "釣り餌のついた糸", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪡"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "bait"}},
-			{"id": "lurethread", "name": "ルアーのついた糸", "item": {"cat": "crafted", "id": "lurethread", "name": "ルアーのついた糸", "level": 1, "baseColor": "#1abc9c", "secColor": "#117a65", "symbol": "🧶"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "lure"}},
-			{"id": "boundflower", "name": "縛った花", "item": {"cat": "crafted", "id": "boundflower", "name": "縛った花", "level": 1, "baseColor": "#ff6b81", "secColor": "#ff4757", "symbol": "💐"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "flower", "level": 4}},
-			{"id": "ukuleleparts", "name": "弦楽器のパーツ", "item": {"cat": "crafted", "id": "ukuleleparts", "name": "弦楽器のパーツ", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪵"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "tree", "level": 2}},
-			{"id": "smallbouquet", "name": "小さい花束", "item": {"cat": "crafted", "id": "smallbouquet", "name": "小さい花束", "level": 1, "baseColor": "#ff4757", "secColor": "#ff6b81", "symbol": "🌷"}, "ing1": {"craftedId": "boundflower"}, "ing2": {"cat": "flower", "level": 4}},
-			{"id": "midbouquet", "name": "中くらいの花束", "item": {"cat": "crafted", "id": "midbouquet", "name": "中くらいの花束", "level": 1, "baseColor": "#ff3838", "secColor": "#ff4d4d", "symbol": "🌻"}, "ing1": {"craftedId": "smallbouquet"}, "ing2": {"cat": "flower", "level": 4}},
-			{"id": "bigbouquet", "name": "大きい花束", "item": {"cat": "crafted", "id": "bigbouquet", "name": "大きい花束", "level": 1, "baseColor": "#ff4d4d", "secColor": "#fa8231", "symbol": "🌹"}, "ing1": {"craftedId": "midbouquet"}, "ing2": {"cat": "flower", "level": 4}},
-			{"id": "letter", "name": "手紙", "item": {"cat": "crafted", "id": "letter", "name": "手紙", "level": 1, "baseColor": "#ecf0f1", "secColor": "#bdc3c7", "symbol": "✉️"}, "ing1": {"craftedId": "paper"}, "ing2": {"cat": "flower", "level": 2}},
-			{"id": "sketchbook", "name": "スケッチブック", "item": {"cat": "crafted", "id": "sketchbook", "name": "スケッチブック", "level": 1, "baseColor": "#f39c12", "secColor": "#d35400", "symbol": "📓"}, "ing1": {"craftedId": "paper"}, "ing2": {"craftedId": "paint"}},
-			{"id": "baitedrod", "name": "釣り餌のついた釣り竿", "item": {"cat": "crafted", "id": "baitedrod", "name": "釣り餌のついた釣り竿", "level": 1, "baseColor": "#e67e22", "secColor": "#b9770e", "symbol": "🥢"}, "ing1": {"craftedId": "baitedthread"}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "lurerod", "name": "ルアーのついた釣り竿", "item": {"cat": "crafted", "id": "lurerod", "name": "ルアーのついた釣り竿", "level": 1, "baseColor": "#16a085", "secColor": "#0e6655", "symbol": "🎋"}, "ing1": {"craftedId": "lurethread"}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "bignet", "name": "大きい投網", "item": {"cat": "crafted", "id": "bignet", "name": "大きい投網", "level": 1, "baseColor": "#2980b9", "secColor": "#1f618d", "symbol": "🕸️"}, "ing1": {"craftedId": "net"}, "ing2": {"craftedId": "net"}},
-			{"id": "maki", "name": "薪", "item": {"cat": "crafted", "id": "maki", "name": "薪", "level": 1, "baseColor": "#d35400", "secColor": "#ba4a00", "symbol": "🪵"}, "ing1": {"craftedId": "axe"}, "ing2": {"cat": "tree", "level": 4}},
-			{"id": "bonfire", "name": "たき火", "item": {"cat": "crafted", "id": "bonfire", "name": "たき火", "level": 1, "baseColor": "#e67e22", "secColor": "#cf711f", "symbol": "🏕️"}, "ing1": {"craftedId": "maki"}, "ing2": {"craftedId": "tinder"}},
-			{"id": "bottle", "name": "きれいな小瓶", "item": {"cat": "crafted", "id": "bottle", "name": "きれいな小瓶", "level": 1, "baseColor": "#00d2d3", "secColor": "#01a3a4", "symbol": "🍾"}, "ing1": {"craftedId": "sand"}, "ing2": {"craftedId": "bonfire"}},
-			{"id": "hourglass", "name": "砂時計", "item": {"cat": "crafted", "id": "hourglass", "name": "砂時計", "level": 1, "baseColor": "#ff9f43", "secColor": "#ee5253", "symbol": "⌛"}, "ing1": {"craftedId": "sand"}, "ing2": {"craftedId": "bottle"}},
-			{"id": "clock", "name": "時計", "item": {"cat": "crafted", "id": "clock", "name": "時計", "level": 1, "baseColor": "#54a0ff", "secColor": "#2e86de", "symbol": "⏰"}, "ing1": {"craftedId": "gear"}, "ing2": {"craftedId": "gear"}},
-			{"id": "potpan", "name": "鍋", "item": {"cat": "crafted", "id": "potpan", "name": "鍋", "level": 1, "baseColor": "#7f8c8d", "secColor": "#95a5a6", "symbol": "🍲"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 3}},
-			{"id": "", "name": "フライパン", "item": {"cat": "crafted", "id": "frypan", "name": "フライパン", "level": 1, "baseColor": "#34495e", "secColor": "#2c3e50", "symbol": "🍳"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 2}},
-			{"id": "ukulele", "name": "ウクレレ", "item": {"cat": "crafted", "id": "ukulele", "name": "ウクレレ", "level": 1, "baseColor": "#f39c12", "secColor": "#d35400", "symbol": "🎸"}, "ing1": {"craftedId": "ukuleleparts"}, "ing2": {"cat": "tree", "level": 4}}
-		];
+            {"id": "bait", "name": "釣り餌", "item": {"cat": "crafted", "id": "bait", "name": "釣り餌", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪱"}, "ing1": {"cat": "flower", "level": 1}, "ing2": {"cat": "grass", "level": 1}},
+            {"id": "shell", "name": "貝殻", "item": {"cat": "crafted", "id": "shell", "name": "貝殻", "level": 1, "baseColor": "#ff9ff3", "secColor": "#f368e0", "symbol": "🐚"}, "ing1": {"cat": "flower", "level": 1}, "ing2": {"cat": "tree", "level": 1}},
+            {"id": "nuts", "name": "木の実", "item": {"cat": "crafted", "id": "nuts", "name": "木の実", "level": 1, "baseColor": "#d35400", "secColor": "#e67e22", "symbol": "🌰"}, "ing1": {"cat": "flower", "level": 1}, "ing2": {"cat": "stone", "level": 1}},
+            {"id": "grassflute", "name": "草笛", "item": {"cat": "crafted", "id": "grassflute", "name": "草笛", "level": 1, "baseColor": "#2ecc71", "secColor": "#27ae60", "symbol": "🌱"}, "ing1": {"cat": "grass", "level": 1}, "ing2": {"cat": "tree", "level": 1}},
+            {"id": "pendant", "name": "ペンダント", "item": {"cat": "crafted", "id": "pendant", "name": "ペンダント", "level": 1, "baseColor": "#f1c40f", "secColor": "#f39c12", "symbol": "📿"}, "ing1": {"cat": "grass", "level": 1}, "ing2": {"cat": "stone", "level": 1}},
+            {"id": "paper", "name": "紙", "item": {"cat": "crafted", "id": "paper", "name": "紙", "level": 1, "baseColor": "#ecf0f1", "secColor": "#bdc3c7", "symbol": "📄"}, "ing1": {"cat": "tree", "level": 1}, "ing2": {"cat": "stone", "level": 1}},
+            {"id": "sachet", "name": "香り袋", "item": {"cat": "crafted", "id": "sachet", "name": "香り袋", "level": 1, "baseColor": "#e84393", "secColor": "#d63031", "symbol": "袋"}, "ing1": {"cat": "flower", "level": 2}, "ing2": {"cat": "grass", "level": 2}},
+            {"id": "lure", "name": "ルアー", "item": {"cat": "crafted", "id": "lure", "name": "ルアー", "level": 1, "baseColor": "#1abc9c", "secColor": "#16a085", "symbol": "🐟"}, "ing1": {"cat": "flower", "level": 2}, "ing2": {"cat": "tree", "level": 2}},
+            {"id": "paint", "name": "絵具", "item": {"cat": "crafted", "id": "paint", "name": "絵具", "level": 1, "baseColor": "#9b59b6", "secColor": "#8e44ad", "symbol": "🎨"}, "ing1": {"cat": "flower", "level": 2}, "ing2": {"cat": "stone", "level": 2}},
+            {"id": "woodflute", "name": "木の笛", "item": {"cat": "crafted", "id": "woodflute", "name": "木の笛", "level": 1, "baseColor": "#d35400", "secColor": "#b9770e", "symbol": "🎵"}, "ing1": {"cat": "grass", "level": 2}, "ing2": {"cat": "tree", "level": 2}},
+            {"id": "thread", "name": "糸", "item": {"cat": "crafted", "id": "thread", "name": "糸", "level": 1, "baseColor": "#9b59b6", "secColor": "#8e44ad", "symbol": "🧵"}, "ing1": {"cat": "grass", "level": 2}, "ing2": {"cat": "stone", "level": 2}},
+            {"id": "knife", "name": "ナイフ", "item": {"cat": "crafted", "id": "knife", "name": "ナイフ", "level": 1, "baseColor": "#95a5a6", "secColor": "#7f8c8d", "symbol": "🔪"}, "ing1": {"cat": "tree", "level": 2}, "ing2": {"cat": "stone", "level": 2}},
+            {"id": "flowercrown", "name": "花冠", "item": {"cat": "crafted", "id": "flowercrown", "name": "花冠", "level": 1, "baseColor": "#ff7675", "secColor": "#d63031", "symbol": "👑"}, "ing1": {"cat": "flower", "level": 3}, "ing2": {"cat": "grass", "level": 3}},
+            {"id": "flowerwreath", "name": "花のリース", "item": {"cat": "crafted", "id": "flowerwreath", "name": "花のリース", "level": 1, "baseColor": "#fd79a8", "secColor": "#e84393", "symbol": "🛞"}, "ing1": {"cat": "flower", "level": 3}, "ing2": {"cat": "tree", "level": 3}},
+            {"id": "flowervase", "name": "花瓶", "item": {"cat": "crafted", "id": "flowervase", "name": "花瓶", "level": 1, "baseColor": "#00cec9", "secColor": "#00b894", "symbol": "🏺"}, "ing1": {"cat": "flower", "level": 3}, "ing2": {"cat": "stone", "level": 3}},
+            {"id": "basket", "name": "丈夫なかご", "item": {"cat": "crafted", "id": "basket", "name": "丈夫なかご", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🧺"}, "ing1": {"cat": "grass", "level": 3}, "ing2": {"cat": "tree", "level": 3}},
+            {"id": "tinder", "name": "火口", "item": {"cat": "crafted", "id": "tinder", "name": "火口", "level": 1, "baseColor": "#e74c3c", "secColor": "#c0392b", "symbol": "💥"}, "ing1": {"cat": "grass", "level": 3}, "ing2": {"cat": "stone", "level": 3}},
+            {"id": "axe", "name": "斧", "item": {"cat": "crafted", "id": "axe", "name": "斧", "level": 1, "baseColor": "#e74c3c", "secColor": "#c0392b", "symbol": "🪓"}, "ing1": {"cat": "tree", "level": 3}, "ing2": {"cat": "stone", "level": 3}},
+            {"id": "gear", "name": "歯車", "item": {"cat": "crafted", "id": "gear", "name": "歯車", "level": 1, "baseColor": "#7f8c8d", "secColor": "#34495e", "symbol": "⚙️"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "stone", "level": 3}},
+            {"id": "pot", "name": "石の器", "item": {"cat": "crafted", "id": "pot", "name": "石の器", "level": 1, "baseColor": "#95a5a6", "secColor": "#34495e", "symbol": "🥣"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "stone", "level": 2}},
+            {"id": "woodcontainer", "name": "木の器", "item": {"cat": "crafted", "id": "woodcontainer", "name": "木の器", "level": 1, "baseColor": "#d35400", "secColor": "#ba4a00", "symbol": "🪵"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "tree", "level": 2}},
+            {"id": "sand", "name": "砂", "item": {"cat": "crafted", "id": "sand", "name": "砂", "level": 1, "baseColor": "#f1c40f", "secColor": "#f39c12", "symbol": "⏳"}, "ing1": {"craftedId": "knife"}, "ing2": {"cat": "stone", "level": 1}},
+            {"id": "rod", "name": "釣り竿", "item": {"cat": "crafted", "id": "rod", "name": "釣り竿", "level": 1, "baseColor": "#d35400", "secColor": "#e67e22", "symbol": "🎣"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "tree", "level": 3}},
+            {"id": "net", "name": "投網", "item": {"cat": "crafted", "id": "net", "name": "投網", "level": 1, "baseColor": "#3498db", "secColor": "#2980b9", "symbol": "🥅"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "thread"}},
+            {"id": "baitedthread", "name": "釣り餌のついた糸", "item": {"cat": "crafted", "id": "baitedthread", "name": "釣り餌のついた糸", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪡"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "bait"}},
+            {"id": "lurethread", "name": "ルアーのついた糸", "item": {"cat": "crafted", "id": "lurethread", "name": "ルアーのついた糸", "level": 1, "baseColor": "#1abc9c", "secColor": "#117a65", "symbol": "🧶"}, "ing1": {"craftedId": "thread"}, "ing2": {"craftedId": "lure"}},
+            {"id": "boundflower", "name": "縛った花", "item": {"cat": "crafted", "id": "boundflower", "name": "縛った花", "level": 1, "baseColor": "#ff6b81", "secColor": "#ff4757", "symbol": "💐"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "flower", "level": 4}},
+            {"id": "ukuleleparts", "name": "弦楽器のパーツ", "item": {"cat": "crafted", "id": "ukuleleparts", "name": "弦楽器のパーツ", "level": 1, "baseColor": "#e67e22", "secColor": "#d35400", "symbol": "🪵"}, "ing1": {"craftedId": "thread"}, "ing2": {"cat": "tree", "level": 2}},
+            {"id": "smallbouquet", "name": "小さい花束", "item": {"cat": "crafted", "id": "smallbouquet", "name": "小さい花束", "level": 1, "baseColor": "#ff4757", "secColor": "#ff6b81", "symbol": "🌷"}, "ing1": {"craftedId": "boundflower"}, "ing2": {"cat": "flower", "level": 4}},
+            {"id": "midbouquet", "name": "中くらいの花束", "item": {"cat": "crafted", "id": "midbouquet", "name": "中くらいの花束", "level": 1, "baseColor": "#ff3838", "secColor": "#ff4d4d", "symbol": "🌻"}, "ing1": {"craftedId": "smallbouquet"}, "ing2": {"cat": "flower", "level": 4}},
+            {"id": "bigbouquet", "name": "大きい花束", "item": {"cat": "crafted", "id": "bigbouquet", "name": "大きい花束", "level": 1, "baseColor": "#ff4d4d", "secColor": "#fa8231", "symbol": "🌹"}, "ing1": {"craftedId": "midbouquet"}, "ing2": {"cat": "flower", "level": 4}},
+            {"id": "letter", "name": "手紙", "item": {"cat": "crafted", "id": "letter", "name": "手紙", "level": 1, "baseColor": "#ecf0f1", "secColor": "#bdc3c7", "symbol": "✉️"}, "ing1": {"craftedId": "paper"}, "ing2": {"cat": "flower", "level": 2}},
+            {"id": "sketchbook", "name": "スケッチブック", "item": {"cat": "crafted", "id": "sketchbook", "name": "スケッチブック", "level": 1, "baseColor": "#f39c12", "secColor": "#d35400", "symbol": "📓"}, "ing1": {"craftedId": "paper"}, "ing2": {"craftedId": "paint"}},
+            {"id": "baitedrod", "name": "釣り餌のついた釣り竿", "item": {"cat": "crafted", "id": "baitedrod", "name": "釣り餌のついた釣り竿", "level": 1, "baseColor": "#e67e22", "secColor": "#b9770e", "symbol": "🥢"}, "ing1": {"craftedId": "baitedthread"}, "ing2": {"cat": "tree", "level": 3}},
+            {"id": "lurerod", "name": "ルアーのついた釣り竿", "item": {"cat": "crafted", "id": "lurerod", "name": "ルアーのついた釣り竿", "level": 1, "baseColor": "#16a085", "secColor": "#0e6655", "symbol": "🎋"}, "ing1": {"craftedId": "lurethread"}, "ing2": {"cat": "tree", "level": 3}},
+            {"id": "bignet", "name": "大きい投網", "item": {"cat": "crafted", "id": "bignet", "name": "大きい投網", "level": 1, "baseColor": "#2980b9", "secColor": "#1f618d", "symbol": "🕸️"}, "ing1": {"craftedId": "net"}, "ing2": {"craftedId": "net"}},
+            {"id": "maki", "name": "薪", "item": {"cat": "crafted", "id": "maki", "name": "薪", "level": 1, "baseColor": "#d35400", "secColor": "#ba4a00", "symbol": "🪵"}, "ing1": {"craftedId": "axe"}, "ing2": {"cat": "tree", "level": 4}},
+            {"id": "bonfire", "name": "たき火", "item": {"cat": "crafted", "id": "bonfire", "name": "たき火", "level": 1, "baseColor": "#e67e22", "secColor": "#cf711f", "symbol": "🏕️"}, "ing1": {"craftedId": "maki"}, "ing2": {"craftedId": "tinder"}},
+            {"id": "bottle", "name": "きれいな小瓶", "item": {"cat": "crafted", "id": "bottle", "name": "きれいな小瓶", "level": 1, "baseColor": "#00d2d3", "secColor": "#01a3a4", "symbol": "🍾"}, "ing1": {"craftedId": "sand"}, "ing2": {"craftedId": "bonfire"}},
+            {"id": "hourglass", "name": "砂時計", "item": {"cat": "crafted", "id": "hourglass", "name": "砂時計", "level": 1, "baseColor": "#ff9f43", "secColor": "#ee5253", "symbol": "⌛"}, "ing1": {"craftedId": "sand"}, "ing2": {"craftedId": "bottle"}},
+            {"id": "clock", "name": "時計", "item": {"cat": "crafted", "id": "clock", "name": "時計", "level": 1, "baseColor": "#54a0ff", "secColor": "#2e86de", "symbol": "⏰"}, "ing1": {"craftedId": "gear"}, "ing2": {"craftedId": "gear"}},
+            {"id": "potpan", "name": "鍋", "item": {"cat": "crafted", "id": "potpan", "name": "鍋", "level": 1, "baseColor": "#7f8c8d", "secColor": "#95a5a6", "symbol": "🍲"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 3}},
+            {"id": "frypan", "name": "フライパン", "item": {"cat": "crafted", "id": "frypan", "name": "フライパン", "level": 1, "baseColor": "#34495e", "secColor": "#2c3e50", "symbol": "🍳"}, "ing1": {"craftedId": "pot"}, "ing2": {"cat": "tree", "level": 2}},
+            {"id": "ukulele", "name": "ウクレレ", "item": {"cat": "crafted", "id": "ukulele", "name": "ウクレレ", "level": 1, "baseColor": "#f39c12", "secColor": "#d35400", "symbol": "🎸"}, "ing1": {"craftedId": "ukuleleparts"}, "ing2": {"cat": "tree", "level": 4}}
+        ];
 
         let stamina = 10000;
         let maxStamina = 10000;
@@ -348,15 +348,15 @@
                         isDragging = true;
                         dragSourceInfo = { locationType, index, itemData };
                         
-						// 既存のドラッグ用ゴーストをすべて削除
-						document.querySelectorAll('body > .item').forEach(ghost => {
-						    if (ghost.style.position === 'fixed' && ghost.style.zIndex === '9999') {
-						        ghost.remove();
-						    }
-						});
+                        // 既存のドラッグ用ゴーストをすべて削除
+                        document.querySelectorAll('body > .item').forEach(ghost => {
+                            if (ghost.style.position === 'fixed' && ghost.style.zIndex === '9999') {
+                                ghost.remove();
+                            }
+                        });
 
-						// 参照もリセット
-						activeDragGhost = null;
+                        // 参照もリセット
+                        activeDragGhost = null;
 
                         // 王冠やIDの重複を防ぐため、ドラッグ用ゴーストは最小限の構成で作成する
                         activeDragGhost = document.createElement('div');
@@ -610,59 +610,59 @@
         /* ==========================================
            常時表示クエスト機能 (クラフト品30%確率追加 ＆ 一括リセット)
            ========================================== */
-		// 図鑑とクラフトの開放％を計算する関数 (0.0 〜 1.0)
-		function calculateUnlockPercentage() {
-		    const totalZukanSlots = (4 * MAX_LEVEL) + CRAFT_RECIPES.length;
-		    let unlockedCount = 0;
+        // 図鑑とクラフトの開放％を計算する関数 (0.0 〜 1.0)
+        function calculateUnlockPercentage() {
+            const totalZukanSlots = (4 * MAX_LEVEL) + CRAFT_RECIPES.length;
+            let unlockedCount = 0;
 
-		    for (let c of ['grass', 'flower', 'tree', 'stone']) {
-		        for (let lv = 1; lv <= MAX_LEVEL; lv++) {
-		            if (unlockedZukan[`${c}_${lv}`]) unlockedCount++;
-		        }
-		    }
-		    CRAFT_RECIPES.forEach(rec => {
-		        if (unlockedZukan[`crafted_${rec.id}`] || unlockedRecipes[rec.id]) unlockedCount++;
-		    });
+            for (let c of ['grass', 'flower', 'tree', 'stone']) {
+                for (let lv = 1; lv <= MAX_LEVEL; lv++) {
+                    if (unlockedZukan[`${c}_${lv}`]) unlockedCount++;
+                }
+            }
+            CRAFT_RECIPES.forEach(rec => {
+                if (unlockedZukan[`crafted_${rec.id}`] || unlockedRecipes[rec.id]) unlockedCount++;
+            });
 
-		    return unlockedCount / totalZukanSlots;
-		}
+            return unlockedCount / totalZukanSlots;
+        }
 
         function generateRandomQuest() {
-			const unlockRatio = calculateUnlockPercentage(); 
-		    // 解放度(0〜1)に合わせてクエストの最大レベルを 2 から 6 の間で変動
-		    const maxQuestLevel = Math.min(6, Math.max(2, Math.floor(2 + unlockRatio * 4)));
-		    const isCrafted = Math.random() < 0.3;
+            const unlockRatio = calculateUnlockPercentage(); 
+            // 解放度(0〜1)に合わせてクエストの最大レベルを 2 から 6 の間で変動
+            const maxQuestLevel = Math.min(6, Math.max(2, Math.floor(2 + unlockRatio * 4)));
+            const isCrafted = Math.random() < 0.3;
 
-		    if (isCrafted) {
-		        const rec = CRAFT_RECIPES[Math.floor(Math.random() * CRAFT_RECIPES.length)];
-		        // クラフト品の種類によって報酬を変動させる
-		        let reward = 300;
-		        if (['bigbouquet', 'lurerod', 'baitedrod', 'campfire', 'clock'].includes(rec.id)) {
-		            reward = 700 + Math.floor(Math.random() * 300);
-		        } else if (['net', 'bignet', 'rod', 'frypan', 'potpan', 'axe', 'hourglass'].includes(rec.id)) {
-		            reward = 500 + Math.floor(Math.random() * 200);
-		        } else {
-		            reward = 300 + Math.floor(Math.random() * 150);
-		        }
+            if (isCrafted) {
+                const rec = CRAFT_RECIPES[Math.floor(Math.random() * CRAFT_RECIPES.length)];
+                // クラフト品の種類によって報酬を変動させる
+                let reward = 300;
+                if (['bigbouquet', 'lurerod', 'baitedrod', 'campfire', 'clock'].includes(rec.id)) {
+                    reward = 700 + Math.floor(Math.random() * 300);
+                } else if (['net', 'bignet', 'rod', 'frypan', 'potpan', 'axe', 'hourglass'].includes(rec.id)) {
+                    reward = 500 + Math.floor(Math.random() * 200);
+                } else {
+                    reward = 300 + Math.floor(Math.random() * 150);
+                }
 
-		        return {
-		            type: 'crafted',
-		            craftedId: rec.id,
-		            catName: rec.item.name,
-		            reward: reward
-		        };
-		    } else {
-		        const cat = CATEGORIES.filter(c => c.id !== 'crafted')[Math.floor(Math.random() * 4)];
-		        // 1 〜 maxQuestLevel の間でランダムに難易度を決定
-		        const lv = Math.floor(Math.random() * maxQuestLevel) + 1;
-		        return {
-		            type: 'base',
-		            category: cat.id,
-		            catName: cat.name,
-		            level: lv,
-		            reward: lv * 60 + Math.floor(Math.random() * 40)
-		        };
-		    }
+                return {
+                    type: 'crafted',
+                    craftedId: rec.id,
+                    catName: rec.item.name,
+                    reward: reward
+                };
+            } else {
+                const cat = CATEGORIES.filter(c => c.id !== 'crafted')[Math.floor(Math.random() * 4)];
+                // 1 〜 maxQuestLevel の間でランダムに難易度を決定
+                const lv = Math.floor(Math.random() * maxQuestLevel) + 1;
+                return {
+                    type: 'base',
+                    category: cat.id,
+                    catName: cat.name,
+                    level: lv,
+                    reward: lv * 60 + Math.floor(Math.random() * 40)
+                };
+            }
         }
 
         function refreshAllQuests() {
@@ -690,14 +690,14 @@
                 const card = document.createElement('div');
                 card.className = 'quest-card-mini';
 
-				// 納品可能ならカード背景をグリーンにハイライト
-		        const isDeliverable = checkIsQuestDeliverable(quest);
-		        if (isDeliverable) {
-		            card.classList.add('deliverable');
-		        }
+                // 納品可能ならカード背景をグリーンにハイライト
+                const isDeliverable = checkIsQuestDeliverable(quest);
+                if (isDeliverable) {
+                    card.classList.add('deliverable');
+                }
 
                 const img = document.createElement('img');
-				img.src = getItemIconQuest(quest);
+                img.src = getItemIconQuest(quest);
                 card.appendChild(img);
 
                 const title = document.createElement('div');
@@ -723,49 +723,49 @@
             saveGame();
         }
         
-		function checkIsQuestDeliverable(quest) {
-		    for (let i = 0; i < fieldData.length; i++) {
-		        const item = fieldData[i];
-		        if (item && matchesQuestItem(item, quest)) return true;
-		    }
-		    for (let i = 0; i < bagData.length; i++) {
-		        const item = bagData[i];
-		        if (item && matchesQuestItem(item, quest)) return true;
-		    }
-		    return false;
-		}
+        function checkIsQuestDeliverable(quest) {
+            for (let i = 0; i < fieldData.length; i++) {
+                const item = fieldData[i];
+                if (item && matchesQuestItem(item, quest)) return true;
+            }
+            for (let i = 0; i < bagData.length; i++) {
+                const item = bagData[i];
+                if (item && matchesQuestItem(item, quest)) return true;
+            }
+            return false;
+        }
 
-		// フィールド上のアイテムのふちをグリーンに光らせる処理
-		function updateItemDeliverableHighlights() {
+        // フィールド上のアイテムのふちをグリーンに光らせる処理
+        function updateItemDeliverableHighlights() {
             // フィールド上のアイテムかつ、現在のクエストのいずれかと一致するか判定
             // クエストカード（ミニリスト）の納品可能ハイライト
-		    const questCards = document.querySelectorAll('.quest-card-mini');
-		    questCards.forEach((card, index) => {
-		        if (randomQuests[index]) {
-		            const isDeliverable = checkIsQuestDeliverable(randomQuests[index]);
-		            if (isDeliverable) {
-		                card.classList.add('deliverable');
-		            } else {
-		                card.classList.remove('deliverable');
-		            }
-		        }
-		    });
+            const questCards = document.querySelectorAll('.quest-card-mini');
+            questCards.forEach((card, index) => {
+                if (randomQuests[index]) {
+                    const isDeliverable = checkIsQuestDeliverable(randomQuests[index]);
+                    if (isDeliverable) {
+                        card.classList.add('deliverable');
+                    } else {
+                        card.classList.remove('deliverable');
+                    }
+                }
+            });
 
-		    // フィールド上のアイテムのふちを光らせる処理（各セル内のDOMを直接安全にチェック）
-		    const cellElems = document.querySelectorAll('#grid-field .cell');
-		    cellElems.forEach((cell, idx) => {
-		        const itemElem = cell.querySelector('.item');
-		        if (itemElem) {
-		            const itemData = fieldData[idx];
-		            let canDeliver = itemData ? randomQuests.some(q => matchesQuestItem(itemData, q)) : false;
-		            if (canDeliver) {
-		                itemElem.classList.add('deliverable-item');
-		            } else {
-		                itemElem.classList.remove('deliverable-item');
-		            }
-		        }
-		    });
-		}
+            // フィールド上のアイテムのふちを光らせる処理（各セル内のDOMを直接安全にチェック）
+            const cellElems = document.querySelectorAll('#grid-field .cell');
+            cellElems.forEach((cell, idx) => {
+                const itemElem = cell.querySelector('.item');
+                if (itemElem) {
+                    const itemData = fieldData[idx];
+                    let canDeliver = itemData ? randomQuests.some(q => matchesQuestItem(itemData, q)) : false;
+                    if (canDeliver) {
+                        itemElem.classList.add('deliverable-item');
+                    } else {
+                        itemElem.classList.remove('deliverable-item');
+                    }
+                }
+            });
+        }
 
         function fulfillQuest(questIndex) {
             const quest = randomQuests[questIndex];
